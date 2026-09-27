@@ -110,8 +110,13 @@ Delivery repair succeeded without new synthesis: Grok reported direct MP3 attach
 
 ## Public delivery preferences in 0.1.7
 
-The owner accepted the delivered Algenib audition at 1.1x with the same model and restrained British direction, and explicitly selected public R2 links using `r2.dev` for this test. Grok reported saving those choices privately without resynthesis and keeping sample verification incomplete. Native UI displayed a secure Cloudflare Account ID card after the exact token instructions; completed credential handoff, provisioning, public access, playback/seek, and token cleanup remain unverified. No owner URL or bucket identifier is published here.
+The owner accepted the delivered Algenib audition at 1.1x with the same model and restrained British direction, and explicitly selected public R2 links using `r2.dev` for this test. Grok reported saving those choices privately without resynthesis and keeping sample verification incomplete. Both native Cloudflare cards displayed Saved, but Grok reported that the pair was absent from its subprocess environment. The local fallback then rejected the submitted form with a cross-origin error. This is not successful credential handoff; provisioning, public access, playback/seek, and token cleanup remain unverified. No owner URL or bucket identifier is published here.
 
 The new instructions save public delivery and its verified base URL, pass it on retries and post-cleanup publishing, and keep private delivery as the default for other owners. They require a dedicated bucket before public exposure and distinguish a signed URL from making a bucket private. The existing CLI already implements public publishing; no new permission-changing CLI was added.
 
 All 81 tests pass on Python 3.14 and Python 3.11, Ruff lint/format checks pass, and both skill validators pass. Release artifacts, native template update, and the live public-hosting test are still pending. This remains shared-account recovery, not clean-import proof.
+
+
+### Browser form diagnosis
+
+A local browser test with dummy Cloudflare values reproduced the same failure: `Origin:null` with `Sec-Fetch-Site:same-origin` under the old `no-referrer` response policy. After changing the policy to `same-origin`, the browser sent the exact loopback origin, the page reported Credentials saved, and the server confirmed success. No real credentials were used in that probe. HTTP regression checks still reject hostile, missing, and null Origin headers. The independent Standards and Spec rechecks found no remaining actionable findings.

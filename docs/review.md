@@ -100,3 +100,18 @@ The reviewer flagged two instruction ambiguities. The completed-state example no
 The independent reviewer found no actionable repository defects. Native publication and legacy-skill retirement are now verified in verification.md; Grok reported the store-name repair. The agreed account-recovery test remains a separate live validation step. Reusing the saved Gemini key cannot establish clean-import isolation.
 
 The Standards reviewer rechecked both fixes and reported no remaining findings. Spec reported zero repository findings. The 81-test suite passes on Python 3.14 and 3.11; Ruff and both skill validators pass.
+
+
+## Public delivery and browser form repair in 0.1.7
+
+Fixed base: `31afaa603ba12eb53efcb5b839fce703d28ff766`, reviewed through `3483de9`. The spec is the owner's accepted audition with public R2 defaults and `r2.dev` for testing, plus the live credential-handoff failure. Two independent agents reviewed Standards and Spec.
+
+### Standards
+
+The reviewer found that proposed alternate configuration directories lacked a complete migration of the accepted record and Gemini credential. That speculative migration path was removed. If the configured bucket contains private or unrelated files, setup now stops without altering credentials or access; automatic migration is explicitly unsupported. Fresh setup still creates a dedicated bucket. A possible policy-duplication concern was retained as a nonblocking maintenance observation after the instructions were made consistent.
+
+The fallback form failed a real browser submission because `Referrer-Policy: no-referrer` made the POST carry `Origin: null`, despite a same-origin navigation. A dummy-credential browser reproduction confirmed the failure. Switching the response policy to `same-origin` made the browser send the actual loopback origin and save successfully. Exact Host, non-null Origin, path, CSRF, expiry, one-shot saving, and no-logging checks remain. Regression assertions cover the policy and rejection of hostile, null, and missing origins. The reviewer rechecked the fix and found no remaining actionable issue.
+
+### Spec
+
+Both passes found no actionable repository defect. Public delivery saves the verified base URL and uses it on retries and post-cleanup uploads; other owners still default to private. Existing audio is reused. Native-card storage is distinguished from subprocess injection, which remains unverified for the Cloudflare pair. Live provisioning/playback and template publication remain external evidence gates, not implied by local tests.
