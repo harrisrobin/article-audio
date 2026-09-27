@@ -1,6 +1,6 @@
 # Install in Grok Bot and create a template
 
-Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio). Pinned release: [v0.1.6](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.6).
+Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio). Pinned release: [v0.1.7](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.7).
 
 ## Use an imported Bot
 
@@ -18,7 +18,7 @@ For local-only audio, say “Set yourself up with Gemini only.” This means MP3
 
 Create a dedicated Article Audio Bot. Set its description from [PROFILE.md](PROFILE.md). Send this preparation prompt after publishing the release:
 
-> Prepare this Bot as the public Article Audio template. Read https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.6/skills/article-audio/SKILL.md and register its complete contents as the Article audio skill. Also read skills/article-audio-onboarding/SKILL.md at the same release and register it as Article Audio onboarding, replacing any older generated getting-started skill in the template. Save https://github.com/harrisrobin/article-audio.git and release v0.1.6 as the installation source. Resolve and remember the full release commit SHA so a future install can verify it. Preserve the profile's ONLY job and Anti-jobs blocks, first-use installation, runtime checks, separate configuration paths, and Gemini audition before hosting. Confirm voice, speed, and hosted-versus-local delivery once after playback; persist preferences privately and pass them explicitly to each CLI invocation. Preserve partial setup and collect only missing keys. Default to automatic bucket provisioning with an account ID and short-lived Cloudflare token, showing the documented dashboard steps and both exact permissions before secret entry. Retain the manual four-field R2 fallback. The imported Bot must check readiness on the first message of every conversation, including greetings or unrelated questions, and prompt for setup when incomplete. An explicit setup request starts setup immediately; a refusal suppresses repeated invitations in that conversation. For this template-authoring task, only register the instructions: do not install the runtime, request credentials, synthesize audio, or upload anything. Include no account-specific credentials, private files, signed links, or unrelated memories. Confirm the saved skill is available before stopping.
+> Prepare this Bot as the public Article Audio template. Read https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.7/skills/article-audio/SKILL.md and register its complete contents as the Article audio skill. Also read skills/article-audio-onboarding/SKILL.md at the same release and register it as Article Audio onboarding, replacing any older generated getting-started skill in the template. Save https://github.com/harrisrobin/article-audio.git and release v0.1.7 as the installation source. Resolve and remember the full release commit SHA so a future install can verify it. Preserve the profile's ONLY job and Anti-jobs blocks, first-use installation, runtime checks, separate configuration paths, and Gemini audition before hosting. Confirm voice, speed, and delivery once after playback; private hosting is the default, with public access only on an explicit owner request. Follow the dedicated-bucket and public-address setup rules and persist a verified public base URL for that mode. Persist preferences privately and pass them explicitly to each CLI invocation. Preserve partial setup and collect only missing keys. Default to automatic bucket provisioning with an account ID and short-lived Cloudflare token, showing the documented dashboard steps and both exact permissions before secret entry. Retain the manual four-field R2 fallback. The imported Bot must check readiness on the first message of every conversation, including greetings or unrelated questions, and prompt for setup when incomplete. An explicit setup request starts setup immediately; a refusal suppresses repeated invitations in that conversation. For this template-authoring task, only register the instructions: do not install the runtime, request credentials, synthesize audio, or upload anything. Include no account-specific credentials, private files, signed links, or unrelated memories. Confirm the saved skill is available before stopping.
 
 Then choose **Share → Create template → Public link**. Inspect the generated template details. It must carry both complete skills, the public source and pinned revision, and the first-use rule. A statement that files are already installed on the author's computer is not a portable setup. Creating a public template is not documented as automatically listing it in the searchable Marketplace.
 
@@ -36,18 +36,18 @@ The earlier public ID `u9M4WdBafSgCyS3GNHKla` is deprecated. The current templat
 
 Test on a fresh account/computer or a deliberately isolated test environment. Bots on the same account share files, browser sessions, credentials, and plugins; importing a second Bot alone is not a clean-install test.
 
-Follow [the runtime acceptance test](../docs/runtime-test.md): greeting, installation, secure credential handoff, audition and saved preferences, private R2 playback/seek, setup-token revocation, repeat publish, and a new conversation without repeated setup. Preserve configuration at `/workspace/.article-audio-config` and recordings at `/workspace/.article-audio-jobs`, outside the source checkout. Report shared-state reuse as recovery evidence rather than a clean import.
+Follow [the runtime acceptance test](../docs/runtime-test.md): greeting, installation, secure credential handoff, audition and saved preferences, playback/seek in the selected R2 mode, setup-token revocation, repeat publish, and a new conversation without repeated setup. Preserve configuration at `/workspace/.article-audio-config` and recordings at `/workspace/.article-audio-jobs`, outside the source checkout. Report shared-state reuse as recovery evidence rather than a clean import.
 
 ## Install without a template
 
 Give an existing Bot the public skill URL above and ask it to save the skill and set up Article Audio. The skill contains the actual Git clone command and prerequisite checks. For a manual checkout:
 
 ```bash
-git clone --branch v0.1.6 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
+git clone --branch v0.1.7 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
 cd article-audio
 bash scripts/setup.sh
 ```
 
-Release assets also include `article-audio-0.1.6.zip` and its SHA-256 file. Verify the checksum and reject archive paths escaping the extraction destination. An archive contains one top-level `article-audio/` directory. Preserve existing source changes and saved credentials when upgrading.
+Release assets also include `article-audio-0.1.7.zip` and its SHA-256 file. Verify the checksum and reject archive paths escaping the extraction destination. An archive contains one top-level `article-audio/` directory. Preserve existing source changes and saved credentials when upgrading.
 
 [Official template documentation](https://docs.x.ai/grok-bot/bots) and [cloud computer behavior](https://docs.x.ai/grok-bot/computer-and-apps).

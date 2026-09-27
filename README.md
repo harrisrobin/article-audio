@@ -6,15 +6,15 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 ## Install in Grok Bot
 
-**Release status:** the GitHub package and retained public Bot template are updated to this release. See [verification status](docs/verification.md) for completed checks and remaining live-integration tests.
+**Release status:** this release is being prepared; the retained public Bot template still serves the previous release. See [verification status](docs/verification.md) for completed checks and remaining live-integration tests.
 
 **[Add Article Audio to Grok Bot](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt)**, then send any message, even **hi**. If setup is incomplete, the Bot should invite you to set up Gemini and private R2 hosting.
 
 The older template ID `u9M4WdBafSgCyS3GNHKla` is deprecated. Use the link above; the old public snapshot may still be accessible.
 
-The Bot downloads the pinned [v0.1.6 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.6) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
+The Bot downloads the pinned [v0.1.7 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.7) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
 
-Setup collects Gemini credentials and provides an audition, then confirms voice, speed, and local-only versus private-hosted delivery once. The Bot saves and reuses those [preferences](docs/preferences.md). Hosted setup then guides Cloudflare bucket setup, verifies sample playback, and checks that uploads still work after setup-token revocation. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
+Setup collects Gemini credentials and provides an audition, then confirms voice, speed, and delivery once. Private links are the default hosted option; an explicit public choice saves its verified base URL for future recordings. The Bot saves and reuses those [preferences](docs/preferences.md). Hosted setup then guides Cloudflare bucket setup, verifies sample playback, and checks that uploads still work after setup-token revocation. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
 
 The package includes a [Bot profile](template/PROFILE.md) and instructions for creating your own template. A native public template is separate from searchable Marketplace catalog inclusion, which is not confirmed.
 
@@ -84,7 +84,7 @@ The result includes `audio_url` and `expires_at`. Private signed links last **se
 
 For jurisdictional buckets, use `--jurisdiction eu`, `us`, or `fedramp`, or set `R2_JURISDICTION`. Ordinary buckets use `default`. [Setup and plugin details](docs/cloudflare.md).
 
-For a permanent public URL, configure an R2 public custom domain first, then explicitly use:
+For a public URL without scheduled expiry, configure an R2 public custom domain first, or choose `r2.dev` for a rate-limited test. Follow the [public-access instructions](docs/cloudflare.md#public-access-only-when-requested), then explicitly use:
 
 ```bash
 bash scripts/article-audio publish /path/to/audio.mp3 \
