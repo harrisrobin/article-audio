@@ -132,3 +132,5 @@ Fixed base: `f742234db5e50b60a46a461ff58e4f32a00d6fd0`. The owner reported that 
 Independent Standards and Spec reviewers both found that moving generation into the hosted branch left new local-only owners without a sample-generation step. Both local-only entry points now explicitly generate or reuse a manifest-matching sample before transfer. Parent review also preserved confirmed narration during hosting-only recovery and removed an obsolete accepted-sample requirement from the public URL instructions. No source comments changed.
 
 Both axes retain publication as a completion gate: the new tag, source archive, verified bundle, and native template must exist before the change is called shipped. Instruction scenarios cover private and public first setup, local-only transfer, shared Gemini recovery, accepted voice with incomplete hosting, voice replacement, delivery-only reuse, and interrupted cleanup. These checks do not establish a clean import or human playback under the revised ordering.
+
+Both reviewers rechecked commit `4bb5f6b` and reported no remaining repository findings. Package and native publication are tracked separately in verification.md.

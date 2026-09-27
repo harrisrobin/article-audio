@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: GitHub v0.1.8 includes the verified template bundle. Native v0.1.8, staged version 16, is published at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt). It preserves all four bundle memories as six native facts, correcting the 500-character truncation found in version 14. The complete profile and both skills were also inspected. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, public audition playback, and post-revocation publishing are verified below. Native secret delivery, clean-import testing, and complete X Article narration remain incomplete.
+Current published baseline: GitHub v0.1.9 includes the revised audition flow and verified template bundle. Its native update is pending review after the Mac locked. Native v0.1.8, staged version 16, remains the last verified publication at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt). It preserves all four bundle memories as six native facts, correcting the 500-character truncation found in version 14. The complete profile and both skills were also inspected. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, public audition playback, and post-revocation publishing are verified below. Native secret delivery, clean-import testing, and complete X Article narration remain incomplete.
 
 ## Confirmed locally
 
@@ -194,4 +194,11 @@ The v0.1.8 package and compiler bundle are unchanged. This repair changes native
 
 The previous flow required voice acceptance before configuring R2 and offered a ZIP when Grok rejected direct MP3 attachments. The owner reported that the ZIP could not be played inside Grok. The revised flow chooses delivery first, configures the selected hosted destination, then sends a verified direct MP3 link before asking for voice acceptance. Local-only explicitly discloses external playback, and ZIP transfer alone never establishes playback or readiness.
 
-Accepted narration settings, existing samples, shared credentials, and automatic setup-token cleanup remain protected. The runtime APIs and synthesis behavior are unchanged. All 132 tests pass on Python 3.11, Ruff lint/format checks pass, and both skill validators pass. Package and native publication checks for this release are pending; a fresh import and human playback under the new ordering remain separate acceptance checks.
+Accepted narration settings, existing samples, shared credentials, and automatic setup-token cleanup remain protected. The runtime APIs and synthesis behavior are unchanged. All 132 tests pass on Python 3.11, Ruff lint/format checks pass, and both skill validators pass. The package and bundle publication checks below pass. A fresh import and human playback under the new ordering remain separate acceptance checks.
+
+
+[GitHub v0.1.9](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.9) was published from `4bb5f6b32227bd17dde6cda244f12926f5160ef6`. ZIP SHA-256: `2dc22954a0916423f4b867a852aa8704ade986588c0464f5ed8075832fb40f24`. An anonymous download matched all 51 archive files to that commit. The compiler run from a fresh extraction produced the same complete profile, two skills, four canonical memories, JSON bundle, and checksum as the release build. Public downloads of the bundle and sidecar matched the verified outputs. Bundle SHA-256: `ce803b4582c43f09c7d51ac11124ba765dbb18930e0b78fd368ac1dd41fe571b`.
+
+[GitHub run 36354196478](https://github.com/harrisrobin/article-audio/actions/runs/36354196478) started no test steps. Its annotation reports the existing account billing lock. Local tests passed; hosted CI did not run.
+
+Grok reported verifying the bundle and updating both complete live skills. Native template staging was in progress when the Mac locked, before the new review card could be inspected or published. This is not a verified v0.1.9 native publication.
