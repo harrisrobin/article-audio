@@ -24,7 +24,7 @@ Do not replace an already published bundle with different bytes. Investigate any
 
 Download the bundle and its checksum from the release. Verify the checksum before using it. Copy the complete text fields into Grok's template preparation tool, including the full profile, both skills, and all four memories. Preserve the exact release commit and source ZIP checksum.
 
-Open **Share > Update template** for the existing authoring Bot. Check its display metadata, complete profile, each skill through its last paragraph, and shared memories against the bundle. Native shared fields must contain literal text, not file paths, JSON expressions, or summaries. Exclude credentials, owner preferences, setup status, recordings, and unrelated skills.
+Open **Share > Update template** for the existing authoring Bot. Check its display metadata, complete profile, each skill through its last paragraph, and every shared memory's complete text and saved length against the bundle. Open memory details rather than relying on list previews; inspect any 500-character cutoff. Native shared fields must contain literal text, not file paths, JSON expressions, or summaries. A hash of the downloaded source does not verify what the host saved. Stop before publication if the saved content is incomplete. Exclude credentials, owner preferences, setup status, recordings, and unrelated skills.
 
 Publish the reviewed native update and confirm that **Copy link** returns the existing template URL. A compiled or uploaded bundle does not update Grok by itself. The public preview cannot prove the full skill bodies were saved. Follow [the native publication checks](../template/INSTALL.md#update-the-existing-public-template).
 

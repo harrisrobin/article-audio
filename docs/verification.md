@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: GitHub v0.1.7 and the native card for staged version 11 now showing Published at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified below. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, public audition playback, and post-revocation publishing are verified below. Native secret delivery and clean-import testing remain incomplete.
+Current published baseline: GitHub v0.1.8 includes the verified template bundle. Native v0.1.8, staged version 14, is published at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), but final inspection found two shared memories truncated at 500 characters. That native snapshot needs correction; the GitHub bundle contains the full text. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, public audition playback, and post-revocation publishing are verified below. Native secret delivery and clean-import testing remain incomplete.
 
 ## Confirmed locally
 
@@ -164,3 +164,19 @@ The later sharing drafts initially contained shortened instructions or literal `
 The version 11 conversation card changed from Unpublished/Publish to Published/Copy link. The retained public URL was independently fetched with `Cache-Control: no-cache`; it returned HTTP 200 and contained the complete tagged PROFILE verbatim, including its final paragraph. An in-app browser reload temporarily retained the short description. The HTTP response advertises `s-maxage=86400` and `stale-while-revalidate=604800`, so a stale preview alone is not a reliable publication check. No numeric revision is exposed by the public page; the native card and staging result establish the revision evidence.
 
 The release code and v0.1.7 assets are unchanged. Subsequent repository commits update verification and publication instructions only. This completes the current shared-account setup and template repair. A clean import and narration of a complete X Article remain separate acceptance tests.
+
+## Published-release template compiler in 0.1.8
+
+[GitHub v0.1.8](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.8) was published from `14e40990bee6ce327a801eb83379f5abc69291e5`. The ZIP SHA-256 is `e84114262eaf6bbb690c5adc21df23eddd2b3edd71132e9b3d78ddf0b903c947`. All 132 tests pass on Python 3.11, Ruff lint and formatting pass, and both skill validators pass. Standards and Spec review outcomes are recorded in review.md.
+
+The actual compiler command succeeded against the published release through anonymous GitHub requests. An independent download matched all 51 ZIP files to the tagged source and checked the full profile, two complete skills, four rendered memories, byte counts, and body hashes. Running the compiler from a fresh extraction with a new Python 3.11 environment produced byte-identical JSON and checksum files.
+
+The release now includes `article-audio-template-v0.1.8.json` and its SHA-256 sidecar. Anonymous downloads of both exactly matched the local verified outputs. Bundle SHA-256: `eb88cab53355d79aa02a745bc60b9913c0f1cb6cf4d7e39ec8f813b7c478ef57`. An initially cached release-metadata response omitted the newly uploaded assets; a fresh metadata request confirmed them before download verification.
+
+[GitHub run 36336342180](https://github.com/harrisrobin/article-audio/actions/runs/36336342180) started no test steps. Its check annotation again reports the account billing lock. Local test results do not establish hosted CI success. This release changes template assembly and release verification; it does not change narration performance or establish a clean Grok import.
+
+### Native v0.1.8 publication and memory defect
+
+After Mac access recovered, Grok verified the bundle checksum and updated the live public profile and both registered skills. Native review showed the complete profile and both skills through their final sharing paragraphs, four intended memories, and the exact v0.1.8 commit and ZIP checksum. Publishing staged version 14 changed its button to Copy link and its conversation card to Published. The retained public URL displayed the complete v0.1.8 profile through the final paragraph. No new template ID was created.
+
+Final inspection of the individual memory detail found the release memory cut off at character 500, compared with 538 in the bundle. The setup/privacy memory has 597 characters in the bundle and was also truncated. Grok's supported read-back reported actual stored truncation, not just a list-preview limit. Correction was requested in place; a corrected native snapshot has not yet been verified. Installation and bundle-publication guidance now explicitly requires opening every memory and comparing its saved full text and length before publishing. Source hashes alone cannot establish successful host storage.

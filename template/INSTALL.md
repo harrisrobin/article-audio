@@ -20,7 +20,7 @@ Create a dedicated Article Audio Bot. After publishing the package, [compile and
 
 Send this preparation prompt with the bundle's release asset URL:
 
-> Prepare this Bot from the published Article Audio template bundle and its matching SHA-256 sidecar. Verify the bundle checksum before using it. Use its complete profile text, both complete skill texts, and all four shared memories literally. Preserve its display metadata and exact release provenance. Do not summarize bodies or insert file-path placeholders. Replace the obsolete Article Audio getting-started skill with Article Audio onboarding. For this template-authoring task, only register the public instructions: do not install the runtime, collect credentials, synthesize audio, or upload recordings. Exclude all owner configuration, private content, unrelated skills, and temporary authoring restrictions from the shared snapshot. Confirm the saved skills contain the full bundle text before stopping.
+> Prepare this Bot from the published Article Audio template bundle and its matching SHA-256 sidecar. Verify the bundle checksum before using it. Use its complete profile text, both complete skill texts, and all four shared memories literally. Preserve its display metadata and exact release provenance. Do not summarize bodies or insert file-path placeholders. Replace the obsolete Article Audio getting-started skill with Article Audio onboarding. For this template-authoring task, only register the public instructions: do not install the runtime, collect credentials, synthesize audio, or upload recordings. Exclude all owner configuration, private content, unrelated skills, and temporary authoring restrictions from the shared snapshot. Read back the saved profile, skills, and each shared memory; compare their complete text and byte counts with the bundle before stopping. A source hash alone does not prove the host saved the complete text. Stop before publication if a host field truncates content.
 
 Then choose **Share → Create template → Public link**. Inspect the generated template details. It must carry both complete skills, the public source and pinned revision, and the first-use rule. A statement that files are already installed on the author's computer is not a portable setup. Creating a public template is not documented as automatically listing it in the searchable Marketplace.
 
@@ -29,6 +29,8 @@ Use **Article Audio** as the Bot and template display name and **Article narrato
 ## Update the existing public template
 
 For later releases, keep the same template-authoring Bot. Compile a bundle from the new published release. Update the profile, both complete skills, public memories, pinned release commit, and ZIP checksum from that bundle. Open its **Share > Update template** action and review the proposed shared configuration. In the staged **Context > Instructions**, verify the complete PROFILE body, not just a short description. Open each skill and check its actual content through the final paragraph. Shared fields must contain literal source text. The share tool does not load a file from a `FILE:/path` marker, code expression, or a statement that a skill is installed. Reject placeholders and shortened bodies before publishing.
+
+Open each shared memory's detail view too. Check its complete ending and saved length against the bundle, especially memories longer than 500 characters. A complete skill does not prove its companion memories are complete. If a native field truncates text, correct the staged payload or stop; do not publish the shortened memory or treat the bundle's source hash as saved-content verification.
 
 Publish the reviewed update and confirm that **Copy link** still returns the existing public URL. Reload that URL and check the full profile through its final paragraph. The public preview does not prove the shared skill bodies are complete; inspect those in the native review. Do not choose Create template or create another authoring Bot for a normal release.
 
@@ -44,7 +46,7 @@ Follow [the runtime acceptance test](../docs/runtime-test.md): greeting, install
 
 ## Install without a template
 
-Give an existing Bot the public skill URL above and ask it to save the skill and set up Article Audio. The skill contains the actual Git clone command and prerequisite checks. For a manual checkout:
+Give an existing Bot the [published Article audio skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.8/skills/article-audio/SKILL.md) and [onboarding skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.8/skills/article-audio-onboarding/SKILL.md), and ask it to save both skills and set up Article Audio. The skills contain the Git clone command, prerequisite checks, and first-message setup flow. For a manual checkout:
 
 ```bash
 git clone --branch v0.1.8 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
