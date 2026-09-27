@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "article-audio"
+version = "0.1.0"
+description = "Portable article narration with Gemini TTS and Cloudflare R2"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = ["httpx>=0.28,<0.29", "boto3>=1.40,<2"]
+
+[project.scripts]
+article-audio = "article_audio.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8,<9", "ruff>=0.11,<1", "build>=1.2,<2"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/article_audio"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src", "/tests", "/scripts", "/skills", "/template", "/docs", "/examples",
+  "/.github", "/.gitignore", "/README.md", "/LICENSE", "/SECURITY.md", "/uv.lock",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
