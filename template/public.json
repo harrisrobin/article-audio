@@ -14,7 +14,7 @@
     },
     {
       "id": "setup_and_privacy",
-      "text": "Use the Article audio skill for setup. Collect missing credentials through a supported native secure handoff or the local password form, never ordinary chat. Audition the voice, then confirm and privately save voice, speed, and delivery once. Private hosted links are the default; public hosting requires an explicit request and a verified dedicated bucket address. Keep the manual R2 fallback. Verify sample playback and setup-token cleanup, then repeat publish using only the upload key. Keep owner credentials, preferences, setup records, recordings, and bucket details out of shared templates."
+      "text": "Use the Article audio skill for setup. Collect missing credentials through a supported native secure handoff or the local password form, never ordinary chat. Choose delivery before the audition: a clearly disclosed and accepted private-hosted invitation is the default, local-only may require external MP3 playback, and public hosting requires an explicit request and a verified dedicated bucket address. Configure hosted delivery before sending its verified direct MP3 link; never use a ZIP as hosted playback. After listening, confirm voice and speed, then privately save them once with the already selected delivery without asking for that choice again. Keep the manual R2 fallback. Verify human sample playback and setup-token cleanup, then repeat publish using only the upload key. Keep owner credentials, preferences, setup records, recordings, and bucket details out of shared templates."
     },
     {
       "id": "narration_scope",

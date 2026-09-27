@@ -188,3 +188,10 @@ On 2026-09-27, staged version 16 split the two over-limit memories at sentence b
 Native review also inspected the profile through its final paragraph and both complete skills through their final sharing sections. Only `article-audio` and `article-audio-onboarding` were included. Publishing version 16 changed its control to Copy link and its conversation card to Published. Copy link returned the same `zBuR546KeAs5X0iwlXkxt` URL; reloading the public page showed the complete v0.1.8 profile. The public page does not expose the numeric native revision or memory bodies, so those checks rely on the native review.
 
 The v0.1.8 package and compiler bundle are unchanged. This repair changes native memory packing and repository publication guidance only; it does not establish a clean import or full-article narration. Grok reported that owner preferences, runtime, and credentials were left untouched.
+
+
+## Playable hosted auditions in 0.1.9
+
+The previous flow required voice acceptance before configuring R2 and offered a ZIP when Grok rejected direct MP3 attachments. The owner reported that the ZIP could not be played inside Grok. The revised flow chooses delivery first, configures the selected hosted destination, then sends a verified direct MP3 link before asking for voice acceptance. Local-only explicitly discloses external playback, and ZIP transfer alone never establishes playback or readiness.
+
+Accepted narration settings, existing samples, shared credentials, and automatic setup-token cleanup remain protected. The runtime APIs and synthesis behavior are unchanged. Package and native publication checks for this release are pending; a fresh import and human playback under the new ordering remain separate acceptance checks.

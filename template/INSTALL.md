@@ -1,6 +1,6 @@
 # Install in Grok Bot and create a template
 
-Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio). Pinned release: [v0.1.8](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.8).
+Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio). Pinned release: [v0.1.9](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.9).
 
 ## Use an imported Bot
 
@@ -30,7 +30,7 @@ Use **Article Audio** as the Bot and template display name and **Article narrato
 
 For later releases, keep the same template-authoring Bot. Compile a bundle from the new published release. Update the profile, both complete skills, public memories, pinned release commit, and ZIP checksum from that bundle. Open its **Share > Update template** action and review the proposed shared configuration. In the staged **Context > Instructions**, verify the complete PROFILE body, not just a short description. Open each skill and check its actual content through the final paragraph. Shared fields must contain literal source text. The share tool does not load a file from a `FILE:/path` marker, code expression, or a statement that a skill is installed. Reject placeholders and shortened bodies before publishing.
 
-Open each shared memory's detail view too. Grok truncates facts longer than 500 characters. Follow [the native memory packing steps](../docs/template-bundles.md#fit-memories-into-native-fields): split long memories at sentence boundaries, preserve every word, then reconstruct and hash the saved parts against the bundle. The four v0.1.8 memories require six native facts. A complete skill does not prove its companion memories are complete. If a native field truncates text, correct the staged payload or stop; do not publish the shortened memory or treat the bundle's source hash as saved-content verification.
+Open each shared memory's detail view too. Grok truncates facts longer than 500 characters. Follow [the native memory packing steps](../docs/template-bundles.md#fit-memories-into-native-fields): split long memories at sentence boundaries, preserve every word, then reconstruct and hash the saved parts against the bundle. The four canonical memories may require more than four native facts. A complete skill does not prove its companion memories are complete. If a native field truncates text, correct the staged payload or stop; do not publish the shortened memory or treat the bundle's source hash as saved-content verification.
 
 Publish the reviewed update and confirm that **Copy link** still returns the existing public URL. Reload that URL and check the full profile through its final paragraph. The public preview does not prove the shared skill bodies are complete; inspect those in the native review. Do not choose Create template or create another authoring Bot for a normal release.
 
@@ -46,14 +46,14 @@ Follow [the runtime acceptance test](../docs/runtime-test.md): greeting, install
 
 ## Install without a template
 
-Give an existing Bot the [published Article audio skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.8/skills/article-audio/SKILL.md) and [onboarding skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.8/skills/article-audio-onboarding/SKILL.md), and ask it to save both skills and set up Article Audio. The skills contain the Git clone command, prerequisite checks, and first-message setup flow. For a manual checkout:
+Give an existing Bot the [published Article audio skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.9/skills/article-audio/SKILL.md) and [onboarding skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.9/skills/article-audio-onboarding/SKILL.md), and ask it to save both skills and set up Article Audio. The skills contain the Git clone command, prerequisite checks, and first-message setup flow. For a manual checkout:
 
 ```bash
-git clone --branch v0.1.8 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
+git clone --branch v0.1.9 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
 cd article-audio
 bash scripts/setup.sh
 ```
 
-Release assets also include `article-audio-0.1.8.zip` and its SHA-256 file. Verify the checksum and reject archive paths escaping the extraction destination. An archive contains one top-level `article-audio/` directory. Preserve existing source changes and saved credentials when upgrading.
+Release assets also include `article-audio-0.1.9.zip` and its SHA-256 file. Verify the checksum and reject archive paths escaping the extraction destination. An archive contains one top-level `article-audio/` directory. Preserve existing source changes and saved credentials when upgrading.
 
 [Official template documentation](https://docs.x.ai/grok-bot/bots) and [cloud computer behavior](https://docs.x.ai/grok-bot/computer-and-apps).
