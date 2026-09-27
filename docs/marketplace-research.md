@@ -8,6 +8,10 @@ Publish **Article Audio first as a public Bot template**. That is the only docum
 
 Treat an indexed Marketplace listing as a separate, currently undocumented publication step. The public Marketplace and individual indexed Bot pages exist, but the official sources reviewed do not expose a submit form, eligibility rules, review criteria, or a documented route from a template link to indexing.
 
+## Publication follow-through
+
+The [Article Audio public template](https://x.ai/bot/u9M4WdBafSgCyS3GNHKla) and [GitHub release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.2) are now published. In the native app, **Template actions → Create Template** asks the Bot to assemble a reviewable template. Its published details expose the shared memories and skills, and Copy link supplies the public preview URL. This verifies the share-link workflow. No searchable catalog listing has been established.
+
 ## Verified
 
 ### Public template sharing

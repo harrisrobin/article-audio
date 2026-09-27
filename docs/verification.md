@@ -18,7 +18,7 @@ Local evidence from 2026-09-27. This distinguishes implemented behavior from int
 - The Python wheel and source distribution built successfully. The full source ZIP includes the skill and template materials.
 - Source and each archive were checked for the actual test key, private job data, virtual environments, and recordings; none were included.
 - The skill creator's validator accepted `skills/article-audio/SKILL.md`.
-- Local tests ran on macOS with Python 3.14.3 and Python 3.11. The Linux CI matrix targets Python 3.11 and 3.13; it has not run yet.
+- Local tests ran on macOS with Python 3.14.3 and Python 3.11. The Linux CI matrix targets Python 3.11 and 3.13; GitHub has not executed it because of the account billing lock described below.
 
 ## Adversarial review changes in 0.1.1
 
@@ -30,11 +30,25 @@ Version 0.1.1 was extracted into a fresh temporary directory and installed succe
 
 Version 0.1.2 adds pinned GitHub bootstrap instructions and first-request setup. Its release checks include consistency between installation tags, archive names, lockfile, and runtime version. The public template must additionally retain the full release commit SHA.
 
-- Grok Bot installation, creation of its native shareable template, and persistence across a new Bot chat.
+- First-use runtime installation in an imported Grok Bot and persistence across a new Bot chat. Template creation itself is verified below.
 - The installed Grok runtime's native secure credential handoff. No general third-party secret-request API is assumed.
 - A user entering credentials in the fallback form through Grok's Agent Computer browser.
 - Real R2 upload, bucket permissions, expiring-link playback/seek, and any public custom domain. No R2 credentials were supplied for the local build.
 - Human review of the voice, segment joins, and fidelity on a complete X Article. Valid MP3 decoding does not prove narration accuracy.
-- Hosted GitHub Actions. The workflow exists, but this local repository has not been published or run in GitHub CI.
+- Hosted GitHub Actions. The published workflow is blocked before starting jobs by an account billing lock; no hosted test result is available.
 
 The local audition is kept outside the release archive. Credentials used for the live Gemini test are temporary and are not part of the project or distribution.
+
+## First public release
+
+[Version 0.1.2](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.2) was published from commit `fbdb6821f3eb7af7cde70d1ca86dd4ee67fd8b70`. The final local suite passed 51 tests. Lint, formatting, skill validation, and source/wheel builds passed. A clean source-archive installation passed doctor and an offline sample plan. Anonymous downloads of the published ZIP and skill succeeded; every ZIP file matched its source at the release commit.
+
+Source ZIP SHA-256: `3a1a63239c8c84bbb2cee5ca5878b484e3bac42c395379ef6a626eb786ed8ed1`.
+
+[GitHub run 36317827409](https://github.com/harrisrobin/article-audio/actions/runs/36317827409) created jobs for Python 3.11 and 3.13 but started no steps. GitHub's annotation says: "The job was not started because your account is locked due to a billing issue." This is not a failing test and is not a passing CI result. The account owner must resolve the lock before rerunning it.
+
+## Published Grok Bot template
+
+[Article Audio](https://x.ai/bot/u9M4WdBafSgCyS3GNHKla) is published as a public native template. Grok fetched the public skill, saved it through its skill system, and created the template. Native inspection confirmed the complete registered narration/bootstrap skill and the shared template's exact commit, ZIP checksum, first-use setup rule, X-access guidance, Article audio skill, and getting-started skill. No unrelated skills or routines appeared in the shared configuration. The public preview loaded without authentication and displayed Article Audio with the app-opening link.
+
+The template-authoring Bot did not install the runtime or configure credentials, preserving the user's planned first-use test. Public template publication does not establish searchable Marketplace catalog inclusion. The main branch now links to the template; the pinned v0.1.2 assets remain unchanged.

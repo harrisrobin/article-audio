@@ -6,11 +6,13 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 ## Install in Grok Bot
 
-Use the [template installation instructions](template/INSTALL.md). The Bot downloads the pinned [v0.1.2 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.2) from GitHub onto its cloud computer and saves the [Article audio skill](skills/article-audio/SKILL.md). Start an imported Bot by sending **Set yourself up**. Setup runs on that first request, not through an install-time hook.
+**[Add Article Audio to Grok Bot](https://x.ai/bot/u9M4WdBafSgCyS3GNHKla)**, then send **Set yourself up with Gemini and private R2 hosting**.
+
+The Bot downloads the pinned [v0.1.2 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.2) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). Setup runs on that first request, not through an install-time hook. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
 
 Hosted setup collects Gemini and R2 credentials, then generates and uploads a sample to verify the listening link. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
 
-The package includes a [Bot profile](template/PROFILE.md) and template instructions. A native Grok template share link must be created inside Grok after installation; this repository is not itself an importable proprietary template.
+The package includes a [Bot profile](template/PROFILE.md) and instructions for creating your own template. The public link above is a native Grok Bot template; searchable Marketplace catalog inclusion is not confirmed.
 
 ## Run locally
 

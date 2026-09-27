@@ -4,7 +4,7 @@ Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio
 
 ## Use an imported Bot
 
-Open the public template preview, choose **Add to Grok Bot**, then send:
+Open the [Article Audio template](https://x.ai/bot/u9M4WdBafSgCyS3GNHKla), choose **Add to Grok Bot**, then send:
 
 > Set yourself up. Configure Gemini and private R2 hosting, then generate the included sample and return its verified listening link. Guide me through credential entry one provider at a time.
 
