@@ -136,3 +136,11 @@ Grok reported installing `/workspace/article-audio-v0.1.7` with the exact clean 
 The observed desktop app version is 0.61.0. Its native Cloudflare cards displayed Saved, while both original and fresh host-worker checks reported the Cloudflare environment names absent. The internal host cause remains unknown; no claim is made that stored secrets were deleted.
 
 [GitHub run 36325438656](https://github.com/harrisrobin/article-audio/actions/runs/36325438656) again started no tests. The check annotation reports the account billing lock. Local checks passed; hosted CI remains unavailable.
+
+### Live fallback credential storage
+
+On 2026-09-27, native Settings reported desktop 0.61.0 Stable and the shared cloud computer up to date. Fully quitting and reopening the desktop app did not change the Bot's subsequent presence-only result: Gemini was injected, while both Cloudflare names were absent. The Bot reported no supported refresh/rebind operation or browser-fill path for an existing Bot Secret. This is an unresolved native handoff, not proof that the saved vault values were deleted.
+
+The owner then chose the repaired local fallback. The first attempted handoff was text only; after correction, native inspection verified an actual Computer / Take over card. On completion, Grok reported both the page's Credentials saved result and the CLI's Cloudflare-present status, while Gemini remained present. No values were inspected or printed. This establishes live credential storage through the v0.1.7 fallback on this account; it does not establish native-card delivery or a clean import. R2 provisioning and public playback remain separate checks.
+
+The subsequent provisioning attempt stopped at its first Cloudflare API request with an authentication rejection. Redacted validation identified an unusable saved setup token. No bucket or upload-token creation was attempted, and correction through the local form is pending. Credential presence is therefore verified, but Cloudflare authentication, R2 provisioning, public playback, and setup-token cleanup remain unverified.
