@@ -12,7 +12,7 @@ The Grok agent manages preferences in the existing private `onboarding.json`, al
 
 ## Record and validation
 
-The following is a completed-state shape, not a template to copy as ready:
+The following is the shape of a completed automatic R2 setup, after confirmed token revocation and cleanup. It is not a template to copy as ready:
 
 ```json
 {
@@ -28,11 +28,11 @@ The following is a completed-state shape, not a template to copy as ready:
     "style": "The exact direction used for the accepted audition."
   },
   "r2_jurisdiction": "default",
-  "setup_token_cleanup": "not-needed"
+  "setup_token_cleanup": "complete"
 }
 ```
 
-Treat confirmation as valid only when the flag is the boolean true, narration contains a supported model, a prebuilt voice name, a finite numeric speed from 0.5 through 2.0, and a direction string no longer than 2,000 characters. Validate by passing the settings to offline `plan` before generation. Delivery mode is `private-r2` or `local-only`. R2 jurisdiction is `default`, `eu`, `us`, or `fedramp`; local-only may omit it. An existing bucket with unknown jurisdiction needs clarification before publishing, not a guessed endpoint.
+Treat confirmation as valid only when the flag is the boolean true, narration contains a supported model, a prebuilt voice name, a finite numeric speed from 0.5 through 2.0, and a direction string no longer than 2,000 characters. Offline `plan` checks supported model and setting syntax before generation; it cannot establish that Gemini supports a voice name. Set confirmation only after successful Gemini generation using these exact settings, verified against the audition manifest, and the user's acceptance of that playable audition. Do not substitute offline validation, copied flags, or an unrelated old sample for that evidence. On later readiness checks, validate syntax without another provider call; provider rejection on a recording requires repair rather than silent fallback. Delivery mode is `private-r2` or `local-only`. R2 jurisdiction is `default`, `eu`, `us`, or `fedramp`; local-only may omit it. An existing bucket with unknown jurisdiction needs clarification before publishing, not a guessed endpoint.
 
 `setup_token_cleanup` is `pending`, `complete`, or `not-needed`. Record `pending` before automatic provisioning, `complete` only after the user confirms revocation and removal of the setup token's native/environment copy, and `not-needed` for local-only or manually configured R2. Preserve a pending cleanup obligation even if the user switches to local-only. For older automatic setups with unknown cleanup status, clarify it once; credential presence does not prove revocation. Never remove a replacement token saved by another process.
 

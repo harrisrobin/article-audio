@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: v0.1.5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. The expert-review changes described in review.md are a subsequent release until their publication is recorded here.
+Current published baseline: v0.1.5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. The expert-review changes for v0.1.6 are not yet published to the native template; the following release section records their separate progress.
 
 ## Confirmed locally
 
@@ -78,3 +78,10 @@ The existing [native template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt) was updat
 The earlier u9M4WdBafSgCyS3GNHKla template remains publicly accessible. Its authoring Bot had already been deleted. The current Bot reported no supported tool to delete or unpublish that other template, and the inspected marketplace management view exposed plugins and skills, not orphaned templates. No deletion was performed. Removing this old link remains unresolved and may require product support; it does not block testing the updated zBuR546KeAs5X0iwlXkxt template.
 
 [GitHub run 36321145250](https://github.com/harrisrobin/article-audio/actions/runs/36321145250) started no steps. The Python 3.13 check reports the same account billing lock; Python 3.11 was canceled. Hosted CI remains unavailable despite passing local checks.
+
+
+## Expert feedback and preferences in 0.1.6
+
+The profile now states its only job, anti-jobs, and source-instruction boundary. Agent onboarding auditions before hosting, confirms and saves narration/delivery preferences once, and resumes partial setup without clearing shared credentials. The CLI continues to use explicit flags; it does not read the agent's readiness record.
+
+All 81 tests pass on Python 3.14 and 3.11, both skill validators pass, and Ruff lint/format checks pass. These tests validate existing CLI behavior, not human acceptance of the new agent instructions. The two-axis review and dispositions are in review.md. Native publication, legacy skill/store inspection, and live account-recovery playback/token cleanup remain pending. A clean-import pass still needs an isolated account/computer; the owner chose to preserve and finish the existing Gemini setup.

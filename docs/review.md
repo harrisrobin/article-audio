@@ -91,4 +91,12 @@ Fixed review base: `e64b77cabf5b67553f1a2081cd7db4a3280b68ab`. The user's suppli
 - The template must contain exactly the two current skills. Legacy account-wide skill removal and editable store display metadata require native inspection before any cleanup. No unrelated Bot skills or opaque IDs should be changed.
 - An EU jurisdiction note and an acceptance-test runbook distinguish local tests, account recovery, human playback, and clean-import proof. Live R2, native handoff, and cleanup evidence remain unverified until actually observed.
 
-Independent Standards and Spec review results will be recorded before publication.
+### Standards
+
+The reviewer flagged two instruction ambiguities. The completed-state example now explicitly represents automatic R2 setup and records cleanup as complete, avoiding the manual-only not-needed example. Offline `plan` validates voice-name syntax, not Gemini voice availability; confirmation now requires a successful matching audition manifest plus human acceptance. No code-smell changes were requested.
+
+### Spec
+
+The independent reviewer found no actionable repository defects. Native publication, legacy-skill retirement, store metadata inspection, and the agreed account-recovery test remain external validation steps. Reusing the saved Gemini key cannot establish clean-import isolation.
+
+The Standards fixes are awaiting recheck. The 81-test suite passes on Python 3.14 and 3.11; Ruff and both skill validators pass.
