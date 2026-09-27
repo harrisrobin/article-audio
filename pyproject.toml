@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "article-audio"
-version = "0.1.7"
+version = "0.1.8"
 description = "Portable article narration with Gemini TTS and Cloudflare R2"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -23,18 +23,19 @@ only-include = [
   "pyproject.toml", "uv.lock",
   "docs/credential-setup.md", "docs/design.md", "docs/implementation-plan.md",
   "docs/verification.md", "docs/review.md", "docs/cloudflare.md", "docs/marketplace-research.md",
-  "docs/preferences.md", "docs/runtime-test.md",
+  "docs/preferences.md", "docs/runtime-test.md", "docs/template-bundles.md", "docs/template-compiler-design.md",
+  "CONTEXT.md",
   "examples/sample.txt",
-  "scripts/article-audio", "scripts/package.py", "scripts/setup.sh",
+  "scripts/article-audio", "scripts/compile_template.py", "scripts/package.py", "scripts/setup.sh",
   "skills/article-audio/SKILL.md", "skills/article-audio-onboarding/SKILL.md",
-  "template/INSTALL.md", "template/PROFILE.md",
+  "template/INSTALL.md", "template/PROFILE.md", "template/public.json",
   "src/article_audio/__init__.py", "src/article_audio/__main__.py",
   "src/article_audio/cloudflare.py", "src/article_audio/audio.py", "src/article_audio/cli.py", "src/article_audio/credentials.py",
   "src/article_audio/errors.py", "src/article_audio/files.py", "src/article_audio/gemini.py",
   "src/article_audio/onboarding.py", "src/article_audio/pipeline.py", "src/article_audio/storage.py",
   "tests/test_cloudflare.py", "tests/test_audio.py", "tests/test_cli.py", "tests/test_credentials.py",
   "tests/test_gemini.py", "tests/test_onboarding.py", "tests/test_pipeline.py",
-  "tests/test_storage.py", "tests/test_packaging.py",
+  "tests/test_storage.py", "tests/test_packaging.py", "tests/test_template_bundle.py",
 ]
 
 [tool.hatch.build.targets.wheel]

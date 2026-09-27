@@ -6,13 +6,13 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 ## Install in Grok Bot
 
-**Release status:** the GitHub package and retained public Bot template are updated to this release. See [verification status](docs/verification.md) for completed checks and remaining live-integration tests.
+**Release status:** GitHub releases and native Grok template snapshots are published separately. See [verification status](docs/verification.md) for their verified versions and remaining live-integration tests.
 
 **[Add Article Audio to Grok Bot](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt)**, then send any message, even **hi**. If setup is incomplete, the Bot should invite you to set up Gemini and private R2 hosting.
 
 The older template ID `u9M4WdBafSgCyS3GNHKla` is deprecated. Use the link above; the old public snapshot may still be accessible.
 
-The Bot downloads the pinned [v0.1.7 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.7) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
+The installation instructions in this repository pin the [v0.1.8 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.8) for the Bot's cloud computer and use the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
 
 Setup collects Gemini credentials and provides an audition, then confirms voice, speed, and delivery once. Private links are the default hosted option; an explicit public choice saves its verified base URL for future recordings. The Bot saves and reuses those [preferences](docs/preferences.md). Hosted setup then guides Cloudflare bucket setup, verifies sample playback, and checks that uploads still work after setup-token revocation. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
 
@@ -117,6 +117,8 @@ python3 scripts/package.py
 ```
 
 The source ZIP in `dist/` contains code, locked dependencies, skill, template instructions, and tests. ZIP, source distribution, and wheel share an explicit file allowlist in `pyproject.toml`; adding a new release file requires listing it there. Stray files under `docs`, `examples`, or the package directory are excluded. Review listed files for secrets before releasing: an allowlist cannot detect private text inserted into an approved source file. The Python wheel installs the CLI; use the source ZIP for the complete Bot installation materials.
+
+After publishing a package release, [compile its template bundle](docs/template-bundles.md) to generate the full public profile, both skills, four shared memories, and verified release pins together. The compiler reads the published ZIP, checks every file against the release commit, and emits a deterministic JSON artifact plus checksum. Grok still requires native review and publication.
 
 Tests cover secure collection, redaction, provider errors, exact input coverage, resumability, concurrency, real FFmpeg encoding, and mocked R2 delivery. See [verification evidence and remaining runtime checks](docs/verification.md). The CI workflow is included; a local test run is not a hosted CI result.
 
