@@ -68,3 +68,9 @@ The replacement [v0.1.4 native template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt)
 ## Credential rotation and runtime repair in 0.1.5
 
 All 81 tests pass on Python 3.14 and Python 3.11. Ruff lint and formatting checks pass. Two independent adversarial reviewers rechecked the credential-rotation cleanup fix, the pinned runtime repair flow, and the update-in-place instructions, with no remaining actionable findings. This does not establish live Cloudflare permissions or Grok's native credential handoff.
+
+[Version 0.1.5](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.5) was published from `b52e77308939635366dc0ed261514bf624cc9957`. A fresh ZIP installation passed dependency setup, the wrapper outside its checkout, doctor, provisioning help, and offline sample planning. Anonymous downloads verified the ZIP checksum, all 43 files against the tagged source, and the public profile plus both complete skills. ZIP SHA-256: `e2b715e256e47cabe54fa66f4499cb12d16bc2a1a55275412199b49cae2d87f8`.
+
+The native template update is a separate publication step. Until its update is confirmed below, the existing zBuR546KeAs5X0iwlXkxt template remains the verified v0.1.4 publication.
+
+[GitHub run 36321145250](https://github.com/harrisrobin/article-audio/actions/runs/36321145250) started no steps. The Python 3.13 check reports the same account billing lock; Python 3.11 was canceled. Hosted CI remains unavailable despite passing local checks.
