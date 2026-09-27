@@ -123,3 +123,12 @@ Fixed base: `b53be74fb0800c4f350626049d52d72d36753894`. The approved spec is a c
 Independent Standards and Spec reviewers inspected the implementation. Standards found a cleanup race that could remove a file replaced by another process. Cleanup now records device/inode ownership and preserves replaced files. A deterministic regression covers that race. Parent review also found uncaught malformed DEFLATE data and ZIP names truncated at NUL bytes; both now fail with safe compiler errors. Releases missing public metadata receive an actionable unsupported-release error and cannot fall back to local files.
 
 The Standards recheck found no remaining actionable issues. Spec found no code-level deviations; its remaining completion gate was publication and verification against the actual release. All 132 tests pass on Python 3.11, and Ruff lint/format checks pass. Release and native-publication evidence is recorded separately in verification.md.
+
+
+## Playable hosted auditions in 0.1.9
+
+Fixed base: `f742234db5e50b60a46a461ff58e4f32a00d6fd0`. The owner reported that Grok delivers the first audition as a ZIP that cannot be played inside the app. The fix chooses delivery first, configures the selected hosted destination, and returns a verified MP3 link before asking for voice acceptance. Local-only retains external playback with no implicit upload.
+
+Independent Standards and Spec reviewers both found that moving generation into the hosted branch left new local-only owners without a sample-generation step. Both local-only entry points now explicitly generate or reuse a manifest-matching sample before transfer. Parent review also preserved confirmed narration during hosting-only recovery and removed an obsolete accepted-sample requirement from the public URL instructions. No source comments changed.
+
+Both axes retain publication as a completion gate: the new tag, source archive, verified bundle, and native template must exist before the change is called shipped. Instruction scenarios cover private and public first setup, local-only transfer, shared Gemini recovery, accepted voice with incomplete hosting, voice replacement, delivery-only reuse, and interrupted cleanup. These checks do not establish a clean import or human playback under the revised ordering.
