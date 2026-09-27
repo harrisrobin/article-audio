@@ -242,3 +242,16 @@ All 165 tests pass locally on Python 3.11.14. Ruff lint and formatting pass. The
 Published release commit: `7d5898bf2b7f2e1b082cb6106ff09f80f771d5b9`. Source ZIP SHA-256: `aa9cb7804331553acb51e308f9c8fe3c0ec06fa00f4102deb882b88c60fd94e9`. Bundle SHA-256: `79dc3d99411aec3d6639676b348f19f5860baf7a0fd851cf11600eb9e877a53a`. All six v0.2.2 assets were downloaded anonymously and matched their local build bytes. All 51 source ZIP files matched the tag commit. A fresh Python 3.11 extraction rebuilt byte-identical template JSON and checksum files. Both skills passed validation.
 
 GitHub Actions run `36358097906` executed no test steps; its check annotation confirms the account billing lock. Native Grok publication was not attempted during this repository review and remains last verified at v0.1.8. The v0.2.2 package and bundle are published, but a native update and clean-import test are still outstanding.
+
+
+### Native v0.2.2 publication
+
+On 2026-09-28, after Mac access resumed, the authoring Bot staged revision 18 on the retained `zBuR546KeAs5X0iwlXkxt` template. It superseded the unpublished v0.1.9 draft. No duplicate template was created. Grok verified the published v0.2.2 bundle, release commit, and ZIP checksum before staging.
+
+Native inspection opened the profile and both skill details through their final paragraphs. The profile and skills contain the fixed preset, runtime version 0.2.2, schema-2 readiness, runtime-only repair, direct hosted MP3 delivery, and the removal of voice/playback/revocation checkpoints. Exactly article-audio and article-audio-onboarding are shared. Grok's saved-content read-back reported a matching 2,576-byte profile and complete skill bodies, with only native frontmatter formatting differing from the source files.
+
+Every saved memory detail was opened. The five displayed texts have lengths 467, 70, 397, 484, and 471. Joining the first two with the original single space reconstructs the 538-character release memory. An independent comparison of these native accessibility read-backs with the release's four canonical memory texts passed exactly. Grok's own read-back counted the joining space with the second part (71 characters); no words were lost. The native share contains no owner setup record, credentials, recordings, unrelated skills, routines, or plugins. Grok reported leaving owner configuration and runtime untouched.
+
+Clicking Publish changed revision 18's card from Unpublished to Published and its action to Copy link. Copy link returned the same retained URL. Reloading that public URL displayed the v0.2.2 profile through its final sharing paragraph. The public preview does not expose shared skills or a numeric revision; those checks come from the native review and staging result.
+
+The package assets and template bundle are unchanged. This verifies native publication, not a clean import or a new full-article recording. Bots on the same account still share configuration, so adding a second copy may reuse existing credentials and readiness. Hosted CI remains blocked by the billing issue recorded above.

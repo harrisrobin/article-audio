@@ -4,7 +4,7 @@ Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio
 
 ## Use an imported Bot
 
-**Native update pending.** The [retained Article Audio template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt) is last verified at 0.1.8 and still carries the older onboarding flow. Importing it does not install this page's pinned release or receive the fixes below. Until its update is published, [install the current skills without a template](#install-without-a-template). Check [verification status](../docs/verification.md) before testing a new import.
+The [published Article Audio template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt) pins v0.2.2. Native revision 18 was published and its saved instructions, both complete skills, public memories, and public preview were verified. Add a new copy to receive these instructions; existing imported Bots are not automatically updated. [Installing the skills without a template](#install-without-a-template) remains available. Publication does not establish a clean-install test; see [verification status](../docs/verification.md).
 
 With the current skills installed, send any message, even "hi". If setup is incomplete, the Bot offers guided setup. Accept that invitation or request setup directly. A direct setup request starts immediately; it can still ask for your delivery choice if you have not supplied one.
 

@@ -6,9 +6,9 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 ## Install in Grok Bot
 
-**Grok template update pending.** The [existing Grok template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt) still has the older 0.1.8 workflow, including the former confirmation steps. To use the fixed-preview flow below now, [install the current skills in your Bot](template/INSTALL.md#install-without-a-template), or wait for native publication. See [verification status](docs/verification.md) for the separate package and template versions.
+**[Add Article Audio to Grok Bot](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt).** The published template now pins v0.2.2 and includes the fixed-preview setup flow below. Add a new copy to receive the updated instructions; existing imported Bots are not automatically updated. You can also [install the current skills in your Bot](template/INSTALL.md#install-without-a-template). See [verification status](docs/verification.md) for publication and runtime evidence.
 
-The older template ID `u9M4WdBafSgCyS3GNHKla` is deprecated. Use the retained template linked above once its update is published; the deprecated snapshot may still be accessible.
+The older template ID `u9M4WdBafSgCyS3GNHKla` is deprecated. Use the retained template linked above; the deprecated snapshot may still be accessible.
 
 The installation instructions in this repository pin the [v0.2.2 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.2.2) for the Bot's cloud computer and use the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
 
