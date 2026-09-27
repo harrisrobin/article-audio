@@ -239,10 +239,18 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
             )
         except UserError as error:
             if error.code == "credentials_changed":
+                try:
+                    store.save({}, remove=GROUPS["cloudflare"])
+                    cleanup = "The setup-token file copy was removed. "
+                except (UserError, OSError):
+                    cleanup = "The setup-token file copy could not be removed. "
                 raise UserError(
                     f"R2 credentials changed during setup and were preserved. Revoke the unused "
                     f"Cloudflare upload token named {state.token_name}. The new bucket remains; "
-                    "no existing bucket was changed.",
+                    "no existing bucket was changed. "
+                    + cleanup
+                    + "Revoke Article Audio setup in Cloudflare and remove its file/native "
+                    "secret/environment copies. Keep the existing manual upload credentials.",
                     "credentials_changed",
                 ) from None
             raise

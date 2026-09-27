@@ -53,3 +53,11 @@ Two independent agents reviewed `b767d68...561fd5b` before first publication. St
 ## Any-message onboarding review for 0.1.3
 
 Two reviewers examined `47af3d1...696f6e1`. Standards found that a returning local-only user could be mistaken for an interrupted hosted setup. Spec found the same missing state and a possible loop between onboarding and narration skills. The agent now maintains a nonsecret mode/completion record outside the checkout, and the narration skill skips onboarding when already entered from it. Greeting, unrelated question, article URL, explicit setup, returning user, local-only, and deferral scenarios were reviewed. The readiness record is agent-maintained, not a new CLI feature.
+
+## Automatic Cloudflare setup review for 0.1.4
+
+Two independent reviewers examined `d2b6944...c15f5c1` and rechecked the fixes in `b921577`. The user's approved spec was account ID plus one short-lived setup token, exact dashboard/permission instructions, automatic private bucket and bucket-scoped upload credentials, native secret handoff when available, and the existing four-field fallback.
+
+Standards found three valid defects: concurrent manual credentials could be overwritten at commit time; complete-R2 reuse could retain an unnecessary setup token; and the recovery marker's directory entry was not fsynced. Fixes add a compare-before-commit under the credential lock, remove file-backed setup credentials on reuse while preserving runtime credentials, and fsync the containing directory after atomic replacement. Regression tests cover concurrent manual entry, interrupted credential persistence, reuse cleanup, CLI redaction, and permission/privacy failures. The Spec recheck found that the concurrent-manual branch still retained the broad setup token. That branch now removes the file copy too and explicitly directs external revocation; if cleanup fails, its error reports the retained copy.
+
+The final review disposition is recorded after the cleanup recheck. Live Cloudflare provisioning remains a user-account validation step. Mocked API tests do not prove the installed Grok secret handoff or actual Cloudflare permissions.

@@ -265,6 +265,7 @@ def test_concurrent_manual_setup_is_not_overwritten(store):
     assert error.value.code == "credentials_changed"
     assert "Revoke the unused" in str(error.value)
     assert store.require("r2") == manual
+    assert store.status("cloudflare")["present"] == []
     assert len(cloud.tokens) == 1
 
 
@@ -303,9 +304,11 @@ def test_cli_provision_output_contains_only_nonsecret_result(store, monkeypatch,
     from article_audio import cli
 
     cloud = CloudflareMock()
-    with httpx.Client(transport=httpx.MockTransport(cloud)) as http:
-        monkeypatch.setattr(cli.httpx, "Client", lambda **kwargs: http)
-        assert cli.main(["--config-dir", str(store.directory), "auth", "provision-r2"]) == 0
+    client_type = httpx.Client
+    monkeypatch.setattr(
+        cli.httpx, "Client", lambda **kwargs: client_type(transport=httpx.MockTransport(cloud))
+    )
+    assert cli.main(["--config-dir", str(store.directory), "auth", "provision-r2"]) == 0
     output = capsys.readouterr()
     assert json.loads(output.out)["configured"] is True
     assert not any(
