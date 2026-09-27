@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: GitHub v0.1.7 and native template version 5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, and public audition playback are verified below. Native secret delivery, setup-token cleanup, repeat publishing, and clean-import testing remain incomplete.
+Current published baseline: GitHub v0.1.7 and native template version 5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, public audition playback, and post-revocation publishing are verified below. Native secret delivery and clean-import testing remain incomplete.
 
 ## Confirmed locally
 
@@ -150,6 +150,8 @@ The subsequent provisioning attempt stopped at its first Cloudflare API request 
 After the owner corrected the setup token, Grok reported successful provisioning of one new dedicated bucket and a bucket-restricted upload key. It verified that the returned bucket matched its reservation and saved R2 configuration, enabled that bucket's managed r2.dev domain through the documented Cloudflare API, and read back enabled=true. It saved the public base URL only in the owner's private preferences. The matching setup-token file copy was removed; this is not provider revocation.
 
 Grok published the previously accepted audition without resynthesis and reported public access, verified=true, and no scheduled expiry. An independent unauthenticated range request from the owner's Mac returned HTTP 206, audio/mpeg, Accept-Ranges: bytes, and Content-Range: bytes 0-1023/814227. The owner confirmed that the public link plays and seeks correctly. No owner URL or bucket identifier is included here. Setup-token revocation, native-secret cleanup, and a repeat publish using the saved upload key remain pending, so overall sample verification must stay false. This remains shared-account recovery, not a clean-import or full X Article test.
+
+The owner subsequently confirmed provider revocation of the temporary setup token while retaining the bucket upload token. Grok repeated the audition publish using saved R2 credentials and the saved public base URL, reported verified public delivery with no expiry, and confirmed the setup token was absent from the private store and process environment. It then marked setup-token cleanup complete and sample verification true. This establishes completion of the shared-account setup via the local fallback; a clean import and full X Article narration still require their own tests.
 
 ### Native audio rendering limitation
 
