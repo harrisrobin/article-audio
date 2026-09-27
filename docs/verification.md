@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: v0.1.5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. The expert-review changes for v0.1.6 are not yet published to the native template; the following release section records their separate progress.
+Current published baseline: v0.1.5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. GitHub v0.1.6 is published and verified below; the native template update is pending because Mac app control is unavailable.
 
 ## Confirmed locally
 
@@ -85,3 +85,7 @@ The earlier u9M4WdBafSgCyS3GNHKla template remains publicly accessible. Its auth
 The profile now states its only job, anti-jobs, and source-instruction boundary. Agent onboarding auditions before hosting, confirms and saves narration/delivery preferences once, and resumes partial setup without clearing shared credentials. The CLI continues to use explicit flags; it does not read the agent's readiness record.
 
 All 81 tests pass on Python 3.14 and 3.11, both skill validators pass, and Ruff lint/format checks pass. These tests validate existing CLI behavior, not human acceptance of the new agent instructions. The two-axis review and dispositions are in review.md. Native publication, legacy skill/store inspection, and live account-recovery playback/token cleanup remain pending. A clean-import pass still needs an isolated account/computer; the owner chose to preserve and finish the existing Gemini setup.
+
+[GitHub v0.1.6](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.6) was published from `411166cc48c30350fd95eae29c980fad63c4d102`. Anonymous download verification matched all 45 ZIP files to the tag, checked the checksum, and retrieved the exact public profile, both skills, and new preference/test guides. ZIP SHA-256: `732a63c102742380e2c959c22d9c559498a945ab5dd1240bd7e1668d804c9563`. A fresh ZIP installation passed setup, version, doctor, provisioning help, and offline sample planning from outside the checkout.
+
+The Mac app-control connection timed out on native inspection and reconnection attempts. No v0.1.6 native update, legacy-skill removal, store rename, or live setup is claimed. The owner approved finishing existing setup while preserving its Gemini key; credential entry and human playback await the restored connection. CI remains blocked before any steps run: the GitHub check annotation says the account is locked due to a billing issue.

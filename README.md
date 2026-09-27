@@ -6,6 +6,8 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 ## Install in Grok Bot
 
+**Release status:** the GitHub package below is published, but the public Bot snapshot is awaiting its native update. Wait for that update before testing the new audition/preferences flow. See [verification status](docs/verification.md).
+
 **[Add Article Audio to Grok Bot](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt)**, then send any message, even **hi**. If setup is incomplete, the Bot should invite you to set up Gemini and private R2 hosting.
 
 The older template ID `u9M4WdBafSgCyS3GNHKla` is deprecated. Use the link above; the old public snapshot may still be accessible.
