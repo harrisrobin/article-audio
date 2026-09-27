@@ -1,10 +1,32 @@
+import re
 import shutil
 import subprocess
 import sys
 import tarfile
+import tomllib
 import zipfile
 from pathlib import Path
 from uuid import uuid4
+
+
+def test_bootstrap_release_matches_package_version():
+    from article_audio import __version__
+
+    root = Path(__file__).resolve().parents[1]
+    version = tomllib.loads((root / "pyproject.toml").read_text())["project"]["version"]
+    assert __version__ == version
+    packages = tomllib.loads((root / "uv.lock").read_text())["package"]
+    assert next(p["version"] for p in packages if p["name"] == "article-audio") == version
+    for name in (
+        "README.md",
+        "template/PROFILE.md",
+        "template/INSTALL.md",
+        "skills/article-audio/SKILL.md",
+    ):
+        text = (root / name).read_text()
+        assert set(re.findall(r"\bv(\d+\.\d+\.\d+)\b", text)) == {version}, name
+        archives = re.findall(r"article-audio-(\d+\.\d+\.\d+)\.zip", text)
+        assert all(value == version for value in archives), name
 
 
 def test_release_builds_exclude_unlisted_private_files(tmp_path):

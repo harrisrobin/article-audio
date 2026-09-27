@@ -28,6 +28,8 @@ Version 0.1.1 was extracted into a fresh temporary directory and installed succe
 
 ## Still requires runtime testing
 
+Version 0.1.2 adds pinned GitHub bootstrap instructions and first-request setup. Its release checks include consistency between installation tags, archive names, lockfile, and runtime version. The public template must additionally retain the full release commit SHA.
+
 - Grok Bot installation, creation of its native shareable template, and persistence across a new Bot chat.
 - The installed Grok runtime's native secure credential handoff. No general third-party secret-request API is assumed.
 - A user entering credentials in the fallback form through Grok's Agent Computer browser.

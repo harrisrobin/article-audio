@@ -45,3 +45,7 @@ Root review also found a hardcoded default-jurisdiction R2 endpoint. `publish --
 The 50-test regression suite passed on Python 3.14 and 3.11. Lint, source/wheel builds, clean ZIP installation, repeated setup with dummy credentials, and standalone wheel execution passed for version 0.1.1. Both reviewers rechecked the fixes and reported zero remaining findings. See verification.md for the separate live-integration checklist.
 
 Standards: 2 findings addressed; the worst practical issue was unusable recovery advice. Spec: 4 findings, 3 fixed and 1 external validation item retained; the worst publication risk was unintended private-file inclusion, now fixed.
+
+## GitHub bootstrap review for 0.1.2
+
+Two independent agents reviewed `b767d68...561fd5b` before first publication. Standards found no hard violations and one maintenance concern: release versions repeated across the profile, bootstrap instructions, and package metadata could drift. A release consistency check now compares all installation tags and archive names against pyproject, the lockfile, and the runtime version. Spec found no actionable issues. Native secret handoff and live R2 testing remain assigned to the user's imported-Bot test.
