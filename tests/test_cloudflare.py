@@ -314,3 +314,46 @@ def test_cli_provision_output_contains_only_nonsecret_result(store, monkeypatch,
     assert not any(
         secret in output.out + output.err for secret in (SETUP_TOKEN, UPLOAD_TOKEN, UPLOAD_ID)
     )
+
+
+@pytest.mark.parametrize("manual_conflict", [False, True])
+def test_rotated_setup_credentials_survive_provisioning(store, manual_conflict):
+    cloud = CloudflareMock()
+    replacement = {
+        "CLOUDFLARE_ACCOUNT_ID": "d" * 32,
+        "CLOUDFLARE_API_TOKEN": "replacement-bootstrap-secret",
+    }
+    manual = {
+        "R2_ACCOUNT_ID": "e" * 32,
+        "R2_BUCKET": "manual-bucket",
+        "R2_ACCESS_KEY_ID": "manual-key",
+        "R2_SECRET_ACCESS_KEY": "manual-secret",
+    }
+
+    def rotate(request):
+        if request.method == "POST" and request.url.path.endswith("/tokens"):
+            store.save(replacement | (manual if manual_conflict else {}))
+
+    cloud.fail = rotate
+    if manual_conflict:
+        with pytest.raises(UserError, match="Newer Cloudflare setup credentials were preserved"):
+            cloud.provision(store)
+        assert store.require("r2") == manual
+    else:
+        result = cloud.provision(store)
+        assert result["configured"] is True
+        assert result["setup_token_removed_from_file"] is False
+        assert "replacement" in result["next_step"]
+    assert store.require("cloudflare") == replacement
+    assert len(cloud.tokens) == 1
+
+
+def test_injected_old_setup_token_does_not_erase_newer_file_copy_on_reuse(store, monkeypatch):
+    for key in GROUPS["r2"]:
+        monkeypatch.setenv(key, "existing-runtime-value")
+    monkeypatch.setenv("CLOUDFLARE_API_TOKEN", SETUP_TOKEN)
+    store.save({"CLOUDFLARE_API_TOKEN": "replacement-token"})
+    result = CloudflareMock().provision(store)
+    assert result["setup_token_removed_from_file"] is False
+    monkeypatch.delenv("CLOUDFLARE_API_TOKEN")
+    assert store.get("CLOUDFLARE_API_TOKEN") == "replacement-token"

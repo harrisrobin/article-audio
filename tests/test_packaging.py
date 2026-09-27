@@ -21,7 +21,9 @@ def test_bootstrap_release_matches_package_version():
         "README.md",
         "template/PROFILE.md",
         "template/INSTALL.md",
+        "docs/credential-setup.md",
         "skills/article-audio/SKILL.md",
+        "skills/article-audio-onboarding/SKILL.md",
     ):
         text = (root / name).read_text()
         assert set(re.findall(r"\bv(\d+\.\d+\.\d+)\b", text)) == {version}, name

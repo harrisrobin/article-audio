@@ -19,6 +19,11 @@ CLEANUP = (
     "and remove its native Grok secret/environment entry. Keep the bucket upload token. "
     "Local removal is not Cloudflare revocation."
 )
+REPLACED_SETUP = (
+    "Newer Cloudflare setup credentials were preserved. Revoke only the token used for this run; "
+    "keep replacement file/native/environment credentials intact. Publish the sample to verify "
+    "the saved R2 upload credentials."
+)
 
 
 class CloudflareAPI:
@@ -157,13 +162,15 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
     with file_lock(store.directory / ".r2-setup.lock"):
         status = store.status("r2")
         if not status["missing"]:
-            store.save({}, remove=GROUPS["cloudflare"])
+            snapshot = {key: store.get(key) for key in GROUPS["cloudflare"]}
+            removed = store.save({}, remove_if_matches=snapshot)
             return {
                 "configured": True,
                 "reused": True,
                 "playback_verified": False,
-                "setup_token_removed_from_file": True,
-                "next_step": "Use the existing bucket's jurisdiction. " + CLEANUP,
+                "setup_token_removed_from_file": removed,
+                "next_step": "Use the existing bucket's jurisdiction. "
+                + (CLEANUP if removed else REPLACED_SETUP),
             }
         if status["present"]:
             raise UserError(
@@ -227,30 +234,37 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
                 "cloudflare_failed",
             )
         try:
-            store.save(
+            removed = store.save(
                 {
                     "R2_ACCOUNT_ID": account,
                     "R2_BUCKET": state.bucket,
                     "R2_ACCESS_KEY_ID": result["id"],
                     "R2_SECRET_ACCESS_KEY": hashlib.sha256(result["value"].encode()).hexdigest(),
                 },
-                remove=GROUPS["cloudflare"],
+                remove_if_matches=values,
                 if_absent=GROUPS["r2"],
             )
         except UserError as error:
             if error.code == "credentials_changed":
                 try:
-                    store.save({}, remove=GROUPS["cloudflare"])
-                    cleanup = "The setup-token file copy was removed. "
+                    removed = store.save({}, remove_if_matches=values)
+                    cleanup = (
+                        "The setup-token file copy was removed. " + CLEANUP
+                        if removed
+                        else REPLACED_SETUP
+                    )
                 except (UserError, OSError):
-                    cleanup = "The setup-token file copy could not be removed. "
+                    cleanup = (
+                        "The setup-token file copy could not be removed. Revoke the "
+                        "token used for this run and remove only its file/native/environment "
+                        "copies; preserve any replacement credentials."
+                    )
                 raise UserError(
                     f"R2 credentials changed during setup and were preserved. Revoke the unused "
                     f"Cloudflare upload token named {state.token_name}. The new bucket remains; "
                     "no existing bucket was changed. "
                     + cleanup
-                    + "Revoke Article Audio setup in Cloudflare and remove its file/native "
-                    "secret/environment copies. Keep the existing manual upload credentials.",
+                    + " Keep the existing manual upload credentials.",
                     "credentials_changed",
                 ) from None
             raise
@@ -260,6 +274,6 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
             "bucket": state.bucket,
             "jurisdiction": "default",
             "playback_verified": False,
-            "setup_token_removed_from_file": True,
-            "next_step": CLEANUP,
+            "setup_token_removed_from_file": removed,
+            "next_step": CLEANUP if removed else REPLACED_SETUP,
         }

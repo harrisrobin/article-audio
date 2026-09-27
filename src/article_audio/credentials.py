@@ -81,10 +81,11 @@ class CredentialStore:
         self,
         values: dict[str, str],
         *,
-        remove: tuple[str, ...] = (),
+        remove_if_matches: dict[str, str | None] | None = None,
         if_absent: tuple[str, ...] = (),
-    ) -> None:
-        values = self.validate(values) if values or not remove else {}
+    ) -> bool:
+        """Merge values; return whether conditional removal completed or was already absent."""
+        values = self.validate(values) if values or not remove_if_matches else {}
         private_dir(self.directory)
         with file_lock(self.directory / ".credentials.lock"):
             current = self._read()
@@ -94,9 +95,14 @@ class CredentialStore:
                     "credentials_changed",
                 )
             combined = current | values
-            for key in remove:
-                combined.pop(key, None)
+            removed = remove_if_matches is not None and all(
+                current.get(key) in (None, value) for key, value in remove_if_matches.items()
+            )
+            if removed:
+                for key in remove_if_matches:
+                    combined.pop(key, None)
             atomic_write(self.path, json.dumps(combined).encode())
+            return removed
 
     def import_environment(self, group: str) -> None:
         values = {key: os.environ.get(key, "") for key in GROUPS[group]}

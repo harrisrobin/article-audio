@@ -8,7 +8,7 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 **[Add Article Audio to Grok Bot](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt)**, then send any message, even **hi**. If setup is incomplete, the Bot should invite you to set up Gemini and private R2 hosting.
 
-The Bot downloads the pinned [v0.1.4 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.4) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
+The Bot downloads the pinned [v0.1.5 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.5) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
 
 Hosted setup collects Gemini credentials and guides automatic Cloudflare bucket setup, then generates and uploads a sample to verify the listening link. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
 
