@@ -6,7 +6,7 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 ## Install in Grok Bot
 
-Use the current public template linked from the [repository installation section](https://github.com/harrisrobin/article-audio#install-in-grok-bot), then send any message, even **hi**. The v0.1.4 native template is being refreshed; meanwhile, use the manual skill-install instructions below. If setup is incomplete, the Bot should invite you to set up Gemini and private R2 hosting.
+**[Add Article Audio to Grok Bot](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt)**, then send any message, even **hi**. If setup is incomplete, the Bot should invite you to set up Gemini and private R2 hosting.
 
 The Bot downloads the pinned [v0.1.4 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.4) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
 
