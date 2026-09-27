@@ -99,4 +99,4 @@ The reviewer flagged two instruction ambiguities. The completed-state example no
 
 The independent reviewer found no actionable repository defects. Native publication, legacy-skill retirement, store metadata inspection, and the agreed account-recovery test remain external validation steps. Reusing the saved Gemini key cannot establish clean-import isolation.
 
-The Standards fixes are awaiting recheck. The 81-test suite passes on Python 3.14 and 3.11; Ruff and both skill validators pass.
+The Standards reviewer rechecked both fixes and reported no remaining findings. Spec reported zero repository findings. The 81-test suite passes on Python 3.14 and 3.11; Ruff and both skill validators pass.
