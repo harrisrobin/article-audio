@@ -61,3 +61,21 @@ Two independent reviewers examined `d2b6944...c15f5c1` and rechecked the fixes i
 Standards found three valid defects: concurrent manual credentials could be overwritten at commit time; complete-R2 reuse could retain an unnecessary setup token; and the recovery marker's directory entry was not fsynced. Fixes add a compare-before-commit under the credential lock, remove file-backed setup credentials on reuse while preserving runtime credentials, and fsync the containing directory after atomic replacement. Regression tests cover concurrent manual entry, interrupted credential persistence, reuse cleanup, CLI redaction, and permission/privacy failures. The Spec recheck found that the concurrent-manual branch still retained the broad setup token. That branch now removes the file copy too and explicitly directs external revocation; if cleanup fails, its error reports the retained copy.
 
 Both reviewers completed their final rechecks with no remaining actionable findings. Live Cloudflare provisioning remains a user-account validation step. Mocked API tests do not prove the installed Grok secret handoff or actual Cloudflare permissions.
+
+## Final release review for 0.1.5
+
+Two independent agents reviewed from fixed base `d2b6944744e06b1d68d81bf6697085e7afb3456c` (v0.1.3) through `c125622`, then rechecked the fixes in `fcb05d5`.
+
+### Standards
+
+The review found a credential-rotation race: successful provisioning or concurrent manual setup could remove a newer Cloudflare setup pair saved during the request. Cleanup now compares the whole pair under the credential lock and preserves replacements. Tests cover successful provisioning, concurrent manual R2 setup, and environment/file divergence.
+
+The security policy also contradicted the intentional removal of an unused setup token after concurrent manual R2 setup succeeds. SECURITY.md now distinguishes this completed-setup case from incomplete failures that retain credentials for repair. A proposed enum for the token-request marker was not adopted: the boolean deliberately records uncertainty about whether a remote token POST occurred, and explicit user-confirmed retry remains the recovery boundary. The reviewer accepted these dispositions.
+
+### Spec
+
+The review found that an older working runtime could satisfy readiness after a template update. Onboarding now checks both version 0.1.5 and the template's full release commit before executing the runtime. A versioned installation directory and optional private runtime_path support repair without overwriting a dirty checkout or losing credentials, recordings, delivery mode, or prior sample verification. Runtime-only repair does not request keys or synthesize another sample.
+
+The concern about creating the earlier replacement template referred to publication before the user requested updates in place. It remains a publication acceptance gate: update the existing zBuR546KeAs5X0iwlXkxt template and verify its URL. INSTALL.md documents that procedure; imported copies are not assumed to update automatically.
+
+Both reviewers independently rechecked the final changes and reported no remaining actionable findings. Each ran the 81-test suite successfully. Real Cloudflare provisioning and native credential handoff remain the user's fresh-import integration test.

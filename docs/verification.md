@@ -64,3 +64,7 @@ Version 0.1.4 was published from `cfd83882dc8c0648422be58b729dcd2c3608bc2c`. A c
 The replacement [v0.1.4 native template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt) was published and its public preview verified. Native review confirmed both skills with their complete release instructions, the full profile, four intended shared memories, exact revision/checksum, first-message readiness rule, and automatic Cloudflare setup guidance with manual fallback. No credentials or account-specific files were included. This is a new public template, not an overwrite of the earlier `u9M4WdBafSgCyS3GNHKla` link. The old template was not deleted.
 
 [GitHub run 36320092567](https://github.com/harrisrobin/article-audio/actions/runs/36320092567) again started no test steps. Its Python 3.11 check reports the account billing lock; Python 3.13 was canceled by the matrix. Local verification is passing; hosted CI remains unavailable.
+
+## Credential rotation and runtime repair in 0.1.5
+
+All 81 tests pass on Python 3.14 and Python 3.11. Ruff lint and formatting checks pass. Two independent adversarial reviewers rechecked the credential-rotation cleanup fix, the pinned runtime repair flow, and the update-in-place instructions, with no remaining actionable findings. This does not establish live Cloudflare permissions or Grok's native credential handoff.
