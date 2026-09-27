@@ -1,6 +1,6 @@
 ---
 name: article-audio
-description: Turn an article or supplied transcript into a full Gemini narration and optional R2 listening link. Use for requests to listen to an article, narrate an X Article, or make an audio edition of a bookmark.
+description: Set up Article Audio from GitHub, repair its runtime, or turn an article into full Gemini narration with an optional R2 listening link. Use for first-run setup, listening to an X Article, or making an audio edition of a bookmark.
 ---
 
 # Article audio
@@ -9,7 +9,12 @@ Use the portable CLI supplied with this skill. Keep Gemini model, voice, directi
 
 ## Install and configure once
 
-Locate the installed repository, normally `/workspace/article-audio`. If missing, obtain the source archive or repository release specified by the user or this Bot's template. Never invent a repository URL. Run `bash scripts/setup.sh` from that directory. The helper command is `bash /workspace/article-audio/scripts/article-audio`; replace the root if installed elsewhere.
+Bootstrap on the first setup or narration request. The public source is `https://github.com/harrisrobin/article-audio.git`, pinned release `v0.1.2`. If the template supplies a full commit SHA, verify that SHA before running package code. Files on the template author's computer are not transferred when someone imports the Bot.
+
+1. Use the Bot's cloud computer. Check for Git, Python 3.11+ with venv support, FFmpeg, and ffprobe. Install missing prerequisites using the computer's supported package manager. On Debian/Ubuntu these are `git python3 python3-venv ffmpeg`. If system-package permission is unavailable, explain the specific missing prerequisite and ask the user to complete that step. Keep approval requirements intact.
+2. If `/workspace/article-audio` does not exist, run `git clone --branch v0.1.2 --depth 1 https://github.com/harrisrobin/article-audio.git /workspace/article-audio`. Verify the origin and revision. An existing path must be this repository with a clean working tree at the requested release. Preserve other checkouts and local edits; use a new versioned directory and remember its path when necessary. Do not reset or delete an existing installation.
+3. From the chosen source directory run `bash scripts/setup.sh`. Run the CLI's `doctor` and `--version` to confirm runtime availability and version 0.1.2. A saved installation marker alone is insufficient because computer recovery can remove dependencies. For a working installation, skip reinstalling and continue with the request.
+4. Save this skill in Grok Bot's supported skill system so later chats can use it. The helper command is `bash /workspace/article-audio/scripts/article-audio`; replace the root consistently if installed elsewhere. Keep the pinned release unless the user requests an upgrade.
 
 Set `ARTICLE_AUDIO_CONFIG_DIR=/workspace/.article-audio-config` and `ARTICLE_AUDIO_DATA_DIR=/workspace/.article-audio-jobs` in your execution environment for durable Grok storage outside the source repository. Keep those same paths across calls. All Bots on this account can access them.
 

@@ -1,25 +1,41 @@
 # Install in Grok Bot and create a template
 
-This directory is a profile and installation contract, not a proprietary Grok template file. The native share link must be created in Grok Bot after a working Bot is configured.
+Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio). Pinned release: [v0.1.2](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.2).
 
-## Try the local build before publication
+## Use an imported Bot
 
-Run `python3 scripts/package.py` to produce `dist/article-audio-0.1.1.zip` and its SHA-256 file. Transfer the archive using an attachment if your Grok client supports it, or put it at a download location that the Bot can reach. Source-code attachments are supported; archive handling can vary by client. A GitHub repository or release asset is the simplest repeatable route once published.
+Open the public template preview, choose **Add to Grok Bot**, then send:
 
-Tell your Bot:
+> Set yourself up. Configure Gemini and private R2 hosting, then generate the included sample and return its verified listening link. Guide me through credential entry one provider at a time.
 
-> Install the Article Audio package I supplied into /workspace/article-audio. Inspect the archive and run bash scripts/setup.sh. Read skills/article-audio/SKILL.md, docs/credential-setup.md, and docs/cloudflare.md. Save the skill as Article audio. Use /workspace/.article-audio-config for credentials and /workspace/.article-audio-jobs for recordings, outside the repository. Set up Gemini and private R2 hosting now. Guide me through both providers' missing credentials with supported secure handoffs or the local forms, one form at a time. Help me choose or create a private R2 bucket, confirm its jurisdiction, and obtain bucket-scoped Object Read & Write credentials. Generate examples/sample.txt, upload the MP3 privately, and return its verified listening link and expiry. Then test a full article I provide. Do not enable public bucket access or upload anything publicly. Reuse existing saved credentials and audio when upgrading this package.
+The Bot downloads the pinned GitHub release to its cloud computer and installs its own dependencies. It collects missing credentials through a supported secure handoff or its local password form. You do not need to copy scripts manually. Adding the Bot does not itself execute an installation hook.
 
-For a local-only installation, replace the hosting instructions with “Set up Gemini only and return local MP3 files.” Keep configuration and job directories outside the checkout so installing a newer archive preserves both.
+For local-only audio, say “Set yourself up with Gemini only.” This means MP3 files on the Bot's cloud computer, not your laptop.
 
-An archive should contain one top-level `article-audio/` directory. When extracting any downloaded archive, check for paths escaping the destination. Keep the supplied release checksum for verification. For a Git repository, check out the selected tag or commit rather than tracking a changing branch on every invocation.
+## Create the public template
 
-## Create the shareable template
+Create a dedicated Article Audio Bot. Set its description from [PROFILE.md](PROFILE.md). Send this preparation prompt after publishing the release:
 
-1. Use PROFILE.md as the Bot's role description and save or attach the Article audio skill.
-2. Give the template a real public repository/release URL and pinned tag or commit after the source is published. This package intentionally does not invent a GitHub owner or publish the project automatically.
-3. Include the credential-setup reference, or preserve the skill's instructions to load it from the installed package. The setup source must be reachable before any credentials are requested.
-4. In Grok Bot, choose Share, then Create template. Inspect the template details before sharing it.
-5. Test the template on a fresh account or installation with no script or credentials present. Verify first-run install, credential collection, generation, R2 upload, playback/seek, repeat-run caching, and continued operation after opening a new chat.
+> Prepare this Bot as the public Article Audio template. Read https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.2/skills/article-audio/SKILL.md and register its complete contents as the Article audio skill. Save https://github.com/harrisrobin/article-audio.git and release v0.1.2 as the installation source. Resolve and remember the full release commit SHA so a future install can verify it. Preserve the skill's first-use GitHub installation, runtime checks, separate configuration paths, and Gemini plus private R2 onboarding. The imported Bot must run setup when its user first asks to set up or narrate. For this template-authoring task, only register the instructions: do not install the runtime, request credentials, synthesize audio, or upload anything. Include no account-specific credentials, private files, signed links, or unrelated memories. Confirm the saved skill is available before stopping.
 
-Template sharing copies configuration, skills, and routines. It does not clone the source machine or transfer logins. All Bots on the same account share one computer, so duplicating a Bot on your own account does not prove a clean installation. [Official template documentation](https://docs.x.ai/grok-bot/bots).
+Then choose **Share → Create template → Public link**. Inspect the generated template details. It must carry the complete skill, the public source and pinned revision, and the first-use rule. A statement that files are already installed on the author's computer is not a portable setup. Creating a public template is not documented as automatically listing it in the searchable Marketplace.
+
+## Validate a fresh import
+
+Test on a fresh account/computer or a deliberately isolated test environment. Bots on the same account share files, browser sessions, credentials, and plugins; importing a second Bot alone is not a clean-install test.
+
+Verify first-request download, dependency installation, both credential forms, sample generation, private R2 upload, playback/seek, repeated-request reuse, and operation after a new chat. Preserve configuration at `/workspace/.article-audio-config` and recordings at `/workspace/.article-audio-jobs`, outside the source checkout. Native credential handoff and live R2 still require this runtime test.
+
+## Install without a template
+
+Give an existing Bot the public skill URL above and ask it to save the skill and set up Article Audio. The skill contains the actual Git clone command and prerequisite checks. For a manual checkout:
+
+```bash
+git clone --branch v0.1.2 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
+cd article-audio
+bash scripts/setup.sh
+```
+
+Release assets also include `article-audio-0.1.2.zip` and its SHA-256 file. Verify the checksum and reject archive paths escaping the extraction destination. An archive contains one top-level `article-audio/` directory. Preserve existing source changes and saved credentials when upgrading.
+
+[Official template documentation](https://docs.x.ai/grok-bot/bots) and [cloud computer behavior](https://docs.x.ai/grok-bot/computer-and-apps).
