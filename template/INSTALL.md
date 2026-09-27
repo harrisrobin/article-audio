@@ -4,7 +4,7 @@ Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio
 
 ## Use an imported Bot
 
-Open the [Article Audio template](https://x.ai/bot/u9M4WdBafSgCyS3GNHKla), choose **Add to Grok Bot**, then send any message:
+Open the [current Article Audio template linked in the repository](https://github.com/harrisrobin/article-audio#install-in-grok-bot), choose **Add to Grok Bot**, then send any message:
 
 > Hi
 
