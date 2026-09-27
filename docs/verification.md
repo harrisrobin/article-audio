@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: GitHub v0.1.7 and native template version 5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, public audition playback, and post-revocation publishing are verified below. Native secret delivery and clean-import testing remain incomplete.
+Current published baseline: GitHub v0.1.7 and the native card for staged version 11 now showing Published at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified below. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, public audition playback, and post-revocation publishing are verified below. Native secret delivery and clean-import testing remain incomplete.
 
 ## Confirmed locally
 
@@ -156,3 +156,11 @@ The owner subsequently confirmed provider revocation of the temporary setup toke
 ### Native audio rendering limitation
 
 On desktop 0.61.0, the Bot reported that its supported SendToUser voice-memo mode synthesizes message text with the host's voice and cannot accept an existing audio file or URL. Its attachment path rejects audio files as voice memos. The Gemini MP3 therefore remains a public listening link or an owner-delivered local file; the documented presence of voice memos in chat does not establish support for external MP3 playback. No replacement narration, file-type disguise, or additional UI service was created.
+
+### Final template content verification
+
+The later sharing drafts initially contained shortened instructions or literal `FILE:/tmp/...` markers in place of skill bodies. Native review identified those defects. The corrected draft, reported by the staging tool as version 11, carries the full v0.1.7 PROFILE, both literal skill bodies, and four intended public memories with the exact release commit and ZIP checksum. Native inspection checked both skills through their final sharing paragraphs and confirmed that the obsolete getting-started skill and unrelated skills are absent. Grok reported matching the source hashes for the profile and both skills. Owner setup records, bucket details, preferences, and credentials were excluded.
+
+The version 11 conversation card changed from Unpublished/Publish to Published/Copy link. The retained public URL was independently fetched with `Cache-Control: no-cache`; it returned HTTP 200 and contained the complete tagged PROFILE verbatim, including its final paragraph. An in-app browser reload temporarily retained the short description. The HTTP response advertises `s-maxage=86400` and `stale-while-revalidate=604800`, so a stale preview alone is not a reliable publication check. No numeric revision is exposed by the public page; the native card and staging result establish the revision evidence.
+
+The release code and v0.1.7 assets are unchanged. Subsequent repository commits update verification and publication instructions only. This completes the current shared-account setup and template repair. A clean import and narration of a complete X Article remain separate acceptance tests.
