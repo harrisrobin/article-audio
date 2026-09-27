@@ -237,3 +237,8 @@ Native app access was attempted again during this follow-up and reported the Mac
 The review covered every tracked source, test, bootstrap, compiler, and instruction file at `20da06789f2e5d962b15ccf518c8bc88a36186b9`. Both independent review axes rechecked the fixes and found no remaining actionable issue. See review.md for accepted and dismissed findings.
 
 All 165 tests pass locally on Python 3.11.14. Ruff lint and formatting pass. The fixes cover consistent credential snapshots and conditional cleanup, exact ranged-delivery checks, public bucket URL validation, and safe malformed provider/audio failures. The fixed narrator and simplified onboarding flow are unchanged. Native template publication and clean-import behavior are separate and have not been reverified by this code review.
+
+
+Published release commit: `7d5898bf2b7f2e1b082cb6106ff09f80f771d5b9`. Source ZIP SHA-256: `aa9cb7804331553acb51e308f9c8fe3c0ec06fa00f4102deb882b88c60fd94e9`. Bundle SHA-256: `79dc3d99411aec3d6639676b348f19f5860baf7a0fd851cf11600eb9e877a53a`. All six v0.2.2 assets were downloaded anonymously and matched their local build bytes. All 51 source ZIP files matched the tag commit. A fresh Python 3.11 extraction rebuilt byte-identical template JSON and checksum files. Both skills passed validation.
+
+GitHub Actions run `36358097906` executed no test steps; its check annotation confirms the account billing lock. Native Grok publication was not attempted during this repository review and remains last verified at v0.1.8. The v0.2.2 package and bundle are published, but a native update and clean-import test are still outstanding.
