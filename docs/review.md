@@ -49,3 +49,7 @@ Standards: 2 findings addressed; the worst practical issue was unusable recovery
 ## GitHub bootstrap review for 0.1.2
 
 Two independent agents reviewed `b767d68...561fd5b` before first publication. Standards found no hard violations and one maintenance concern: release versions repeated across the profile, bootstrap instructions, and package metadata could drift. A release consistency check now compares all installation tags and archive names against pyproject, the lockfile, and the runtime version. Spec found no actionable issues. Native secret handoff and live R2 testing remain assigned to the user's imported-Bot test.
+
+## Any-message onboarding review for 0.1.3
+
+Two reviewers examined `47af3d1...696f6e1`. Standards found that a returning local-only user could be mistaken for an interrupted hosted setup. Spec found the same missing state and a possible loop between onboarding and narration skills. The agent now maintains a nonsecret mode/completion record outside the checkout, and the narration skill skips onboarding when already entered from it. Greeting, unrelated question, article URL, explicit setup, returning user, local-only, and deferral scenarios were reviewed. The readiness record is agent-maintained, not a new CLI feature.
