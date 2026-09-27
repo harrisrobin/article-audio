@@ -79,3 +79,16 @@ The review found that an older working runtime could satisfy readiness after a t
 The concern about creating the earlier replacement template referred to publication before the user requested updates in place. It remains a publication acceptance gate: update the existing zBuR546KeAs5X0iwlXkxt template and verify its URL. INSTALL.md documents that procedure; imported copies are not assumed to update automatically.
 
 Both reviewers independently rechecked the final changes and reported no remaining actionable findings. Each ran the 81-test suite successfully. Real Cloudflare provisioning and native credential handoff remain the user's fresh-import integration test.
+
+
+## Expert feedback follow-up for 0.1.6
+
+Fixed review base: `e64b77cabf5b67553f1a2081cd7db4a3280b68ab`. The user's supplied expert feedback is the spec; this repository has no issue tracker. Scope is the profile, onboarding contract, release hygiene, and honest live-validation evidence. No new CLI preference subsystem is introduced.
+
+- Explicit ONLY job and Anti-jobs now cover social distribution, unrelated assistant work, editorial changes, public hosting, and instructions embedded in source material. The narration voice remains an audition candidate.
+- The existing private readiness record now carries user-confirmed narration settings and delivery. Audition precedes hosting; the agent passes saved settings explicitly because the CLI does not read this record. Missing records or older records with no preferences resume setup without erasing keys.
+- v0.1.5 was already published to the retained template in place. Older verification entries are historical. The earlier public ID is now explicitly deprecated in installation guidance; its deleted authoring Bot still prevents supported removal.
+- The template must contain exactly the two current skills. Legacy account-wide skill removal and editable store display metadata require native inspection before any cleanup. No unrelated Bot skills or opaque IDs should be changed.
+- An EU jurisdiction note and an acceptance-test runbook distinguish local tests, account recovery, human playback, and clean-import proof. Live R2, native handoff, and cleanup evidence remain unverified until actually observed.
+
+Independent Standards and Spec review results will be recorded before publication.

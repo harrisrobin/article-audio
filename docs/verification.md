@@ -2,6 +2,8 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
+Current published baseline: v0.1.5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. The expert-review changes described in review.md are a subsequent release until their publication is recorded here.
+
 ## Confirmed locally
 
 - 50 automated tests passed after adversarial review, including actual FFmpeg encoding and real loopback submissions of Gemini and R2 forms with dummy credentials.
@@ -47,9 +49,9 @@ Source ZIP SHA-256: `3a1a63239c8c84bbb2cee5ca5878b484e3bac42c395379ef6a626eb786e
 
 [GitHub run 36317827409](https://github.com/harrisrobin/article-audio/actions/runs/36317827409) created jobs for Python 3.11 and 3.13 but started no steps. GitHub's annotation says: "The job was not started because your account is locked due to a billing issue." This is not a failing test and is not a passing CI result. The account owner must resolve the lock before rerunning it.
 
-## Published Grok Bot template
+## Historical first Grok Bot template, deprecated
 
-[Article Audio](https://x.ai/bot/u9M4WdBafSgCyS3GNHKla) is published as a public native template. Grok fetched the public skill, saved it through its skill system, and created the template. Native inspection confirmed the complete registered narration/bootstrap skill and the shared template's exact commit, ZIP checksum, first-use setup rule, X-access guidance, Article audio skill, and getting-started skill. No unrelated skills or routines appeared in the shared configuration. The public preview loaded without authentication and displayed Article Audio with the app-opening link.
+The original template `u9M4WdBafSgCyS3GNHKla` was published with the first release and is now deprecated. Grok fetched the public skill, saved it through its skill system, and created the template. Native inspection at that time confirmed its narration/bootstrap skill, exact commit, ZIP checksum, first-use setup rule, X-access guidance, and generated getting-started skill. The current template uses only Article audio and Article Audio onboarding. The old public preview remains accessible but is not the current install path.
 
 The template-authoring Bot did not install the runtime or configure credentials, preserving the user's planned first-use test. Public template publication does not establish searchable Marketplace catalog inclusion. The main branch now links to the template; the pinned v0.1.2 assets remain unchanged.
 

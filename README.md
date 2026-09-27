@@ -8,9 +8,11 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 **[Add Article Audio to Grok Bot](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt)**, then send any message, even **hi**. If setup is incomplete, the Bot should invite you to set up Gemini and private R2 hosting.
 
-The Bot downloads the pinned [v0.1.5 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.5) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
+The older template ID `u9M4WdBafSgCyS3GNHKla` is deprecated. Use the link above; the old public snapshot may still be accessible.
 
-Hosted setup collects Gemini credentials and guides automatic Cloudflare bucket setup, then generates and uploads a sample to verify the listening link. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
+The Bot downloads the pinned [v0.1.6 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.6) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
+
+Setup collects Gemini credentials and provides an audition, then confirms voice, speed, and local-only versus private-hosted delivery once. The Bot saves and reuses those [preferences](docs/preferences.md). Hosted setup then guides Cloudflare bucket setup, verifies sample playback, and checks that uploads still work after setup-token revocation. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
 
 The package includes a [Bot profile](template/PROFILE.md) and instructions for creating your own template. A native public template is separate from searchable Marketplace catalog inclusion, which is not confirmed.
 
@@ -41,6 +43,8 @@ Supplying a corrected title, author, or source URL updates the saved metadata ev
 ## Narration settings
 
 Defaults: **Gemini 3.8 Flash TTS**, **Algenib**, restrained British delivery, **1.1× speed**, MP3 at **44.1 kHz / mono / 128 kbps**. FFmpeg changes speed while preserving pitch. The model controls the performance, so audition a short sample before processing a backlog.
+
+In Grok these defaults are audition candidates. The Bot persists your accepted model, voice, direction, speed, and delivery in private `onboarding.json` and passes the settings on each command. The standalone CLI does not read this agent-maintained record; use its flags as shown below.
 
 ```bash
 bash scripts/article-audio generate /path/to/transcript.txt \
@@ -94,6 +98,8 @@ Run `auth status` for credential presence and `doctor` for dependencies. Neither
 Grok Bot's supported native secure handoff is preferred when it can inject an environment or stdin stream. `auth import-env gemini`, `auth import-env r2`, and `auth import-json` support those handoffs. If native handoff is unavailable, the local password form runs in the Bot's Agent Computer browser. **Generic native-form compatibility is not verified.** See the [credential setup contract](docs/credential-setup.md).
 
 Defaults are `~/.config/article-audio` for credentials and `~/.local/share/article-audio/jobs` for recordings, respecting `XDG_CONFIG_HOME` and `XDG_DATA_HOME`. Override them with `ARTICLE_AUDIO_CONFIG_DIR` and `ARTICLE_AUDIO_DATA_DIR`. Grok installations use `/workspace/.article-audio-config` and `/workspace/.article-audio-jobs`. Keep these paths consistent across calls and outside the checkout.
+
+A saved Gemini key without completed onboarding is partial setup. The Bot should preserve it and finish the missing audition, preferences, or hosting steps. Deleting a Bot or importing another does not reset account-shared setup. The [runtime acceptance test](docs/runtime-test.md) separates clean-import proof from recovery on a shared computer.
 
 The credential file is **plaintext**, protected by mode 0600 inside a mode 0700 directory. Other processes and Bots running as the same OS user can read it. Environment variables override saved credentials. Re-run setup to rotate saved values. Never put keys into ordinary chat, source files, command arguments, or a shared template. [Security and privacy details](SECURITY.md).
 

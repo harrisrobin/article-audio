@@ -2,6 +2,10 @@
 
 The default setup asks for an account ID and one short-lived setup token. The CLI creates a private bucket in the default jurisdiction and saves a separate upload key restricted to that bucket. Existing R2 credentials are reused. Local-only audio needs no Cloudflare account.
 
+## Storage jurisdiction
+
+Before creating resources, explain that a Lisbon timezone or an EU location hint does not guarantee EU-only R2 storage. Cloudflare describes location hints as best effort; an EU jurisdiction restriction is the storage boundary. Automatic setup currently creates a `default`-jurisdiction bucket. If EU storage is required, use the manual path to create an EU-restricted bucket, save `r2_jurisdiction:eu` in the private setup record, and pass `--jurisdiction eu` on every publish. This restricts R2 storage, not processing by Gemini or the Grok computer. See [Cloudflare data location](https://developers.cloudflare.com/r2/reference/data-location/).
+
 ## Create the setup token
 
 Show these instructions before asking for the secret. The user completes the Cloudflare dashboard steps themselves; never ask them to paste a token in chat.
@@ -30,7 +34,7 @@ bash scripts/article-audio auth provision-r2
 
 The second command creates a new `article-audio-<random suffix>` bucket, checks that r2.dev and custom-domain access are disabled, resolves the bucket object-write permission, and creates a token scoped only to that bucket. It derives the S3 credentials as documented by [Cloudflare](https://developers.cloudflare.com/r2/api/tokens/) and saves all four R2 fields without returning their values. It never enables public access or changes another bucket's settings.
 
-The CLI removes the matching setup token from its credential file after saving the upload key. If another process saved replacement Cloudflare credentials during setup, it preserves them and reports `setup_token_removed_from_file:false`. Follow the returned cleanup guidance, revoking only the token used for this run and leaving replacement credentials intact. **This does not revoke the token at Cloudflare or remove a native Grok secret/environment entry.** Generate the original sample, publish it, and return its verified listening link. Then guide the user to revoke **Article Audio setup** on the Account API Tokens page and remove its saved Grok secret/environment entry. Keep the new `article-audio-<suffix>-uploads` token. Renew the sample link with `publish` after cleanup to confirm ongoing access. Never declare hosted setup complete from credential presence or bucket creation alone.
+The CLI removes the matching setup token from its credential file after saving the upload key. If another process saved replacement Cloudflare credentials during setup, it preserves them and reports `setup_token_removed_from_file:false`. Follow the returned cleanup guidance, revoking only the token used for this run and leaving replacement credentials intact. **This does not revoke the token at Cloudflare or remove a native Grok secret/environment entry.** Publish the accepted audition MP3 without regenerating it, and return its verified listening link. Then guide the user to revoke **Article Audio setup** on the Account API Tokens page and remove its saved Grok secret/environment entry. Keep the new `article-audio-<suffix>-uploads` token. Renew the sample link with `publish` after cleanup to confirm ongoing access. Never declare hosted setup complete from credential presence or bucket creation alone.
 
 `auth provision-r2` reuses complete R2 credentials without creating resources. It refuses partial existing R2 configuration, so finish that configuration with the manual form. Automatic setup creates an ordinary `default`-jurisdiction bucket; use the manual path for `eu`, `us`, or `fedramp` requirements. Save the jurisdiction in the Bot's nonsecret configuration and pass it on every publish.
 
@@ -38,7 +42,7 @@ The CLI removes the matching setup token from its credential file after saving t
 
 Offer this immediately if the user already has a bucket, lacks token-management permissions, wants a jurisdictional bucket, or prefers not to grant setup authority. Do not keep pushing the automatic path after they choose manual setup.
 
-1. In **R2 Object Storage > Overview**, create or select a private bucket. Keep public r2.dev and custom-domain access disabled for private listening links.
+1. In **R2 Object Storage > Overview**, create or select a private bucket. Select the required jurisdiction when creating it, or confirm the existing bucket's jurisdiction before publishing. Keep public r2.dev and custom-domain access disabled for private listening links.
 2. In the R2 overview, find **Account Details > API Tokens > Manage**. Create an R2 account token, or a user token if permitted by the account. Select **Object Read & Write**, then **Apply to specific buckets only**, selecting this bucket.
 3. Copy the S3 **Access Key ID** and **Secret Access Key** from the confirmation. The API token value is not the Secret Access Key.
 4. Use native secure cards for missing values when supported, or open the unchanged four-field form with `auth setup r2`. It asks for `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_BUCKET`.
