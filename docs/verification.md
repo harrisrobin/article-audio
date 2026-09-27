@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-v0.1.7 public-preference instructions are in preparation. Current published baseline: v0.1.6 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. GitHub v0.1.6 and native template version 3 are published and verified below; live account-recovery testing remains separate.
+GitHub v0.1.7 is published; its native template update is being staged. Current published baseline: v0.1.6 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. GitHub v0.1.6 and native template version 3 are published and verified below; live account-recovery testing remains separate.
 
 ## Confirmed locally
 
@@ -120,3 +120,8 @@ All 81 tests pass on Python 3.14 and Python 3.11, Ruff lint/format checks pass, 
 ### Browser form diagnosis
 
 A local browser test with dummy Cloudflare values reproduced the same failure: `Origin:null` with `Sec-Fetch-Site:same-origin` under the old `no-referrer` response policy. After changing the policy to `same-origin`, the browser sent the exact loopback origin, the page reported Credentials saved, and the server confirmed success. No real credentials were used in that probe. HTTP regression checks still reject hostile, missing, and null Origin headers. The independent Standards and Spec rechecks found no remaining actionable findings.
+
+
+[GitHub v0.1.7](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.7) is published from `dfa61e82b9a4f3f6af68f8ae4c47ad8dd4568820`. Its ZIP checksum is `1657dbe5f5852b221beb86297a1a0ede080e2ebe0097ecf9b01a168cd254e4df`. Anonymous download verification matched all 45 files to the tag. Fresh ZIP installation passed version, doctor, provisioning help, and offline planning outside the checkout. The final 81-test suite passes on Python 3.14 and 3.11; Ruff and both skill validators pass.
+
+Grok reported that a separate host-spawned worker also received only the Gemini injected-secret name, with both Cloudflare names absent. This confirms the observed handoff failure extends beyond an ordinary child shell. It does not prove the vault deleted the saved secrets or establish the internal cause. Credential collection is paused while the fixed runtime and native template update are staged. Native Settings also displayed an older v0.1.5 profile; the update must verify that live description as well as the public preview.
