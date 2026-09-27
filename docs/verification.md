@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: GitHub v0.1.7 and native template version 5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Shared-account credential handoff and live R2 testing remain incomplete.
+Current published baseline: GitHub v0.1.7 and native template version 5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, and public audition playback are verified below. Native secret delivery, setup-token cleanup, repeat publishing, and clean-import testing remain incomplete.
 
 ## Confirmed locally
 
@@ -144,3 +144,13 @@ On 2026-09-27, native Settings reported desktop 0.61.0 Stable and the shared clo
 The owner then chose the repaired local fallback. The first attempted handoff was text only; after correction, native inspection verified an actual Computer / Take over card. On completion, Grok reported both the page's Credentials saved result and the CLI's Cloudflare-present status, while Gemini remained present. No values were inspected or printed. This establishes live credential storage through the v0.1.7 fallback on this account; it does not establish native-card delivery or a clean import. R2 provisioning and public playback remain separate checks.
 
 The subsequent provisioning attempt stopped at its first Cloudflare API request with an authentication rejection. Redacted validation identified an unusable saved setup token. No bucket or upload-token creation was attempted, and correction through the local form is pending. Credential presence is therefore verified, but Cloudflare authentication, R2 provisioning, public playback, and setup-token cleanup remain unverified.
+
+### Live public R2 playback
+
+After the owner corrected the setup token, Grok reported successful provisioning of one new dedicated bucket and a bucket-restricted upload key. It verified that the returned bucket matched its reservation and saved R2 configuration, enabled that bucket's managed r2.dev domain through the documented Cloudflare API, and read back enabled=true. It saved the public base URL only in the owner's private preferences. The matching setup-token file copy was removed; this is not provider revocation.
+
+Grok published the previously accepted audition without resynthesis and reported public access, verified=true, and no scheduled expiry. An independent unauthenticated range request from the owner's Mac returned HTTP 206, audio/mpeg, Accept-Ranges: bytes, and Content-Range: bytes 0-1023/814227. The owner confirmed that the public link plays and seeks correctly. No owner URL or bucket identifier is included here. Setup-token revocation, native-secret cleanup, and a repeat publish using the saved upload key remain pending, so overall sample verification must stay false. This remains shared-account recovery, not a clean-import or full X Article test.
+
+### Native audio rendering limitation
+
+On desktop 0.61.0, the Bot reported that its supported SendToUser voice-memo mode synthesizes message text with the host's voice and cannot accept an existing audio file or URL. Its attachment path rejects audio files as voice memos. The Gemini MP3 therefore remains a public listening link or an owner-delivered local file; the documented presence of voice memos in chat does not establish support for external MP3 playback. No replacement narration, file-type disguise, or additional UI service was created.
