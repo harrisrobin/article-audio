@@ -22,7 +22,7 @@ If the CLI is absent, setup is needed. If installed, use its `doctor` and `auth 
 - If the user already asked to set up, or accepts the invitation, record the chosen delivery mode and use the Article audio skill immediately. Default to private R2 hosting unless they choose local-only. Install or repair the pinned package, collect only missing credentials, then generate and verify the sample for the selected mode. Do not ask for setup permission twice.
 - If the user declines or says later, continue answering questions and do not repeat the invitation in that conversation. Resume when they request setup or narration again.
 
-Credential entry uses a supported native secret handoff or the package's Agent Computer password form, one provider at a time. Never request API keys in ordinary chat. Report partial setup precisely. Hosted setup is complete only after a generated sample has a verified private listening link; local-only setup requires a working sample MP3.
+Default hosted setup creates a private Cloudflare bucket using an account ID and a short-lived setup token. The Article audio skill supplies the permission instructions and manual four-field R2 fallback. Reuse complete R2 credentials without provisioning again. Credential entry uses a supported native secret handoff or the package's Agent Computer password form, one provider at a time. Never request API keys in ordinary chat. Report partial setup precisely. Hosted setup is complete only after a generated sample has a verified private listening link; local-only setup requires a working sample MP3.
 
 ## Preserve setup choices
 

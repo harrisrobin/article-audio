@@ -15,3 +15,5 @@ The app sends narration text and style instructions to Google's Gemini API. A pu
 The CLI runs trusted, installed FFmpeg without a shell and does not execute article content. Use the Bot's normal permissions for reading sources and publishing. Review third-party source rights before public redistribution.
 
 Report suspected vulnerabilities privately to the repository maintainer rather than posting secrets or exploit credentials in a public issue.
+
+Automatic Cloudflare provisioning temporarily needs account-level R2 administration and account token-management authority. Limit the setup token to one account and expire it within one day. The saved runtime token has only object read/write access to the newly created bucket. Provisioning removes the setup credential's file copy after saving runtime credentials; the user must still revoke the setup token at Cloudflare and remove native secret/environment copies. Failed or interrupted provisioning retains the setup credential for repair. Never log API bodies or silently repeat uncertain token-create requests. The private setup record enables recovery and stays outside releases.

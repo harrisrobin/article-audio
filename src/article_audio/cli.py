@@ -11,6 +11,7 @@ import httpx
 
 from . import __version__
 from .audio import probe_audio
+from .cloudflare import provision_r2
 from .credentials import GROUPS, CredentialStore
 from .errors import UserError
 from .gemini import DEFAULT_STYLE, MODELS, GeminiClient, VoiceSettings
@@ -37,6 +38,14 @@ def parser() -> argparse.ArgumentParser:
     )
     actions = auth.add_subparsers(dest="auth_command", required=True)
     actions.add_parser("status", help="Report missing credential names")
+    provision = actions.add_parser(
+        "provision-r2", help="Create a private bucket and scoped upload key"
+    )
+    provision.add_argument(
+        "--retry-token",
+        action="store_true",
+        help="Retry only after revoking an uncertain previous upload token",
+    )
     actions.add_parser("import-json", help="Read credential JSON on stdin from a secure handoff")
     injected = actions.add_parser("import-env", help="Persist credentials injected by the host")
     injected.add_argument("provider", choices=GROUPS)
@@ -98,6 +107,9 @@ def dispatch(args) -> dict:
     if args.command == "auth":
         if args.auth_command == "status":
             return _status(store)
+        if args.auth_command == "provision-r2":
+            with httpx.Client(trust_env=False) as http:
+                return provision_r2(store, http, retry_token=args.retry_token)
         if args.auth_command == "import-json":
             try:
                 raw = sys.stdin.read(65537)

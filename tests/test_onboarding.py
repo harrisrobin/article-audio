@@ -8,7 +8,7 @@ from article_audio.credentials import GROUPS, CredentialStore
 from article_audio.onboarding import SetupServer
 
 
-@pytest.mark.parametrize("group", ["gemini", "r2"])
+@pytest.mark.parametrize("group", ["gemini", "r2", "cloudflare"])
 def test_local_form_rejects_cross_origin_and_saves_without_echo(tmp_path, group):
     store = CredentialStore(tmp_path / "credentials")
     if group == "r2":
@@ -24,6 +24,10 @@ def test_local_form_rejects_cross_origin_and_saves_without_echo(tmp_path, group)
             assert 'type="password"' in page.text
             assert page.headers["cache-control"] == "no-store"
             assert all(f'name="{key}"' in page.text for key in values)
+            if group == "cloudflare":
+                assert "Account API Tokens &gt; Edit" in page.text
+                assert "Workers R2 Storage &gt; Edit" in page.text
+                assert "manual R2 setup" in page.text
             data = urlencode({"csrf": server.token, **values})
             headers = {
                 "Content-Type": "application/x-www-form-urlencoded",

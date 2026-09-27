@@ -1,4 +1,5 @@
 import fcntl
+import json
 import os
 import stat
 import tempfile
@@ -6,6 +7,29 @@ from contextlib import contextmanager
 from pathlib import Path
 
 from .errors import UserError
+
+
+def read_private_json(path: Path):
+    if not path.exists() and not path.is_symlink():
+        return None
+    private_dir(path.parent)
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        with os.fdopen(fd, "r") as stream:
+            info = os.fstat(stream.fileno())
+            if not stat.S_ISREG(info.st_mode):
+                raise UserError("Private storage must be a regular file.", "unsafe_storage")
+            if info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
+                raise UserError(
+                    "Private file must be owned by you with mode 0600.", "unsafe_storage"
+                )
+            if info.st_size > 65536:
+                raise ValueError
+            return json.load(stream)
+    except OSError:
+        raise UserError(
+            "Cannot safely open private storage. Check paths and permissions.", "unsafe_storage"
+        ) from None
 
 
 def private_dir(path: Path) -> None:

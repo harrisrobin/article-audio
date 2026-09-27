@@ -8,6 +8,30 @@ from urllib.parse import parse_qs
 from .credentials import GROUPS, CredentialStore
 from .errors import UserError
 
+SETUP_HELP = {
+    "cloudflare": """<h2>Create a short-lived setup token</h2>
+<ol><li>Open <a href="https://dash.cloudflare.com/" target="_blank" rel="noreferrer">Cloudflare</a>,
+select your account, and activate R2 Object Storage if needed.
+Cloudflare may require billing details.
+Account token creation requires the Super Administrator role.</li>
+<li>Go to <strong>Manage Account &gt; Account API Tokens &gt; Create Token</strong>.
+Choose a custom token if offered and name it <strong>Article Audio setup</strong>.</li>
+<li>Add <strong>Account &gt; Workers R2 Storage &gt; Edit</strong> and
+<strong>Account &gt; Account API Tokens &gt; Edit</strong>. Limit resources to this account.
+These allow bucket administration and token management, including more than the new bucket.</li>
+<li>Set an expiry within one day. Review the summary and create the token.
+Paste its value below, never in chat. Do not use a Global API Key.</li>
+<li>Copy your 32-character Account ID from the R2 overview's Account Details.</li></ol>
+<p>Setup creates a private bucket and a separate bucket-only upload key. After a successful sample,
+revoke the setup token and remove its Grok secret entry. Keep the upload key.</p>
+<p>Prefer an existing bucket, or lack these permissions? Return to the Bot and ask for
+<strong>manual R2 setup</strong>, the four-field fallback.</p>""",
+    "r2": """<p>For an existing private bucket, open Cloudflare &gt; R2 Object Storage &gt;
+Overview &gt; Manage API Tokens. Create an <strong>Object Read &amp; Write</strong> token
+limited to that bucket. Enter the S3 Access Key ID and Secret Access Key below.
+Keep public access disabled for private audio links.</p>""",
+}
+
 
 class SetupServer(HTTPServer):
     """A one-time loopback form, independent of any agent's secret-form API."""
@@ -96,6 +120,7 @@ body{{font:17px system-ui;max-width:540px;margin:60px auto;padding:24px;color:#1
 label{{display:block;margin:22px 0}}input{{display:block;width:95%;padding:12px;margin-top:8px}}
 button{{padding:12px 24px}}p{{line-height:1.5}}</style>
 <h1>Connect {html.escape(self.server.group)}</h1>
+{SETUP_HELP.get(self.server.group, "")}
 <p>Enter your credentials here. They are saved on this computer in a private file,
 outside the project. Processes running as your account can read this file.
 This form does not send values to the conversation.</p>

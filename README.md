@@ -8,9 +8,9 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 **[Add Article Audio to Grok Bot](https://x.ai/bot/u9M4WdBafSgCyS3GNHKla)**, then send any message, even **hi**. If setup is incomplete, the Bot should invite you to set up Gemini and private R2 hosting.
 
-The Bot downloads the pinned [v0.1.3 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.3) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
+The Bot downloads the pinned [v0.1.4 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.4) from GitHub onto its cloud computer and uses the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
 
-Hosted setup collects Gemini and R2 credentials, then generates and uploads a sample to verify the listening link. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
+Hosted setup collects Gemini credentials and guides automatic Cloudflare bucket setup, then generates and uploads a sample to verify the listening link. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
 
 The package includes a [Bot profile](template/PROFILE.md) and instructions for creating your own template. The public link above is a native Grok Bot template; searchable Marketplace catalog inclusion is not confirmed.
 
@@ -62,12 +62,17 @@ Inputs are capped at 1 MB and generation at 100 segments by default. Use `plan` 
 
 ## Host on R2
 
-Create a bucket and [R2 S3 credentials](https://developers.cloudflare.com/r2/api/tokens/) with object read/write access scoped to that bucket. Keep the bucket private for private playback. Configure its account ID, access key ID, secret access key, and bucket name through the form:
+Automatic setup needs your Cloudflare account ID and one short-lived setup token. Follow the [dashboard instructions and exact permissions](docs/cloudflare.md#create-the-setup-token): **Account > Workers R2 Storage > Edit** and **Account > Account API Tokens > Edit**, restricted to one account, expiring within one day. R2 must be activated; account token creation requires Super Administrator access.
 
 ```bash
-bash scripts/article-audio auth setup r2
+bash scripts/article-audio auth setup cloudflare
+bash scripts/article-audio auth provision-r2
 bash scripts/article-audio publish /path/from/generate/audio.mp3
 ```
+
+The form explains how to create the token. Provisioning creates a private bucket and saves a separate upload key restricted to it. After successful sample playback, revoke the setup token and remove any native secret/environment copy. The CLI removes its file copy, which does not revoke it at Cloudflare. Keep the upload token and repeat `publish` to confirm ongoing access.
+
+Already have a bucket, need a specific jurisdiction, or prefer not to grant token-management access? Use the existing four-field fallback with `bash scripts/article-audio auth setup r2`. It collects the account ID, bucket name, and bucket-scoped S3 Access Key ID and Secret Access Key. [Manual steps and interrupted-setup recovery](docs/cloudflare.md).
 
 The result includes `audio_url` and `expires_at`. Private signed links last **seven days** by default; `--expires` accepts 1–604800 seconds. Anyone holding the link can listen until it expires. Run `publish` again to renew it; matching uploads are reused. Signed links are returned, not saved in manifests.
 
