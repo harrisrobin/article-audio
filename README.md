@@ -124,4 +124,8 @@ Tests cover secure collection, redaction, provider errors, exact input coverage,
 
 [Gemini speech generation](https://ai.google.dev/gemini-api/docs/speech-generation), [R2 with boto3](https://developers.cloudflare.com/r2/examples/aws/boto3/), [Grok security](https://docs.x.ai/grok-bot/approvals-security-and-privacy), and [Grok templates](https://docs.x.ai/grok-bot/bots).
 
-Inspired by [Steve Ruiz's article narration](https://x.com/steveruizok/status/2101406564582138346) and [Mouad Mabrouk's recreation](https://x.com/mmabrouk_/status/2101669633161916628). The sample text is original and does not redistribute their source article or audio.
+## Credits
+
+Inspired by [Steve Ruiz](https://x.com/steveruizok) and his [article narration demo](https://x.com/steveruizok/status/2101406564582138346), with thanks to [Mouad Mabrouk's recreation](https://x.com/mmabrouk_/status/2101669633161916628) for sharing the approach.
+
+The sample text is original and does not redistribute their source article or audio.
