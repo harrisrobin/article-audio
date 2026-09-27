@@ -26,6 +26,14 @@ Download the bundle and its checksum from the release. Verify the checksum befor
 
 Open **Share > Update template** for the existing authoring Bot. Check its display metadata, complete profile, each skill through its last paragraph, and every shared memory's complete text and saved length against the bundle. Open memory details rather than relying on list previews; inspect any 500-character cutoff. Native shared fields must contain literal text, not file paths, JSON expressions, or summaries. A hash of the downloaded source does not verify what the host saved. Stop before publication if the saved content is incomplete. Exclude credentials, owner preferences, setup status, recordings, and unrelated skills.
 
+### Fit memories into native fields
+
+Grok's observed native memory limit is **500 characters per fact**. Longer strings were accepted by the staging tool but truncated when saved. Split any longer bundle memory at sentence boundaries into consecutive facts of at most 500 characters. Preserve every word and the original separator between parts; do not summarize or clip the text. The compiler's four canonical memories remain unchanged.
+
+For v0.1.8, the release memory becomes parts of 467 and 70 characters, and the setup/privacy memory becomes parts of 489 and 107 characters. Each pair joins with one space. The other memories remain single facts of 397 and 471 characters, giving six native facts in total.
+
+Read back every saved part before publication. Reconstruct each canonical memory with its original separator and compare the complete text and SHA-256 with the bundle. A successful source checksum or staging response is not enough. If the saved parts do not reconstruct the source exactly, stop and correct the draft.
+
 Publish the reviewed native update and confirm that **Copy link** returns the existing template URL. A compiled or uploaded bundle does not update Grok by itself. The public preview cannot prove the full skill bodies were saved. Follow [the native publication checks](../template/INSTALL.md#update-the-existing-public-template).
 
 ## Recover from a compiler failure
