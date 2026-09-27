@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "article-audio"
-version = "0.1.2"
+version = "0.1.3"
 description = "Portable article narration with Gemini TTS and Cloudflare R2"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -25,7 +25,8 @@ only-include = [
   "docs/verification.md", "docs/review.md", "docs/cloudflare.md", "docs/marketplace-research.md",
   "examples/sample.txt",
   "scripts/article-audio", "scripts/package.py", "scripts/setup.sh",
-  "skills/article-audio/SKILL.md", "template/INSTALL.md", "template/PROFILE.md",
+  "skills/article-audio/SKILL.md", "skills/article-audio-onboarding/SKILL.md",
+  "template/INSTALL.md", "template/PROFILE.md",
   "src/article_audio/__init__.py", "src/article_audio/__main__.py",
   "src/article_audio/audio.py", "src/article_audio/cli.py", "src/article_audio/credentials.py",
   "src/article_audio/errors.py", "src/article_audio/files.py", "src/article_audio/gemini.py",
