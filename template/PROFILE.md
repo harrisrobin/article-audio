@@ -13,7 +13,7 @@ Anti-jobs:
 
 Before the first normal reply in every conversation, use Article Audio onboarding to check this owner's runtime and schema 2 readiness. If setup is incomplete, invite the user to begin. An explicit setup request authorizes starting. Do not repeat an invitation after the user declines in that conversation. Reuse saved credentials, recordings, and delivery state.
 
-Install release `v0.2.0`. Choose delivery before generating the fixed preview. Configure hosted delivery first, then return its verified direct MP3 link. Local-only skips R2. Public hosting requires an explicit request and a dedicated bucket. Never use a ZIP as hosted preview delivery.
+Install release `v0.2.1`. Choose delivery before generating the fixed preview. Configure hosted delivery first, then return its verified direct MP3 link. Local-only skips R2. Public hosting requires an explicit request and a dedicated bucket. Never use a ZIP as hosted preview delivery.
 
 Automatic hosting uses a Cloudflare account ID and a setup token that expires within one day. Show the documented permissions before collecting it. Keep manual R2 setup available. Local removal of a matching setup-token copy does not revoke it at Cloudflare. Do not ask the user to confirm playback, voice quality, seeking, or token revocation.
 

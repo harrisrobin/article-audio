@@ -1,16 +1,14 @@
 # Install in Grok Bot and create a template
 
-Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio). Pinned release: [v0.2.0](https://github.com/harrisrobin/article-audio/releases/tag/v0.2.0).
+Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio). Pinned release: [v0.2.1](https://github.com/harrisrobin/article-audio/releases/tag/v0.2.1).
 
 ## Use an imported Bot
 
-Open the [current Article Audio template linked in the repository](https://github.com/harrisrobin/article-audio#install-in-grok-bot), choose **Add to Grok Bot**, then send any message:
+**Native update pending.** The [retained Article Audio template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt) is last verified at 0.1.8 and still carries the older onboarding flow. Importing it does not install this page's pinned release or receive the fixes below. Until its update is published, [install the current skills without a template](#install-without-a-template). Check [verification status](../docs/verification.md) before testing a new import.
 
-> Hi
+With the current skills installed, send any message, even "hi". If setup is incomplete, the Bot offers guided setup. Accept that invitation or request setup directly. A direct setup request starts immediately; it can still ask for your delivery choice if you have not supplied one.
 
-If setup is incomplete, the Bot should offer guided setup in its first reply. Accept that invitation to begin. You can also request setup directly, without a second confirmation.
-
-The Bot downloads the pinned GitHub release to its cloud computer and installs its own dependencies. It collects missing credentials through a supported secure handoff or its local password form. You do not need to copy scripts manually. Adding the Bot does not itself execute an installation hook.
+The current skills download the pinned GitHub release to the Bot's cloud computer and install dependencies. Missing credentials use a supported secure handoff or local password form. You do not need to copy scripts manually. Adding a Bot does not itself execute an installation hook.
 
 For local-only audio, say “Set yourself up with Gemini only.” This skips R2. The Bot still needs a supported way to deliver the MP3, possibly for playback in another app. If it cannot deliver the file, it must explain the limitation and leave preview readiness incomplete.
 
@@ -46,14 +44,14 @@ Follow [the runtime acceptance test](../docs/runtime-test.md): greeting, install
 
 ## Install without a template
 
-Give an existing Bot the [published Article audio skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.2.0/skills/article-audio/SKILL.md) and [onboarding skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.2.0/skills/article-audio-onboarding/SKILL.md), and ask it to save both skills and set up Article Audio. The skills contain the Git clone command, prerequisite checks, and first-message setup flow. For a manual checkout:
+Give an existing Bot the [published Article audio skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.2.1/skills/article-audio/SKILL.md) and [onboarding skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.2.1/skills/article-audio-onboarding/SKILL.md), and ask it to save both skills and set up Article Audio. The skills contain the Git clone command, prerequisite checks, and first-message setup flow. For a manual checkout:
 
 ```bash
-git clone --branch v0.2.0 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
+git clone --branch v0.2.1 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
 cd article-audio
 bash scripts/setup.sh
 ```
 
-Release assets also include `article-audio-0.2.0.zip` and its SHA-256 file. Verify the checksum and reject archive paths escaping the extraction destination. An archive contains one top-level `article-audio/` directory. Preserve existing source changes and saved credentials when upgrading.
+Release assets also include `article-audio-0.2.1.zip` and its SHA-256 file. Verify the checksum and reject archive paths escaping the extraction destination. An archive contains one top-level `article-audio/` directory. Preserve existing source changes and saved credentials when upgrading.
 
 [Official template documentation](https://docs.x.ai/grok-bot/bots) and [cloud computer behavior](https://docs.x.ai/grok-bot/computer-and-apps).

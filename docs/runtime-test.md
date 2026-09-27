@@ -23,7 +23,8 @@ Listening remains useful maintainer QA for pronunciation, fidelity, and joins. I
 ## Recovery and scope checks
 
 - A saved Gemini key with no setup record should be reused when completing setup. Do not erase credentials, silently choose local-only, or declare readiness from credential presence alone.
-- Repair an old runtime to the pinned version without losing recordings or delivery configuration. Migrate schema 1 according to `docs/preferences.md`; never restore old voice controls or confirmation gates.
+- With schema 2 `preview_ready:true` and a missing, damaged, or outdated runtime, expect automatic runtime-only repair followed by fresh checks before any setup invitation. No setup acceptance, key collection, or new preview should occur solely for that repair. Preserve recordings and delivery configuration.
+- Migrate schema 1 according to `docs/preferences.md` without a new setup invitation. Reuse the saved destination and keys even when replacing a customized preview; request only missing credentials or destination details. Never restore old voice controls or confirmation gates.
 - A previously verified matching fixed-voice preview may retain readiness. An old customized or unknown preview must be regenerated or reused from the current fixed preset, then delivered automatically without asking for voice acceptance.
 - Local-only skips R2 even if shared R2 keys exist. Changing delivery verifies the new destination without resynthesizing an unchanged sample.
 - Public delivery preserves its saved base URL across chats and upgrades. A missing URL or failed publish keeps setup incomplete. Do not silently return a signed link or claim signing disables public access.

@@ -143,3 +143,16 @@ Fixed base: `c68c210a5b53dc2968d55bacf9a7affef573c1cd`. The owner's new requirem
 The Model the Domain principle led to a new readiness schema without obsolete acceptance and cleanup flags. The Laziness Protocol kept the existing settings snapshot and cache format, while deleting voice CLI controls, model discovery, and the unreachable legacy provider payload. No remote token-revocation mechanism was added. Setup tokens retain their one-day expiry requirement, matching-only local cleanup, and uncertain upload-token recovery.
 
 Work was split into runtime controls and agent instructions, then checked together. Parent review removed a redundant repeat-publish step and restored concrete bootstrap commands, secure-handoff details, local-delivery requirements, and dedicated-bucket safeguards. The Standards review found no actionable issue. The Spec review found that runtime-only repair could bypass schema-1 migration and that local-only invitation wording implied a Bot-only path counted as delivery. Both were corrected: migration runs first, and local-only needs usable file delivery before readiness. The same pass made explicit setup requests proceed without another invitation. The Spec recheck found one stale playback gate in the earlier marketplace design notes; it now uses automated selected-mode delivery. The active runtime and onboarding instructions passed the recheck, and the final stale research note was confirmed corrected. No new source comments require deletion.
+
+
+## Adversarial follow-up in 0.2.1
+
+Reviewed `c68c210a5b53dc2968d55bacf9a7affef573c1cd...172f1e1620eb9f24bfa418f6bb5da9daa688e5b8` with fresh independent Standards and Spec reviewers.
+
+Standards found one valid documentation issue. The primary install link led to the older native template while nearby text described the newer fixed-preview behavior. README and INSTALL now label the native snapshot as 0.1.8 with its update pending and offer current skill installation as the available route.
+
+Spec found one valid recovery issue. The onboarding instructions said a ready record qualified for runtime-only repair without dispatching that repair before the generic setup invitation. They now require repair and recheck first, preserving readiness and avoiding new acceptance, credentials, or synthesis solely for runtime repair. Valid schema-1 migration with a customized preview also reuses the saved delivery and keys without a new invitation. The runtime acceptance checklist names these cases.
+
+Two other proposed Spec findings were dismissed. The unchanged short-audio error recommends listening as diagnosis but imposes no playback confirmation or readiness gate. Choosing an unspecified destination is a retained privacy and delivery preference, distinct from the removed voice/playback approvals or a second request to begin setup. INSTALL now makes that distinction explicit.
+
+The Spec reviewer rechecked fresh setup, ready-owner repair, matching/customized schema-1 migration, and missing credentials with no remaining actionable finding. The Standards reviewer also found no unresolved issue after the corrections. All 140 tests, Ruff lint, and formatting passed before these instruction-only corrections. Publication and native runtime evidence remain separate in verification.md.

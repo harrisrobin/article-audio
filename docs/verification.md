@@ -218,3 +218,10 @@ Published package commit: `7c17964566d8e2d9f2e3c1f85f7abe78d81bec29`. Source ZIP
 The release memory expands to 538 characters and needs two native facts; the other canonical memories are 397, 484, and 471 characters. Native publication must preserve all five resulting facts, both complete skills, the full profile, and the same template URL. Grok control was attempted again after package publication and still reported a locked Mac, so no v0.2.0 native update is claimed.
 
 GitHub Actions run `36355321696` did not execute any test steps. Its annotation says the account is locked due to a billing issue. The 140-test result is local; the clean-import behavior of this simplified flow remains unverified.
+
+
+## Adversarial follow-up in 0.2.1
+
+The independent follow-up review corrected two instruction issues. Already-ready owners now get runtime-only repair before any setup invitation; schema-1 migration reuses their delivery and keys. README and INSTALL prominently distinguish the older native template from the current package and offer manual skill installation until native publication.
+
+All 140 tests passed again on Python 3.11, with Ruff and formatting checks passing. After the instruction corrections and patch-version change, both packaging tests and both skill validators passed. Independent Standards and Spec rechecks found no remaining actionable issue. The new package and native update are pending publication; the native snapshot remains last verified at 0.1.8.
