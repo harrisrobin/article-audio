@@ -22,7 +22,7 @@ Run this on the Bot's computer in a terminal process that remains alive:
 
 ```bash
 export ARTICLE_AUDIO_CONFIG_DIR=/workspace/.article-audio-config
-bash /workspace/article-audio-v0.1.9/scripts/article-audio auth setup gemini
+bash /workspace/article-audio-v0.2.0/scripts/article-audio auth setup gemini
 ```
 
 The first JSON line contains a one-time `setup_url`. Open that exact URL in the browser on the same Bot computer. The user takes control and fills the password field, or a supported host secret-handoff mechanism fills it without exposing the value to the model. After submitting, the page reports success and the command exits. `auth setup cloudflare` shows the two-field automatic-setup form with token instructions. `auth setup r2` keeps the four-field manual fallback.
@@ -45,7 +45,7 @@ Defaults: `$XDG_CONFIG_HOME/article-audio/credentials.json`, or `~/.config/artic
 
 The directory is mode 0700 and the file is mode 0600. Values are plaintext at rest. Every process and Bot running as that OS user can access them. The package refuses symlink credential files and insecure file permissions. Keep keys out of the shared template and repository.
 
-After saving, run `auth status`, `models`, and a short generation. Status only establishes presence, not validity. A successful model-list request verifies some Gemini access; successful synthesis is the actual speech test. R2 credentials are validated through upload and ranged retrieval when you publish.
+After saving, run `auth status` and generate the fixed-voice sample. Status only establishes presence, not validity; successful synthesis verifies Gemini access. R2 credentials are validated through upload and ranged retrieval when you publish. Neither test requires a user confirmation.
 
 Native form compatibility must be tested on the installed Grok Bot version. The local form is implemented and independently testable. [Official secret-handoff documentation](https://cursor.com/help/grok-bot/secrets).
 

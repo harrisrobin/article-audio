@@ -22,8 +22,9 @@ These allow bucket administration and token management, including more than the 
 <li>Set an expiry within one day. Review the summary and create the token.
 Paste its value below, never in chat. Do not use a Global API Key.</li>
 <li>Copy your 32-character Account ID from the R2 overview's Account Details.</li></ol>
-<p>Setup creates a private bucket and a separate bucket-only upload key. After a successful sample,
-revoke the setup token and remove its Grok secret entry. Keep the upload key.</p>
+<p>Setup creates a private bucket and saves a separate bucket-only upload key for ongoing use.
+It removes the matching setup-token file copy. The setup token expires at the time you selected;
+local removal does not revoke it at Cloudflare or remove a native secret copy.</p>
 <p>Prefer an existing bucket, or lack these permissions? Return to the Bot and ask for
 <strong>manual R2 setup</strong>, the four-field fallback.</p>""",
     "r2": """<p>For an existing private bucket, open Cloudflare &gt; R2 Object Storage &gt;

@@ -83,7 +83,6 @@ def test_provision_saves_bucket_scoped_keys_clears_bootstrap_and_reuses(store):
     cloud = CloudflareMock()
     result = cloud.provision(store)
     bucket = result["bucket"]
-    assert result["playback_verified"] is False
     assert cloud.tokens == [
         {
             "name": bucket + "-uploads",
@@ -279,7 +278,8 @@ def test_reuse_clears_unneeded_bootstrap_without_api_requests(store, monkeypatch
     assert store.status("cloudflare")["present"] == []
     assert store.get("GEMINI_API_KEY") == "gemini-keep"
     assert cloud.requests == []
-    assert "revoke" in result["next_step"]
+    assert "Publish the fixed-voice sample" in result["next_step"]
+    assert "revoke" not in result["next_step"]
 
 
 def test_failed_credential_write_does_not_repeat_token_creation(store, monkeypatch):

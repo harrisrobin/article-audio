@@ -28,19 +28,20 @@ def response_data(finish="STOP"):
     }
 
 
-def test_current_model_keeps_directions_out_of_spoken_text():
+def test_fixed_preset_keeps_directions_out_of_spoken_text():
     def handler(request):
         assert request.headers["x-goog-api-key"] == "secret"
         assert "secret" not in str(request.url)
         body = json.loads(request.content)
         part = body["contents"][0]["parts"][0]
         assert part["text"] == "The complete article."
-        assert part["speech_metadata"]["style"] == "Warm British narration"
+        assert part["speech_metadata"]["style"] == VoiceSettings().style
+        assert body["generationConfig"]["speechConfig"]["voiceConfig"] == {"voice": "Algenib"}
         return httpx.Response(200, json=response_data())
 
     with httpx.Client(transport=httpx.MockTransport(handler)) as transport:
         audio = GeminiClient("secret", transport).synthesize(
-            "The complete article.", VoiceSettings(style="Warm British narration")
+            "The complete article.", VoiceSettings()
         )
     assert audio.startswith(b"RIFF")
 
@@ -78,17 +79,3 @@ def test_truncation_never_becomes_a_successful_recording():
     ) as transport:
         with pytest.raises(UserError, match="incomplete"):
             GeminiClient("secret", transport).synthesize("Text", VoiceSettings())
-
-
-def test_legacy_model_uses_its_own_request_schema():
-    def handler(request):
-        body = json.loads(request.content)
-        voice = body["generationConfig"]["speechConfig"]["voiceConfig"]
-        assert voice["prebuiltVoiceConfig"]["voiceName"] == "Algenib"
-        assert "TRANSCRIPT" in body["contents"][0]["parts"][0]["text"]
-        return httpx.Response(200, json=response_data())
-
-    with httpx.Client(transport=httpx.MockTransport(handler)) as transport:
-        GeminiClient("secret", transport).synthesize(
-            "Text", VoiceSettings(model="gemini-3.1-flash-tts-preview")
-        )

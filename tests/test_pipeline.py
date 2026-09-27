@@ -42,10 +42,10 @@ def test_resume_skips_completed_segments_and_repeat_reuses_mp3(tmp_path):
     assert "api_key" not in str(manifest)
 
 
-def test_settings_change_creates_new_job():
+def test_chunk_size_change_creates_new_job():
     assert (
         plan("Article", VoiceSettings())["job_id"]
-        != plan("Article", VoiceSettings(voice="Charon"))["job_id"]
+        != plan("Article", VoiceSettings(chunk_chars=40))["job_id"]
     )
 
 

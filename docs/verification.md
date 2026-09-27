@@ -2,7 +2,9 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: GitHub v0.1.9 includes the revised audition flow and verified template bundle. Its native update is pending review after the Mac locked. Native v0.1.8, staged version 16, remains the last verified publication at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt). It preserves all four bundle memories as six native facts, correcting the 500-character truncation found in version 14. The complete profile and both skills were also inspected. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Live fallback storage, R2 provisioning, public audition playback, and post-revocation publishing are verified below. Native secret delivery, clean-import testing, and complete X Article narration remain incomplete.
+Current work: v0.2.0 fixes narration to one preset and removes the voice-approval, manual playback/seek, and setup-token-revocation checkpoints. Local implementation is under review; its release and native template are not yet published. GitHub v0.1.9 and its verified bundle remain published. Native v0.1.8, staged version 16, is the last verified publication at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt). The v0.1.9 native draft was not verified or published before the Mac locked and is superseded by this work.
+
+Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Shared-account fallback storage, R2 provisioning, and public sample delivery were verified below. Native secret delivery, a clean import, and complete X Article narration still need their own proof.
 
 ## Confirmed locally
 
@@ -202,3 +204,10 @@ Accepted narration settings, existing samples, shared credentials, and automatic
 [GitHub run 36354196478](https://github.com/harrisrobin/article-audio/actions/runs/36354196478) started no test steps. Its annotation reports the existing account billing lock. Local tests passed; hosted CI did not run.
 
 Grok reported verifying the bundle and updating both complete live skills. Native template staging was in progress when the Mac locked, before the new review card could be inspected or published. This is not a verified v0.1.9 native publication.
+
+
+## Fixed narration and automatic readiness in 0.2.0
+
+The owner requested one informational preview with no voice controls, voice acceptance, manual playback/seek check, or setup-token-revocation checkpoint. The CLI now exposes only the fixed Gemini 3.8 Flash TTS / Algenib / British / 1.1× preset. Automated media and selected-mode publish verification remain. Schema 2 records `preview_ready` and delivery configuration, replacing the former narration, confirmation, and cleanup flags. Migration preserves credentials and recordings.
+
+The complete local suite passes 140 tests on Python 3.11, including CLI rejection of all removed controls before provider access or job creation. Ruff, formatting, both skill validators, and direct wrapper version/help/plan checks pass. Native and fresh-import behavior for this release remain untested while the Mac is locked. This local result is not a hosted CI result.

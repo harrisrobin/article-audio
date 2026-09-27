@@ -1,6 +1,6 @@
 # Install in Grok Bot and create a template
 
-Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio). Pinned release: [v0.1.9](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.9).
+Source: [harrisrobin/article-audio](https://github.com/harrisrobin/article-audio). Pinned release: [v0.2.0](https://github.com/harrisrobin/article-audio/releases/tag/v0.2.0).
 
 ## Use an imported Bot
 
@@ -12,7 +12,7 @@ If setup is incomplete, the Bot should offer guided setup in its first reply. Ac
 
 The Bot downloads the pinned GitHub release to its cloud computer and installs its own dependencies. It collects missing credentials through a supported secure handoff or its local password form. You do not need to copy scripts manually. Adding the Bot does not itself execute an installation hook.
 
-For local-only audio, say “Set yourself up with Gemini only.” This means MP3 files on the Bot's cloud computer, not your laptop.
+For local-only audio, say “Set yourself up with Gemini only.” This skips R2. The Bot still needs a supported way to deliver the MP3, possibly for playback in another app. If it cannot deliver the file, it must explain the limitation and leave preview readiness incomplete.
 
 ## Create the public template
 
@@ -42,18 +42,18 @@ The earlier public ID `u9M4WdBafSgCyS3GNHKla` is deprecated. The current templat
 
 Test on a fresh account/computer or a deliberately isolated test environment. Bots on the same account share files, browser sessions, credentials, and plugins; importing a second Bot alone is not a clean-install test.
 
-Follow [the runtime acceptance test](../docs/runtime-test.md): greeting, installation, secure credential handoff, audition and saved preferences, playback/seek in the selected R2 mode, setup-token revocation, repeat publish, and a new conversation without repeated setup. Preserve configuration at `/workspace/.article-audio-config` and recordings at `/workspace/.article-audio-jobs`, outside the source checkout. Report shared-state reuse as recovery evidence rather than a clean import.
+Follow [the runtime acceptance test](../docs/runtime-test.md): greeting, installation, secure credential handoff, a fixed-voice MP3 preview in the selected delivery mode, automatic readiness, and a new conversation without repeated setup or confirmation prompts. Preserve configuration at `/workspace/.article-audio-config` and recordings at `/workspace/.article-audio-jobs`, outside the source checkout. Report shared-state reuse as recovery evidence rather than a clean import.
 
 ## Install without a template
 
-Give an existing Bot the [published Article audio skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.9/skills/article-audio/SKILL.md) and [onboarding skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.1.9/skills/article-audio-onboarding/SKILL.md), and ask it to save both skills and set up Article Audio. The skills contain the Git clone command, prerequisite checks, and first-message setup flow. For a manual checkout:
+Give an existing Bot the [published Article audio skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.2.0/skills/article-audio/SKILL.md) and [onboarding skill](https://raw.githubusercontent.com/harrisrobin/article-audio/v0.2.0/skills/article-audio-onboarding/SKILL.md), and ask it to save both skills and set up Article Audio. The skills contain the Git clone command, prerequisite checks, and first-message setup flow. For a manual checkout:
 
 ```bash
-git clone --branch v0.1.9 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
+git clone --branch v0.2.0 --depth 1 https://github.com/harrisrobin/article-audio.git article-audio
 cd article-audio
 bash scripts/setup.sh
 ```
 
-Release assets also include `article-audio-0.1.9.zip` and its SHA-256 file. Verify the checksum and reject archive paths escaping the extraction destination. An archive contains one top-level `article-audio/` directory. Preserve existing source changes and saved credentials when upgrading.
+Release assets also include `article-audio-0.2.0.zip` and its SHA-256 file. Verify the checksum and reject archive paths escaping the extraction destination. An archive contains one top-level `article-audio/` directory. Preserve existing source changes and saved credentials when upgrading.
 
 [Official template documentation](https://docs.x.ai/grok-bot/bots) and [cloud computer behavior](https://docs.x.ai/grok-bot/computer-and-apps).

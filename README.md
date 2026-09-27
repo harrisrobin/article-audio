@@ -12,9 +12,9 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 The older template ID `u9M4WdBafSgCyS3GNHKla` is deprecated. Use the link above; the old public snapshot may still be accessible.
 
-The installation instructions in this repository pin the [v0.1.9 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.9) for the Bot's cloud computer and use the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
+The installation instructions in this repository pin the [v0.2.0 release](https://github.com/harrisrobin/article-audio/releases/tag/v0.2.0) for the Bot's cloud computer and use the [Article audio skill](skills/article-audio/SKILL.md). The readiness check happens on the first message of every conversation. Installation starts when you accept the setup invitation or explicitly request setup. No install-time hook is assumed. See the [installation instructions](template/INSTALL.md) for manual setup and fresh-install testing.
 
-Setup collects Gemini credentials and chooses audition delivery first. A clearly disclosed private-hosted invitation is the default; public hosting requires an explicit choice, while local-only may require downloading and playing the MP3 outside Grok. Hosted setup configures Cloudflare before it sends a verified direct MP3 audition link. After you listen, the Bot confirms and saves voice, speed, and delivery once, verifies playback, and checks that uploads still work after setup-token revocation. A ZIP transfer alone is never treated as playback or readiness. The Bot saves and reuses those [preferences](docs/preferences.md). The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
+Setup collects credentials, saves your delivery choice, and sends a sample of the fixed voice. Hosted setup configures Cloudflare and returns a verified direct MP3 link. You can start sending articles immediately, with no voice approval, playback quiz, or token-revocation checkpoint. Private hosting is the disclosed default; public hosting requires your explicit choice. Local-only delivers an MP3 for playback outside Grok when necessary. The Bot saves and reuses its [setup record](docs/preferences.md). The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
 
 The package includes a [Bot profile](template/PROFILE.md) and instructions for creating your own template. A native public template is separate from searchable Marketplace catalog inclusion, which is not confirmed.
 
@@ -42,27 +42,22 @@ The JSON result contains `audio_path`, duration, actual model and voice, and cac
 
 Supplying a corrected title, author, or source URL updates the saved metadata even when audio is cached. Omitted metadata fields keep their previous values.
 
-## Narration settings
+## Fixed narration
 
-Defaults: **Gemini 3.8 Flash TTS**, **Algenib**, restrained British delivery, **1.1× speed**, MP3 at **44.1 kHz / mono / 128 kbps**. FFmpeg changes speed while preserving pitch. The model controls the performance, so audition a short sample before processing a backlog.
-
-In Grok these defaults are audition candidates. The Bot persists your accepted model, voice, direction, speed, and delivery in private `onboarding.json` and passes the settings on each command. The standalone CLI does not read this agent-maintained record; use its flags as shown below.
+Every recording uses **Gemini 3.8 Flash TTS**, **Algenib**, restrained British delivery, and **1.1× speed**. Output is MP3 at **44.1 kHz / mono / 128 kbps**. FFmpeg changes speed while preserving pitch. Voice, speed, model, and direction are fixed in both the Bot and CLI. The setup sample lets you hear the voice; no acceptance step is required.
 
 ```bash
 bash scripts/article-audio generate /path/to/transcript.txt \
-  --model gemini-3.8-flash-tts \
-  --voice Algenib \
-  --speed 1.1 \
   --title 'Article title' \
   --author 'Author' \
   --source-url 'https://x.com/example/article/123'
 ```
 
-`--style-file /path/to/direction.txt` supplies voice direction separately from the narration. With Gemini 3.8, direction is sent in speech metadata; legacy models receive a labeled transcript and direction prompt. `models` lists TTS models available to your key; `generate --help` shows models this package supports. There is no silent model fallback.
+Direction is sent separately from the transcript in speech metadata. There is no model fallback. Version 0.2.0 removes the former `--model`, `--voice`, `--speed`, `--style-file`, and `models` controls; older scripts must omit them.
 
 Segments default to 3,000 characters, favoring paragraph and whitespace boundaries. `--chunk-chars` accepts 32–6,000. Exact text slices preserve the full transcript, but generated speech can still mispronounce or omit words; decoding success is not a transcript accuracy check. Separate requests can have audible changes in prosody. Smaller segments can help with provider limits but may create more joins.
 
-A gross-truncation check rejects audio shorter than one second per 100 alphanumeric characters, applied only when at least 200 such characters are present. It checks new and cached WAVs plus the combined MP3, accounting for playback speed. This deliberately loose floor catches implausibly brief output, not ordinary omissions or silence; audition is still required. Invalid cached audio is regenerated on retry.
+A gross-truncation check rejects audio shorter than one second per 100 alphanumeric characters, applied only when at least 200 such characters are present. It checks new and cached WAVs plus the combined MP3, accounting for playback speed. This deliberately loose floor catches implausibly brief output, not ordinary omissions or silence; it does not prove spoken accuracy. Invalid cached audio is regenerated on retry.
 
 Inputs are capped at 1 MB and generation at 100 segments by default. Use `plan` before a long article and increase `--max-chunks` deliberately if needed. Duration is an estimate, not a price quote; Gemini usage is billed by your provider. Transient requests have at most three attempts, and an ambiguous timeout can still incur provider usage.
 
@@ -76,7 +71,7 @@ bash scripts/article-audio auth provision-r2
 bash scripts/article-audio publish /path/from/generate/audio.mp3
 ```
 
-The form explains how to create the token. Provisioning creates a private bucket and saves a separate upload key restricted to it. After successful sample playback, revoke the setup token and remove any native secret/environment copy. The CLI removes its file copy, which does not revoke it at Cloudflare. Keep the upload token and repeat `publish` to confirm ongoing access.
+The form explains how to create the token. Provisioning creates a private bucket, saves a separate bucket-restricted upload key, and removes the matching setup-token file copy. Ongoing uploads use the saved upload key. The setup token expires within the day you selected; local removal does not revoke it at Cloudflare or remove native secret/environment copies.
 
 Already have a bucket, need a specific jurisdiction, or prefer not to grant token-management access? Use the existing four-field fallback with `bash scripts/article-audio auth setup r2`. It collects the account ID, bucket name, and bucket-scoped S3 Access Key ID and Secret Access Key. [Manual steps and interrupted-setup recovery](docs/cloudflare.md).
 
@@ -101,7 +96,7 @@ Grok Bot's supported native secure handoff is preferred when it can inject an en
 
 Defaults are `~/.config/article-audio` for credentials and `~/.local/share/article-audio/jobs` for recordings, respecting `XDG_CONFIG_HOME` and `XDG_DATA_HOME`. Override them with `ARTICLE_AUDIO_CONFIG_DIR` and `ARTICLE_AUDIO_DATA_DIR`. Grok installations use `/workspace/.article-audio-config` and `/workspace/.article-audio-jobs`. Keep these paths consistent across calls and outside the checkout.
 
-A saved Gemini key without completed onboarding is partial setup. The Bot should preserve it and finish the missing audition, preferences, or hosting steps. Deleting a Bot or importing another does not reset account-shared setup. The [runtime acceptance test](docs/runtime-test.md) separates clean-import proof from recovery on a shared computer.
+A saved Gemini key without completed onboarding is partial setup. The Bot should preserve it and finish the missing preview or hosting steps. Deleting a Bot or importing another does not reset account-shared setup. The [runtime acceptance test](docs/runtime-test.md) separates clean-import proof from recovery on a shared computer.
 
 The credential file is **plaintext**, protected by mode 0600 inside a mode 0700 directory. Other processes and Bots running as the same OS user can read it. Environment variables override saved credentials. Re-run setup to rotate saved values. Never put keys into ordinary chat, source files, command arguments, or a shared template. [Security and privacy details](SECURITY.md).
 

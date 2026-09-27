@@ -47,10 +47,10 @@ The portable Bot can bootstrap Article Audio on the **first user message**, rath
 
 1. Include the self-contained Article audio skill and a first-run rule in the shared template.
 2. When the user first asks it to start, check the installed revision, Python environment, FFmpeg, and the CLI's `doctor` result. Keep configuration and recordings outside the checkout.
-3. If source is missing, clone/download the public GitHub repository into `/workspace/article-audio` at the exact commit supplied by the template. Verify a release archive's checksum before extracting it. Never overwrite local changes or an unrelated existing directory.
+3. If source is missing, clone/download the public GitHub repository into the versioned runtime path specified by the skills at the exact commit supplied by the template. Verify a release archive's checksum before extracting it. Never overwrite local changes or an unrelated existing directory.
 4. Run the repository's idempotent setup script when needed. Install missing system prerequisites through the cloud computer's supported mechanism, then verify the runtime. Do not treat a version marker as sufficient after computer recovery.
 5. Ask for missing Gemini and R2 credentials through a supported secure handoff or the package's password form, one provider at a time. Never collect them in chat or put them in the public template.
-6. Generate the sample, upload it privately, and verify playback before declaring setup complete. On later requests, reuse working installations and saved credentials.
+6. Generate the fixed-voice sample and deliver it in the selected mode. One automated verified publish establishes hosted preview readiness; local-only requires supported file delivery. No human playback or approval gate is required. On later requests, reuse working installations and saved credentials.
 
 This design is consistent with documented template contents, skills, terminal/filesystem access, and Marketplace first-run patterns. It still needs a native end-to-end test because the docs do not promise that imported first-run instructions will execute automatically or that every shell/network operation will pass approval and network policy.
 

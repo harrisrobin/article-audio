@@ -134,3 +134,12 @@ Independent Standards and Spec reviewers both found that moving generation into 
 Both axes retain publication as a completion gate: the new tag, source archive, verified bundle, and native template must exist before the change is called shipped. Instruction scenarios cover private and public first setup, local-only transfer, shared Gemini recovery, accepted voice with incomplete hosting, voice replacement, delivery-only reuse, and interrupted cleanup. These checks do not establish a clean import or human playback under the revised ordering.
 
 Both reviewers rechecked commit `4bb5f6b` and reported no remaining repository findings. Package and native publication are tracked separately in verification.md.
+
+
+## Fixed narration and automatic readiness in 0.2.0
+
+Fixed base: `c68c210a5b53dc2968d55bacf9a7affef573c1cd`. The owner's new requirement supersedes the earlier preference-confirmation and cleanup gates. The data shape is one immutable narration preset plus a schema-2 delivery record with `preview_ready`. Only chunk size remains configurable in the internal settings snapshot. Existing cache identities still contain the concrete preset values.
+
+The Model the Domain principle led to a new readiness schema without obsolete acceptance and cleanup flags. The Laziness Protocol kept the existing settings snapshot and cache format, while deleting voice CLI controls, model discovery, and the unreachable legacy provider payload. No remote token-revocation mechanism was added. Setup tokens retain their one-day expiry requirement, matching-only local cleanup, and uncertain upload-token recovery.
+
+Work was split into runtime controls and agent instructions, then checked together. Parent review removed a redundant repeat-publish step and restored concrete bootstrap commands, secure-handoff details, local-delivery requirements, and dedicated-bucket safeguards. The Standards review found no actionable issue. The Spec review found that runtime-only repair could bypass schema-1 migration and that local-only invitation wording implied a Bot-only path counted as delivery. Both were corrected: migration runs first, and local-only needs usable file delivery before readiness. The same pass made explicit setup requests proceed without another invitation. The Spec recheck found one stale playback gate in the earlier marketplace design notes; it now uses automated selected-mode delivery. The active runtime and onboarding instructions passed the recheck. No new source comments require deletion.

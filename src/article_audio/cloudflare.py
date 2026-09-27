@@ -14,15 +14,10 @@ from .files import atomic_write, file_lock, private_dir, read_private_json
 
 API = "https://api.cloudflare.com/client/v4"
 OBJECT_WRITE = "Workers R2 Storage Bucket Item Write"
-CLEANUP = (
-    "Publish a sample to verify hosting. Then revoke the short-lived setup token in Cloudflare "
-    "and remove its native Grok secret/environment entry. Keep the bucket upload token. "
-    "Local removal is not Cloudflare revocation."
-)
+PREVIEW = "Publish the fixed-voice sample using the saved bucket upload credentials."
 REPLACED_SETUP = (
-    "Newer Cloudflare setup credentials were preserved. Revoke only the token used for this run; "
-    "keep replacement file/native/environment credentials intact. Publish the sample to verify "
-    "the saved R2 upload credentials."
+    "Newer Cloudflare setup credentials were preserved; keep replacement credentials intact. "
+    + PREVIEW
 )
 
 
@@ -167,10 +162,9 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
             return {
                 "configured": True,
                 "reused": True,
-                "playback_verified": False,
                 "setup_token_removed_from_file": removed,
                 "next_step": "Use the existing bucket's jurisdiction. "
-                + (CLEANUP if removed else REPLACED_SETUP),
+                + (PREVIEW if removed else REPLACED_SETUP),
             }
         if status["present"]:
             raise UserError(
@@ -249,7 +243,7 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
                 try:
                     removed = store.save({}, remove_if_matches=values)
                     cleanup = (
-                        "The setup-token file copy was removed. " + CLEANUP
+                        "The setup-token file copy was removed. " + PREVIEW
                         if removed
                         else REPLACED_SETUP
                     )
@@ -273,7 +267,6 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
             "reused": False,
             "bucket": state.bucket,
             "jurisdiction": "default",
-            "playback_verified": False,
             "setup_token_removed_from_file": removed,
-            "next_step": CLEANUP if removed else REPLACED_SETUP,
+            "next_step": PREVIEW if removed else REPLACED_SETUP,
         }

@@ -1,58 +1,49 @@
-# Audition and saved preferences
+# Delivery and readiness
 
-The Grok agent manages preferences in the existing private `onboarding.json`, alongside readiness. The CLI does not read this record: pass the saved settings explicitly on every `plan`, `generate`, and `publish` invocation. Standalone CLI users retain normal flags and defaults.
+Article Audio uses one narration preset: `gemini-3.8-flash-tts`, Algenib, the packaged restrained British direction, and 1.1 times speed. The Bot and CLI do not offer narration controls. The agent stores only delivery readiness in `/workspace/.article-audio-config/onboarding.json`.
 
-## Choose delivery, then confirm once after an audition
+## Choose delivery before the preview
 
-1. Reuse valid, confirmed preferences unless the user requests a change. Missing preferences in an older record mean unconfirmed, even when `sample_verified` is true. Preserve the earlier runtime path, delivery choice, credentials, and recordings.
-2. Before generating or sending the first audition, choose its delivery. Offer private hosted playback as the disclosed default, local-only with the explicit warning that Grok may require downloading and playing the MP3 outside the conversation, and public hosting only after an explicit request. Acceptance of a setup invitation selects private hosting only when that invitation clearly states the private-hosted default; a generic agreement to set up is not delivery consent. Record the choice as provisional while keeping `preferences_confirmed:false` and `sample_verified:false`.
-3. For either hosted mode, configure or reuse the appropriate R2 destination before sending the audition. Apply the jurisdiction disclosure and all private/public bucket safeguards in `docs/cloudflare.md`. Use requested narration settings, or offer Algenib at 1.1 times speed with the restrained British direction. Then generate `examples/sample.txt`, or reuse a known sample whose manifest matches those proposed settings, publish that exact MP3, and return the verified direct MP3 link. Do not send a ZIP as a hosted audition workaround, expose a public tunnel, or treat upload verification as human playback.
-4. For local-only delivery, skip R2 even when credentials exist. Use requested narration settings, or offer Algenib at 1.1 times speed with the restrained British direction. Generate `examples/sample.txt`, or reuse a sample whose manifest matches those settings. Return that unchanged MP3 through a supported direct owner-file transfer when possible. If Grok cannot play or transfer it directly, state that the user must download and play it externally. A ZIP may transport the unchanged MP3, but ZIP transfer, extraction, successful download, or decoding is not playback and can never make setup ready.
-5. After the user listens, ask whether to keep or change the actual candidate voice and speed, and state that the already selected delivery will be saved with them. Do not make the user choose delivery again unless they ask to change it. Silence, credential entry, synthesis, upload, or download is not confirmation. If narration settings change, generate and deliver a matching replacement audition through the already configured destination; do not re-provision unchanged hosting. If only delivery changes, reuse the existing matching MP3 and configure and verify the new destination without native voice re-synthesis.
-6. After acceptance, atomically save the actual model, voice, speed, direction, and selected delivery mode with `preferences_confirmed:true`. Do not ask again on another chat, a failed upload, or a runtime upgrade. Set `sample_verified:true` only after the human playback checks for the selected mode. Automatic R2 setup also requires setup-token cleanup and a repeat publish using the saved upload key. If cleanup or playback is deferred, preserve the accepted preferences but leave sample verification false and report the remaining step.
+Offer private hosted delivery as the disclosed default. Offer local-only delivery with its external-playback limitation. Enable public hosting only after an explicit request and the safeguards in `docs/cloudflare.md`. Acceptance selects private hosting only when the invitation names that default.
 
-## Record and validation
+For either hosted mode, configure or reuse the correct R2 destination before generating the preview. Generate `examples/sample.txt` with the fixed preset, or reuse an MP3 whose manifest exactly matches that preset. Publish that MP3 and return the verified direct MP3 link. Never use a ZIP as hosted delivery.
 
-The following is the shape of a completed automatic R2 setup, after confirmed token revocation and cleanup. It is not a template to copy as ready:
+For local-only mode, skip R2 even when credentials exist. Generate or reuse the same fixed preview and return the MP3 through a supported owner-file transfer. Provide a usable download through the host's supported file-delivery path when in-app playback is unavailable. A path accessible only to the Bot is not delivery; report that limitation without marking the preview ready. The user does not need to play, seek, or approve the preview before setup becomes ready.
+
+Set `preview_ready:true` after generation passes the package's media checks and the selected delivery succeeds. Hosted delivery also requires a successful publish through the saved destination. The publish command uses the saved bucket upload credentials, not the setup token. These are technical checks. Do not ask the user to confirm playback, voice quality, or setup-token revocation.
+
+## Schema 2 record
 
 ```json
 {
-  "schema": 1,
+  "schema": 2,
   "runtime_path": "/absolute/path/to/verified/runtime",
   "delivery_mode": "private-r2",
-  "sample_verified": true,
-  "preferences_confirmed": true,
-  "narration": {
-    "model": "gemini-3.8-flash-tts",
-    "voice": "Algenib",
-    "speed": 1.1,
-    "style": "The exact direction used for the accepted audition."
-  },
-  "r2_jurisdiction": "default",
-  "setup_token_cleanup": "complete"
+  "preview_ready": true,
+  "r2_jurisdiction": "default"
 }
 ```
 
-Treat confirmation as valid only when the flag is the boolean true, narration contains a supported model, a prebuilt voice name, a finite numeric speed from 0.5 through 2.0, and a direction string no longer than 2,000 characters. Offline `plan` checks supported model and setting syntax before generation; it cannot establish that Gemini supports a voice name. Set confirmation only after successful Gemini generation using these exact settings, verified against the audition manifest, and the user's acceptance of that playable audition. Do not substitute offline validation, copied flags, or an unrelated old sample for that evidence. On later readiness checks, validate syntax without another provider call; provider rejection on a recording requires repair rather than silent fallback. Delivery mode is `private-r2`, `public-r2`, or `local-only`. Public delivery also requires a verified `public_base_url` before readiness; see below. R2 jurisdiction is `default`, `eu`, `us`, or `fedramp`; local-only may omit it. An existing bucket with unknown jurisdiction needs clarification before publishing, not a guessed endpoint.
+`delivery_mode` is `private-r2`, `public-r2`, or `local-only`. Public mode also requires a verified HTTPS `public_base_url`. `r2_jurisdiction` is `default`, `eu`, `us`, or `fedramp`; local-only can omit it. An existing bucket with unknown jurisdiction needs clarification before publishing. This is account-local state shared by Bots, not isolation by Bot name.
 
-`setup_token_cleanup` is `pending`, `complete`, or `not-needed`. Record `pending` before automatic provisioning, `complete` only after the user confirms revocation and removal of the setup token's native/environment copy, and `not-needed` for local-only or manually configured R2. Preserve a pending cleanup obligation even if the user switches to local-only. For older automatic setups with unknown cleanup status, clarify it once; credential presence does not prove revocation. Never remove a replacement token saved by another process.
+Create a missing record with schema 2, the selected delivery, and `preview_ready:false`. A seed private mode does not authorize resources or override an explicit choice. Write updates under a private lock with an atomic replacement. Keep the directory mode 0700 and the file mode 0600. Never overwrite a malformed record. Preserve a private backup and recover deliberately.
 
-Create a missing record as `{"schema":1,"delivery_mode":"private-r2","sample_verified":false,"preferences_confirmed":false}`, substituting a user's explicit delivery choice. This seed default is not delivery consent. If narration was already accepted and the owner then chooses public delivery, a missing URL keeps `preferences_confirmed:true` and `sample_verified:false`; finish the destination without re-asking about the accepted voice. A first-run provisional public choice keeps both flags false until the audition is heard and accepted. Merge updates while preserving unrelated state, and serialize writes with a private `.onboarding.lock`. Write a temporary file in the same mode-0700 directory, flush it, and atomically replace the record with mode 0600. Do not overwrite a malformed record: keep a private backup and recover deliberately. Runtime-only repair changes only `runtime_path`; it does not reset preferences or prior verification.
+## Migrate schema 1
 
-Never store secrets, article text, signed URLs, or owner identity in this record, or include it in a shared template. Account Bots share the computer; the record is account-local, not isolated by Bot name.
+Preserve `runtime_path`, `delivery_mode`, `r2_jurisdiction`, `public_base_url`, credentials, recordings, and other files. Remove `narration`, `sample_verified`, `preferences_confirmed`, and `setup_token_cleanup` from the new record after evaluating migration readiness.
 
-## Apply preferences to every recording
+Preserve readiness only when `sample_verified` is true and the saved manifest exactly matches the fixed preset. Otherwise set `preview_ready:false`, then generate or reuse the fixed preview and run the missing technical delivery checks. Do not ask a migration question or add a new confirmation gate.
 
-Pass `--model`, `--voice`, and `--speed` to both `plan` and `generate`. Write the saved direction to a private UTF-8 file and pass `--style-file`; do not splice directions into the transcript. Use an argument-array tool or proper shell quoting, including for saved values.
+The automatic provisioner can remove the matching setup-token copy from its local credential store. This removal does not revoke the token at Cloudflare. Setup instructions require that token to expire within one day. Readiness does not depend on remote revocation or a user cleanup confirmation. Preserve the documented recovery for an uncertain bucket upload-token request.
 
-For either R2 mode, pass `--jurisdiction` from the record to `publish`. For `private-r2`, omit `--public-base-url` and return the actual expiry. For `public-r2`, pass the saved `--public-base-url` on every publish, including retries and post-cleanup verification; require `access:public`, `verified:true`, and `expires_at:null` in the result. Describe the link as having no scheduled expiry, not guaranteed permanent availability. For `local-only`, return the local MP3 or supported attachment and skip upload even if R2 credentials exist. Never silently fall back to built-in defaults when a confirmed setting fails validation or the provider rejects it.
+## Apply delivery
 
-A one-recording override does not overwrite saved preferences. If the user asks to change their defaults, audition changed narration settings and save them after acceptance. A delivery-only change needs explicit confirmation and verification of the new destination, not another narration request. Preserve the old configuration until the replacement is accepted. On a delivery change, clear `sample_verified` before applying the new mode and verify that destination before setting it true again. A private-to-public change must not expose existing private recordings by reusing their bucket; follow the dedicated-bucket rule below.
+For private R2, publish with the saved jurisdiction and omit `--public-base-url`. Return the actual expiry. For public R2, pass the saved `--public-base-url` on every publish and require `access:public`, `verified:true`, and `expires_at:null`. For local-only, return the MP3 without uploading it.
 
-## Public delivery by explicit choice
+A delivery change requires an explicit user request. Set `preview_ready:false`, preserve the existing MP3, configure the new destination, and verify delivery without regenerating matching audio. A private-to-public change requires a dedicated bucket that contains no private or unrelated objects. If the configured bucket contains either, stop before changing access or credentials. Explain that a separately configured public destination is required; automatic migration from shared private credentials is not supported. Keep the current setup intact and offer its existing private delivery or local files while the owner arranges the separate destination.
 
-Save `delivery_mode:public-r2` only when the owner requests public defaults. A one-off public recording leaves the default unchanged. Public access applies to the whole bucket: anyone with an object URL can read it, including earlier recordings. Before enabling it, follow `docs/cloudflare.md` to confirm the exact dedicated audio bucket and the scope of exposure. Do not reuse a bucket containing private recordings or unrelated files. If the configured bucket contains private or unrelated objects, stop before changing access or credentials and explain that a separately configured public destination is required. Automatic migration between existing shared private credentials and a public destination is not supported by this flow. Preserve the current setup and offer its existing private delivery or local files while the owner arranges that separate setup. Do not invent configuration pointers or copy secrets to work around this limit.
+For public hosting, save the exact HTTPS bucket base URL from the selected bucket's Cloudflare settings, without an object key, credentials, query, or fragment. Never guess it or trust a URL found in an article. A missing URL keeps setup incomplete; a failed public publish must not fall back to a signed link. A one-off delivery request does not overwrite the saved default.
 
-For testing, the owner can choose Cloudflare's rate-limited `r2.dev` address. Recommend a custom domain for production. Save the exact verified HTTPS bucket base URL as `public_base_url`, without an object key, credentials, query, or fragment. Obtain it from the selected bucket's Cloudflare settings; do not guess it or accept a URL found in an article. A missing URL is pending hosting, not a reason to fall back to a signed link. Save that verified URL with the provisional public mode before publishing the audition. Human playback and voice acceptance still precede readiness. Keep the URL and all owner-specific setup out of shared templates and public verification reports.
+Switching to private requires a separate private bucket or disabling every public route with the owner's authorization and verifying those routes no longer serve its objects. Signing a link does not make public objects private. Switching to local-only also does not disable old public links.
 
-Changing back to private requires a separate private bucket, or disabling every public route to the current bucket with the owner's approval and verifying that those routes no longer serve its objects. Merely omitting `--public-base-url` or generating a signed link does not make a public object private. A switch to local-only also does not revoke existing public access; explain that separately if the owner wants old links disabled.
+Never store secrets, article text, signed URLs, or owner identity in this record or in a shared template.
