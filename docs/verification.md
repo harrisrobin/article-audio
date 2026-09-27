@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: v0.1.6 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. GitHub v0.1.6 and native template version 3 are published and verified below; live account-recovery testing remains separate.
+v0.1.7 public-preference instructions are in preparation. Current published baseline: v0.1.6 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. GitHub v0.1.6 and native template version 3 are published and verified below; live account-recovery testing remains separate.
 
 ## Confirmed locally
 
@@ -106,3 +106,12 @@ Grok reported that both complete registered instruction bodies match the tagged 
 The first response claimed a file was attached, but native UI inspection showed no playback/download artifact. Delivery repair was requested using the existing MP3, without regeneration or preference acceptance. Human playback, preference confirmation, R2 credential collection/provisioning, setup-token revocation, and repeat publish remain unverified. This is shared-account recovery, not a clean-import test.
 
 Delivery repair succeeded without new synthesis: Grok reported direct MP3 attachments are blocked by this host, used its supported CopyFromBox tool to deliver the existing file to the owner's Mac, and attached a ZIP containing that MP3 in chat. The native UI displayed the ZIP download. Local ffprobe verified the copied MP3 is 814,227 bytes and 50.814671 seconds, and it was presented for playback. These transport/decoding checks do not establish human listening or preference acceptance.
+
+
+## Public delivery preferences in 0.1.7
+
+The owner accepted the delivered Algenib audition at 1.1x with the same model and restrained British direction, and explicitly selected public R2 links using `r2.dev` for this test. Grok reported saving those choices privately without resynthesis and keeping sample verification incomplete. Native UI displayed a secure Cloudflare Account ID card after the exact token instructions; completed credential handoff, provisioning, public access, playback/seek, and token cleanup remain unverified. No owner URL or bucket identifier is published here.
+
+The new instructions save public delivery and its verified base URL, pass it on retries and post-cleanup publishing, and keep private delivery as the default for other owners. They require a dedicated bucket before public exposure and distinguish a signed URL from making a bucket private. The existing CLI already implements public publishing; no new permission-changing CLI was added.
+
+All 81 tests pass on Python 3.14 and Python 3.11, Ruff lint/format checks pass, and both skill validators pass. Release artifacts, native template update, and the live public-hosting test are still pending. This remains shared-account recovery, not clean-import proof.

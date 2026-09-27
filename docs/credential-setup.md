@@ -48,3 +48,9 @@ The directory is mode 0700 and the file is mode 0600. Values are plaintext at re
 After saving, run `auth status`, `models`, and a short generation. Status only establishes presence, not validity. A successful model-list request verifies some Gemini access; successful synthesis is the actual speech test. R2 credentials are validated through upload and ranged retrieval when you publish.
 
 Native form compatibility must be tested on the installed Grok Bot version. The local form is implemented and independently testable. [Official secret-handoff documentation](https://cursor.com/help/grok-bot/secrets).
+
+## Diagnose a saved native secret before requesting it again
+
+A card marked Saved proves vault storage, not subprocess delivery. Check the exact variable names and supported handoff in the installed tool's schema, then run `auth status` in a fresh host execution context. Read names/presence only. A normal child process inherits its parent's environment; starting a child with `env -i` clears injected secrets and cannot test a fresh host injection. Do not print values to test whether masking works. If names remain saved in the Bot's Secrets UI but unavailable to the CLI, report an unverified host handoff and offer the local form once. Do not repeatedly request or replace the same native secret. See [Grok secret storage](https://cursor.com/help/grok-bot/secrets).
+
+If a local form reports a cross-origin rejection, stop repeated entry and inspect the installed runtime version and nonsecret request-origin behavior. Keep exact Host, Origin, and CSRF validation intact. Releases before 0.1.7 used `Referrer-Policy: no-referrer`, which can make an ordinary browser form POST send `Origin: null`. Upgrade the runtime before retrying; accepting null origins is not the repair.

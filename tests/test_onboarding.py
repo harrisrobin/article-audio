@@ -23,6 +23,7 @@ def test_local_form_rejects_cross_origin_and_saves_without_echo(tmp_path, group)
             assert page.status_code == 200
             assert 'type="password"' in page.text
             assert page.headers["cache-control"] == "no-store"
+            assert page.headers["referrer-policy"] == "same-origin"
             assert all(f'name="{key}"' in page.text for key in values)
             if group == "cloudflare":
                 assert "Account API Tokens &gt; Edit" in page.text
@@ -33,8 +34,13 @@ def test_local_form_rejects_cross_origin_and_saves_without_echo(tmp_path, group)
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Origin": "https://bad.test",
             }
-            assert client.post(server.url, content=data, headers=headers).status_code == 403
-            assert all(store.get(key) is None for key in values)
+            for origin in ("https://bad.test", "null", None):
+                if origin is None:
+                    headers.pop("Origin", None)
+                else:
+                    headers["Origin"] = origin
+                assert client.post(server.url, content=data, headers=headers).status_code == 403
+                assert all(store.get(key) is None for key in values)
             headers["Origin"] = server.origin
             saved = client.post(server.url, content=data, headers=headers)
             assert saved.status_code == 200
