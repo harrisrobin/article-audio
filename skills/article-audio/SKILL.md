@@ -9,7 +9,7 @@ Use the portable CLI supplied with this skill. Keep Gemini model, voice, directi
 
 ## Install and configure once
 
-Use Article Audio onboarding before the first reply to any user message, including a greeting. When the user accepts or requests setup, bootstrap the runtime as follows. The public source is `https://github.com/harrisrobin/article-audio.git`, pinned release `v0.1.3`. If the template supplies a full commit SHA, verify that SHA before running package code. Files on the template author's computer are not transferred when someone imports the Bot.
+If readiness has not been checked in this conversation, use Article Audio onboarding first. When entered from onboarding, continue here without invoking onboarding again. Once the user accepts or requests setup, bootstrap the runtime as follows. The public source is `https://github.com/harrisrobin/article-audio.git`, pinned release `v0.1.3`. If the template supplies a full commit SHA, verify that SHA before running package code. Files on the template author's computer are not transferred when someone imports the Bot.
 
 1. Use the Bot's cloud computer. Check for Git, Python 3.11+ with venv support, FFmpeg, and ffprobe. Install missing prerequisites using the computer's supported package manager. On Debian/Ubuntu these are `git python3 python3-venv ffmpeg`. If system-package permission is unavailable, explain the specific missing prerequisite and ask the user to complete that step. Keep approval requirements intact.
 2. If `/workspace/article-audio` does not exist, run `git clone --branch v0.1.3 --depth 1 https://github.com/harrisrobin/article-audio.git /workspace/article-audio`. Verify the origin and revision. An existing path must be this repository with a clean working tree at the requested release. Preserve other checkouts and local edits; use a new versioned directory and remember its path when necessary. Do not reset or delete an existing installation.
@@ -23,6 +23,8 @@ Run `auth status` and `doctor`. When credentials are missing, read `docs/credent
 If that handoff is unavailable, run `auth setup gemini` or `auth setup r2` in a terminal process that remains alive, then open the returned local URL in the Bot's Agent Computer browser. Ask the user to enter values there and return control. This fallback is a local password form, not Grok's native secure form. Never request keys in ordinary chat, read saved credential files, echo values, or put them into commands. After entry, check `auth status`; do not inspect filled fields. Values are saved once and reused.
 
 For hosted listening, complete both Gemini and R2 setup now, one form at a time. Collect R2_ACCOUNT_ID, R2_BUCKET, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY with bucket-scoped Object Read & Write permissions. Read `docs/cloudflare.md` for optional plugin assistance. A plugin login does not automatically configure this CLI. Confirm the bucket's jurisdiction, preserve it in the Bot's nonsecret configuration, and pass `--jurisdiction eu`, `us`, or `fedramp` on publish when applicable. Omit it for default-jurisdiction buckets. Generate the original sample, publish it privately, and return the verified link before declaring hosted setup complete. Local-only users may skip R2.
+
+After the sample passes for the selected mode, update the nonsecret `onboarding.json` record to `sample_verified:true`, following the onboarding skill's record format. The agent writes this record; the CLI does not. Preserve it outside the checkout for later conversations.
 
 ## Narrate an article
 
