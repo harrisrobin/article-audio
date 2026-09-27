@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current work: v0.2.0 fixes narration to one preset and removes the voice-approval, manual playback/seek, and setup-token-revocation checkpoints. Local implementation is under review; its release and native template are not yet published. GitHub v0.1.9 and its verified bundle remain published. Native v0.1.8, staged version 16, is the last verified publication at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt). The v0.1.9 native draft was not verified or published before the Mac locked and is superseded by this work.
+Current published package: [GitHub v0.2.0](https://github.com/harrisrobin/article-audio/releases/tag/v0.2.0) fixes narration to one preset and removes voice-approval, manual playback/seek, and setup-token-revocation checkpoints. Its source archive and complete template bundle are published and independently verified. The native Grok update is blocked by the locked Mac. Native v0.1.8, staged version 16, remains the last verified publication at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt). The unpublished v0.1.9 draft is superseded; stage v0.2.0 when native control resumes.
 
 Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Shared-account fallback storage, R2 provisioning, and public sample delivery were verified below. Native secret delivery, a clean import, and complete X Article narration still need their own proof.
 
@@ -211,3 +211,10 @@ Grok reported verifying the bundle and updating both complete live skills. Nativ
 The owner requested one informational preview with no voice controls, voice acceptance, manual playback/seek check, or setup-token-revocation checkpoint. The CLI now exposes only the fixed Gemini 3.8 Flash TTS / Algenib / British / 1.1× preset. Automated media and selected-mode publish verification remain. Schema 2 records `preview_ready` and delivery configuration, replacing the former narration, confirmation, and cleanup flags. Migration preserves credentials and recordings.
 
 The complete local suite passes 140 tests on Python 3.11, including CLI rejection of all removed controls before provider access or job creation. Ruff, formatting, both skill validators, and direct wrapper version/help/plan checks pass. Native and fresh-import behavior for this release remain untested while the Mac is locked. This local result is not a hosted CI result.
+
+
+Published package commit: `7c17964566d8e2d9f2e3c1f85f7abe78d81bec29`. Source ZIP SHA-256: `e4ba6aa78c1e0bf4e234714ed51a7f94ac5bc76fabe532963bff644d58071584`. Bundle SHA-256: `a944fb7f8aaf5441545e04914ed1555d7d413273cf4426ebf2e892d39453f656`. All six release assets are published. Anonymous downloads matched the verified local bundle and checksum. Every one of the 51 source ZIP files matched the tag commit. Compiling from that fresh downloaded source with Python 3.11 produced byte-identical bundle and checksum files.
+
+The release memory expands to 538 characters and needs two native facts; the other canonical memories are 397, 484, and 471 characters. Native publication must preserve all five resulting facts, both complete skills, the full profile, and the same template URL. Grok control was attempted again after package publication and still reported a locked Mac, so no v0.2.0 native update is claimed.
+
+GitHub Actions run `36355321696` did not execute any test steps. Its annotation says the account is locked due to a billing issue. The 140-test result is local; the clean-import behavior of this simplified flow remains unverified.
