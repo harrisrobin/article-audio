@@ -2,7 +2,7 @@
 
 Never commit API keys, credential files, source articles, or signed playback links.
 
-Credentials are accepted through injected environment variables, JSON on stdin from a secure runtime handoff, a local password form, or hidden terminal input. There is no command-line flag that takes a credential value. Provider errors are summarized without echoing raw responses. Status commands report names and presence only.
+Credentials are accepted through injected environment variables, JSON on stdin from a secure runtime handoff, a local password form, or hidden terminal input. There is no command-line flag that takes a credential value. Provider errors are summarized without echoing raw responses. Status commands report credential names, presence, and the storage path for diagnosis; they never report credential values.
 
 The file backend stores plaintext in a user-owned directory with mode 0700 and a credentials.json file with mode 0600. It is outside the repository. This is access control, not encryption. Another process running as the same OS user can read it. All Bots on one Grok Bot account share the computer and command-line credentials. Protect the account, use bucket-scoped R2 keys, and rotate credentials through their providers when needed.
 

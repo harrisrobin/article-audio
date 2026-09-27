@@ -2,32 +2,22 @@
 
 import hashlib
 import stat
+import tomllib
 import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-FILES = ("pyproject.toml", "uv.lock", "README.md", "LICENSE", "SECURITY.md", ".gitignore")
-DIRECTORIES = ("src", "tests", "scripts", "skills", "template", "docs", "examples", ".github")
-EXTENSIONS = {".py", ".md", ".sh", ".yml", ".yaml", ".txt"}
 
 
 def main():
     target = ROOT / "dist"
     target.mkdir(exist_ok=True)
-    archive = target / "article-audio-0.1.0.zip"
-    paths = [ROOT / file for file in FILES]
-    for directory in DIRECTORIES:
-        paths.extend(
-            path
-            for path in (ROOT / directory).rglob("*")
-            if path.is_file()
-            and not path.is_symlink()
-            and (path.suffix in EXTENSIONS or path.name == "article-audio")
-            and "__pycache__" not in path.parts
-        )
+    config = tomllib.loads((ROOT / "pyproject.toml").read_text())
+    archive = target / f"article-audio-{config['project']['version']}.zip"
+    paths = [ROOT / file for file in config["tool"]["hatch"]["build"]["only-include"]]
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:
         for path in sorted(paths):
-            if not path.is_file() or path.is_symlink():
+            if not path.is_file() or path.resolve() != path.absolute():
                 raise RuntimeError("Missing or unsafe release input")
             info = zipfile.ZipInfo(f"article-audio/{path.relative_to(ROOT)}")
             info.compress_type = zipfile.ZIP_DEFLATED

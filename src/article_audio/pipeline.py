@@ -5,7 +5,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Protocol
 
-from .audio import decode_audio, encode_mp3, probe_audio, require_ffmpeg, split_text
+from .audio import (
+    check_narration_duration,
+    encode_mp3,
+    probe_audio,
+    require_ffmpeg,
+    split_text,
+    validate_narration,
+)
 from .errors import UserError
 from .files import atomic_write, file_lock, private_dir
 from .gemini import VoiceSettings
@@ -80,12 +87,27 @@ def generate(
                     "Job manifest is damaged. Choose a new output directory.", "invalid_job"
                 ) from None
         output = directory / "audio.mp3"
-        if output.is_file() and manifest.get("audio_sha256") == digest(output.read_bytes()):
-            duration = probe_audio(output)
-            return _result(directory, specification, duration, cached=True)
-        atomic_write(directory / "transcript.txt", text.encode())
         if metadata:
-            atomic_write(directory / "source.json", json.dumps(metadata, indent=2).encode())
+            source_path = directory / "source.json"
+            try:
+                source = json.loads(source_path.read_text()) if source_path.exists() else {}
+                if not isinstance(source, dict):
+                    raise ValueError
+            except ValueError:
+                raise UserError("Saved source metadata is damaged.", "invalid_job") from None
+            source.update({key: value for key, value in metadata.items() if value is not None})
+            atomic_write(source_path, json.dumps(source, indent=2).encode())
+        if output.is_file() and manifest.get("audio_sha256") == digest(output.read_bytes()):
+            try:
+                duration = probe_audio(output)
+                check_narration_duration(text, duration * settings.speed)
+            except UserError:
+                manifest.pop("audio_sha256", None)
+                manifest["segments"] = {}
+                output.unlink(missing_ok=True)
+            else:
+                return _result(directory, specification, duration, cached=True)
+        atomic_write(directory / "transcript.txt", text.encode())
         chunks_dir = directory / "chunks"
         private_dir(chunks_dir)
 
@@ -102,7 +124,7 @@ def generate(
                 valid = False
                 if path.exists() and previous.get("sha256") == digest(path.read_bytes()):
                     try:
-                        decode_audio(path.read_bytes(), "audio/wav")
+                        validate_narration(path.read_bytes(), chunk)
                         valid = True
                     except UserError:
                         pass
@@ -111,7 +133,7 @@ def generate(
                     if not chunk.strip():
                         continue
                     audio = narrator.synthesize(chunk, settings)
-                    decode_audio(audio, "audio/wav")
+                    validate_narration(audio, chunk)
                     atomic_write(path, audio)
                     manifest["segments"][str(index)] = {"sha256": digest(audio)}
                     save()
@@ -121,6 +143,13 @@ def generate(
             manifest["status"] = "encoding"
             save()
             duration = encode_mp3(audio_paths, output, settings.speed)
+            try:
+                check_narration_duration(text, duration * settings.speed)
+            except UserError:
+                manifest["segments"] = {}
+                manifest.pop("audio_sha256", None)
+                output.unlink(missing_ok=True)
+                raise
             manifest.update(
                 status="complete",
                 duration_seconds=duration,

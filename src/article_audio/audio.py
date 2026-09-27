@@ -76,6 +76,22 @@ def require_ffmpeg() -> None:
         )
 
 
+def check_narration_duration(text: str, seconds: float) -> None:
+    characters = sum(character.isalnum() for character in text)
+    # A loose ceiling catches gross truncation without mistaking headings for missing speech.
+    if characters >= 200 and seconds < characters / 100:
+        raise UserError(
+            "Narration is implausibly short for the transcript. Retry generation and audition it.",
+            "suspiciously_short_audio",
+        )
+
+
+def validate_narration(audio: bytes, text: str) -> None:
+    decode_audio(audio, "audio/wav")
+    with wave.open(io.BytesIO(audio), "rb") as wav:
+        check_narration_duration(text, wav.getnframes() / wav.getframerate())
+
+
 def encode_mp3(chunks: list[Path], destination: Path, speed: float) -> float:
     require_ffmpeg()
     combined = destination.with_suffix(".joined.wav")

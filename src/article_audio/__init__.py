@@ -1,3 +1,3 @@
 """Article narration with Gemini TTS and optional R2 delivery."""
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"

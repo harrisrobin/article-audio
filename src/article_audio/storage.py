@@ -13,14 +13,19 @@ from botocore.exceptions import BotoCoreError, ClientError
 
 from .errors import UserError
 
+R2_JURISDICTIONS = ("default", "eu", "us", "fedramp")
 
-def r2_client(credentials: dict):
+
+def r2_client(credentials: dict, jurisdiction: str = "default"):
     account = credentials["R2_ACCOUNT_ID"]
     if not re.fullmatch(r"[a-fA-F0-9]{32}", account):
         raise UserError("R2_ACCOUNT_ID must be a 32-character Cloudflare account ID.")
+    if jurisdiction not in R2_JURISDICTIONS:
+        raise UserError("Unsupported R2 jurisdiction. Choose default, eu, us, or fedramp.")
+    suffix = "" if jurisdiction == "default" else f".{jurisdiction}"
     return boto3.client(
         "s3",
-        endpoint_url=f"https://{account}.r2.cloudflarestorage.com",
+        endpoint_url=f"https://{account}{suffix}.r2.cloudflarestorage.com",
         aws_access_key_id=credentials["R2_ACCESS_KEY_ID"],
         aws_secret_access_key=credentials["R2_SECRET_ACCESS_KEY"],
         region_name="auto",

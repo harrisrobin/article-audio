@@ -8,6 +8,8 @@ The Bot reads the article using its existing X or browser access and supplies a 
 
 Give the Bot a source archive or a checkout of this repository and use the [installation prompt](template/INSTALL.md). The Bot installs the scripts on its computer and saves the [Article audio skill](skills/article-audio/SKILL.md).
 
+Hosted setup collects Gemini and R2 credentials, then generates and uploads a sample to verify the listening link. The [Cloudflare plugin is optional](docs/cloudflare.md); its account login does not automatically supply this CLI's S3 credentials.
+
 The package includes a [Bot profile](template/PROFILE.md) and template instructions. A native Grok template share link must be created inside Grok after installation; this repository is not itself an importable proprietary template.
 
 ## Run locally
@@ -32,6 +34,8 @@ bash scripts/article-audio generate examples/sample.txt --title 'Room for your a
 
 The JSON result contains `audio_path`, duration, actual model and voice, and cache status. Progress is emitted separately on stderr. Rerun the same command to resume completed segments after a failure or reuse an existing MP3.
 
+Supplying a corrected title, author, or source URL updates the saved metadata even when audio is cached. Omitted metadata fields keep their previous values.
+
 ## Narration settings
 
 Defaults: **Gemini 3.8 Flash TTS**, **Algenib**, restrained British delivery, **1.1× speed**, MP3 at **44.1 kHz / mono / 128 kbps**. FFmpeg changes speed while preserving pitch. The model controls the performance, so audition a short sample before processing a backlog.
@@ -50,6 +54,8 @@ bash scripts/article-audio generate /path/to/transcript.txt \
 
 Segments default to 3,000 characters, favoring paragraph and whitespace boundaries. `--chunk-chars` accepts 32–6,000. Exact text slices preserve the full transcript, but generated speech can still mispronounce or omit words; decoding success is not a transcript accuracy check. Separate requests can have audible changes in prosody. Smaller segments can help with provider limits but may create more joins.
 
+A gross-truncation check rejects audio shorter than one second per 100 alphanumeric characters, applied only when at least 200 such characters are present. It checks new and cached WAVs plus the combined MP3, accounting for playback speed. This deliberately loose floor catches implausibly brief output, not ordinary omissions or silence; audition is still required. Invalid cached audio is regenerated on retry.
+
 Inputs are capped at 1 MB and generation at 100 segments by default. Use `plan` before a long article and increase `--max-chunks` deliberately if needed. Duration is an estimate, not a price quote; Gemini usage is billed by your provider. Transient requests have at most three attempts, and an ambiguous timeout can still incur provider usage.
 
 ## Host on R2
@@ -62,6 +68,8 @@ bash scripts/article-audio publish /path/from/generate/audio.mp3
 ```
 
 The result includes `audio_url` and `expires_at`. Private signed links last **seven days** by default; `--expires` accepts 1–604800 seconds. Anyone holding the link can listen until it expires. Run `publish` again to renew it; matching uploads are reused. Signed links are returned, not saved in manifests.
+
+For jurisdictional buckets, use `--jurisdiction eu`, `us`, or `fedramp`, or set `R2_JURISDICTION`. Ordinary buckets use `default`. [Setup and plugin details](docs/cloudflare.md).
 
 For a permanent public URL, configure an R2 public custom domain first, then explicitly use:
 
@@ -93,7 +101,7 @@ uv build
 python3 scripts/package.py
 ```
 
-The source ZIP in `dist/` contains code, locked dependencies, skill, template instructions, and tests. It uses an allowlist and excludes credentials, recordings, virtual environments, and private job data. The Python wheel installs the CLI; use the source ZIP for the complete Bot installation materials.
+The source ZIP in `dist/` contains code, locked dependencies, skill, template instructions, and tests. ZIP, source distribution, and wheel share an explicit file allowlist in `pyproject.toml`; adding a new release file requires listing it there. Stray files under `docs`, `examples`, or the package directory are excluded. Review listed files for secrets before releasing: an allowlist cannot detect private text inserted into an approved source file. The Python wheel installs the CLI; use the source ZIP for the complete Bot installation materials.
 
 Tests cover secure collection, redaction, provider errors, exact input coverage, resumability, concurrency, real FFmpeg encoding, and mocked R2 delivery. See [verification evidence and remaining runtime checks](docs/verification.md). The CI workflow is included; a local test run is not a hosted CI result.
 

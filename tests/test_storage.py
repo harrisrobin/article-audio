@@ -7,7 +7,26 @@ from boto3.exceptions import S3UploadFailedError
 from botocore.exceptions import ClientError
 
 from article_audio.errors import UserError
-from article_audio.storage import publish
+from article_audio.storage import publish, r2_client
+
+
+@pytest.mark.parametrize("jurisdiction", ["default", "eu", "us", "fedramp"])
+def test_r2_jurisdiction_selects_cloudflare_endpoint(jurisdiction):
+    account = "a" * 32
+    client = r2_client(
+        {"R2_ACCOUNT_ID": account, "R2_ACCESS_KEY_ID": "test", "R2_SECRET_ACCESS_KEY": "test"},
+        jurisdiction=jurisdiction,
+    )
+    suffix = "" if jurisdiction == "default" else f".{jurisdiction}"
+    assert client.meta.endpoint_url == f"https://{account}{suffix}.r2.cloudflarestorage.com"
+
+
+def test_invalid_jurisdiction_cannot_redirect_credentials():
+    with pytest.raises(UserError, match="jurisdiction"):
+        r2_client(
+            {"R2_ACCOUNT_ID": "a" * 32, "R2_ACCESS_KEY_ID": "test", "R2_SECRET_ACCESS_KEY": "test"},
+            jurisdiction="attacker.example",
+        )
 
 
 class Bucket:

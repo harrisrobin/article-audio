@@ -26,23 +26,37 @@ class CredentialStore:
             return {}
         private_dir(self.directory)
         try:
-            fd = os.open(self.path, os.O_RDONLY | os.O_NOFOLLOW)
+            fd = os.open(self.path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
             with os.fdopen(fd, "r") as stream:
                 info = os.fstat(stream.fileno())
-                if (
-                    not stat.S_ISREG(info.st_mode)
-                    or info.st_uid != os.getuid()
-                    or stat.S_IMODE(info.st_mode) & 0o077
-                    or info.st_size > 65536
-                ):
+                if not stat.S_ISREG(info.st_mode):
+                    raise UserError("Credential storage must be a regular file.", "unsafe_storage")
+                if info.st_uid != os.getuid():
+                    raise UserError(
+                        "Credential file must be owned by your OS account.", "unsafe_storage"
+                    )
+                if stat.S_IMODE(info.st_mode) & 0o077:
                     raise UserError(
                         "Credential file must be private (mode 0600).", "unsafe_storage"
                     )
+                if info.st_size > 65536:
+                    raise ValueError
                 values = json.load(stream)
-            return self.validate(values)
-        except (OSError, ValueError):
+            try:
+                return self.validate(values)
+            except UserError:
+                raise ValueError from None
+        except ValueError:
             raise UserError(
-                "Cannot safely read credentials. Re-run auth setup.", "unsafe_storage"
+                "Saved credentials are damaged. Move credentials.json to a private backup in "
+                "the same directory, then re-run auth setup for each provider.",
+                "unsafe_storage",
+            ) from None
+        except OSError:
+            raise UserError(
+                "Cannot safely open credentials. Check ownership and permissions; "
+                "remove symlinks rather than following them.",
+                "unsafe_storage",
             ) from None
 
     @staticmethod

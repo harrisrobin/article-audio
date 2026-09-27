@@ -1,8 +1,10 @@
 # Credential setup for Grok Bot
 
-The CLI needs GEMINI_API_KEY for narration. Uploads additionally need R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, and R2_BUCKET. Ask for the R2 group only when hosted delivery is needed.
+The CLI needs GEMINI_API_KEY for narration. Uploads additionally need R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, and R2_BUCKET. For hosted listening, collect both groups during initial setup, before the sample upload test. Ask for only Gemini when the user chooses local audio.
 
 Use `auth status` to discover missing names. It never prints values. Gemini keys come from [Google AI Studio](https://aistudio.google.com/apikey). Create R2 object read/write credentials scoped to the chosen bucket in Cloudflare. Leave the bucket private for signed links.
+
+Run the Gemini and R2 handoffs in sequence so the user completes one form at a time. The R2 save merges with the existing Gemini key. See [Cloudflare setup](cloudflare.md) for bucket creation, the optional plugin, and required token permissions. `scripts/setup.sh` installs dependencies; credential collection is the next step in the guided Bot setup.
 
 ## Native handoff, when supported
 
@@ -28,6 +30,14 @@ The first JSON line contains a one-time `setup_url`. Open that exact URL in the 
 The URL expires after ten minutes. It does not work in a browser on the user's laptop unless the script is also running there. Do not expose or tunnel the form publicly. Do not inspect the filled password inputs or capture screenshots during credential entry. Retry by starting a fresh form if it expires.
 
 For a human at a terminal, `auth setup gemini --method terminal` uses hidden input. Both form and terminal modes save values for future calls. Re-run setup to rotate a key.
+
+## Recover a damaged credential file
+
+Ordinary rotation works when the saved file is valid. Setup deliberately refuses to overwrite unreadable or damaged storage, because another provider's key might otherwise be lost.
+
+For a mode error, verify that the file is a regular file owned by your account, then restore mode 0600 inside the private mode-0700 directory and retry. Do not follow or change a symlink's target.
+
+For malformed JSON, unsupported saved fields, or a file larger than 65,536 bytes, move `credentials.json` to a private backup name in the same mode-0700 directory, then collect each provider again with `auth setup`. Keep the backup protected with mode 0600. Do not print its contents or put it in the source checkout. This preserves the old file while allowing a fresh store; repeating setup before moving it cannot repair it. A nonregular path, such as a named pipe, is rejected immediately; replace that path with a regular credential file through setup.
 
 ## Storage and verification
 

@@ -1,5 +1,7 @@
 import os
 import stat
+import subprocess
+import sys
 
 import pytest
 
@@ -58,3 +60,52 @@ def test_refuses_world_readable_existing_secrets(tmp_path):
     os.chmod(store.path, 0o644)
     with pytest.raises(UserError):
         store.get("GEMINI_API_KEY")
+
+
+@pytest.mark.parametrize(
+    "damaged",
+    ['{"GEMINI_API_KEY":"private-marker",BROKEN', '{"unknown":"private-marker"}', "x" * 65537],
+    ids=["json", "schema", "size"],
+)
+def test_corrupt_credentials_preserve_file_and_give_working_recovery_steps(tmp_path, damaged):
+    store = CredentialStore(tmp_path / "settings")
+    store.save({"GEMINI_API_KEY": "private-marker"})
+    store.path.write_text(damaged)
+    broken = store.path.read_bytes()
+    with pytest.raises(UserError) as error:
+        store.save({"GEMINI_API_KEY": "replacement"})
+    assert error.value.code == "unsafe_storage"
+    assert "Move" in str(error.value) and "private-marker" not in str(error.value)
+    assert store.path.read_bytes() == broken
+    backup = store.directory / "credentials.backup"
+    store.path.rename(backup)
+    store.save({"GEMINI_API_KEY": "replacement"})
+    assert store.get("GEMINI_API_KEY") == "replacement"
+    assert backup.read_bytes() == broken
+
+
+def test_insecure_permissions_can_be_repaired_without_losing_other_provider(tmp_path):
+    store = CredentialStore(tmp_path / "settings")
+    store.save({"GEMINI_API_KEY": "before", "R2_BUCKET": "audio"})
+    store.path.chmod(0o644)
+    with pytest.raises(UserError, match="0600"):
+        store.save({"GEMINI_API_KEY": "after"})
+    store.path.chmod(0o600)
+    store.save({"GEMINI_API_KEY": "after"})
+    assert store.get("R2_BUCKET") == "audio"
+    assert store.get("GEMINI_API_KEY") == "after"
+
+
+def test_fifo_credential_path_fails_without_hanging(tmp_path):
+    directory = tmp_path / "settings"
+    directory.mkdir(mode=0o700)
+    os.mkfifo(directory / "credentials.json", 0o600)
+    result = subprocess.run(
+        [sys.executable, "-m", "article_audio", "--config-dir", str(directory), "auth", "status"],
+        capture_output=True,
+        text=True,
+        timeout=2,
+        env={key: value for key, value in os.environ.items() if key != "GEMINI_API_KEY"},
+    )
+    assert result.returncode == 2
+    assert "regular file" in result.stdout

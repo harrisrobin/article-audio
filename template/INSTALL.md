@@ -4,11 +4,13 @@ This directory is a profile and installation contract, not a proprietary Grok te
 
 ## Try the local build before publication
 
-Run `python3 scripts/package.py` to produce `dist/article-audio-0.1.0.zip` and its SHA-256 file. Transfer the archive using an attachment if your Grok client supports it, or put it at a download location that the Bot can reach. Source-code attachments are supported; archive handling can vary by client. A GitHub repository or release asset is the simplest repeatable route once published.
+Run `python3 scripts/package.py` to produce `dist/article-audio-0.1.1.zip` and its SHA-256 file. Transfer the archive using an attachment if your Grok client supports it, or put it at a download location that the Bot can reach. Source-code attachments are supported; archive handling can vary by client. A GitHub repository or release asset is the simplest repeatable route once published.
 
 Tell your Bot:
 
-> Install the Article Audio package I supplied into /workspace/article-audio. Inspect the archive and run bash scripts/setup.sh. Read skills/article-audio/SKILL.md and docs/credential-setup.md. Save the skill as Article audio. Use /workspace/.article-audio-config for credentials and /workspace/.article-audio-jobs for recordings, outside the repository. Guide me through missing credentials with the supported secure handoff or the local form. Generate examples/sample.txt, then test a full article I provide. Do not upload anything publicly.
+> Install the Article Audio package I supplied into /workspace/article-audio. Inspect the archive and run bash scripts/setup.sh. Read skills/article-audio/SKILL.md, docs/credential-setup.md, and docs/cloudflare.md. Save the skill as Article audio. Use /workspace/.article-audio-config for credentials and /workspace/.article-audio-jobs for recordings, outside the repository. Set up Gemini and private R2 hosting now. Guide me through both providers' missing credentials with supported secure handoffs or the local forms, one form at a time. Help me choose or create a private R2 bucket, confirm its jurisdiction, and obtain bucket-scoped Object Read & Write credentials. Generate examples/sample.txt, upload the MP3 privately, and return its verified listening link and expiry. Then test a full article I provide. Do not enable public bucket access or upload anything publicly. Reuse existing saved credentials and audio when upgrading this package.
+
+For a local-only installation, replace the hosting instructions with “Set up Gemini only and return local MP3 files.” Keep configuration and job directories outside the checkout so installing a newer archive preserves both.
 
 An archive should contain one top-level `article-audio/` directory. When extracting any downloaded archive, check for paths escaping the destination. Keep the supplied release checksum for verification. For a Git repository, check out the selected tag or commit rather than tracking a changing branch on every invocation.
 

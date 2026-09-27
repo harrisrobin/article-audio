@@ -16,7 +16,7 @@ from .errors import UserError
 from .gemini import DEFAULT_STYLE, MODELS, GeminiClient, VoiceSettings
 from .onboarding import SetupServer
 from .pipeline import generate, plan
-from .storage import publish, r2_client
+from .storage import R2_JURISDICTIONS, publish, r2_client
 
 
 def parser() -> argparse.ArgumentParser:
@@ -62,15 +62,21 @@ def parser() -> argparse.ArgumentParser:
                 type=Path,
                 default=Path(os.environ.get("ARTICLE_AUDIO_DATA_DIR", data / "article-audio/jobs")),
             )
-            command.add_argument("--title", default="")
-            command.add_argument("--author", default="")
-            command.add_argument("--source-url", default="")
+            command.add_argument("--title")
+            command.add_argument("--author")
+            command.add_argument("--source-url")
             command.add_argument("--max-chunks", type=int, default=100)
     upload = commands.add_parser(
         "publish", help="Upload an existing MP3 and return a verified R2 link"
     )
     upload.add_argument("audio", type=Path)
     upload.add_argument("--expires", type=int, default=604800)
+    upload.add_argument(
+        "--jurisdiction",
+        choices=R2_JURISDICTIONS,
+        default=os.environ.get("R2_JURISDICTION", "default"),
+        help="Bucket jurisdiction, also configurable with R2_JURISDICTION",
+    )
     upload.add_argument("--public-base-url", help="Explicitly request a public HTTPS playback link")
     return root
 
@@ -121,7 +127,7 @@ def dispatch(args) -> dict:
         credentials = store.require("r2")
         result = publish(
             args.audio,
-            r2_client(credentials),
+            r2_client(credentials, args.jurisdiction),
             credentials["R2_BUCKET"],
             args.expires,
             args.public_base_url,

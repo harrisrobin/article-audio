@@ -44,3 +44,12 @@ def test_publish_probe_rejects_non_mp3_audio(tmp_path):
     path.write_bytes(decode_audio(b"\x00\x01" * 2400, "audio/L16;rate=24000"))
     with pytest.raises(UserError):
         probe_audio(path)
+
+
+def test_duration_guard_is_conservative_and_ignores_short_headings():
+    from article_audio.audio import check_narration_duration
+
+    check_narration_duration("Brief heading", 0.5)
+    check_narration_duration("word " * 50, 2.0)
+    with pytest.raises(UserError, match="short"):
+        check_narration_duration("word " * 50, 1.99)
