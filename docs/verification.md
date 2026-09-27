@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-GitHub v0.1.7 is published; its native template update is being staged. Current published baseline: v0.1.6 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. GitHub v0.1.6 and native template version 3 are published and verified below; live account-recovery testing remains separate.
+Current published baseline: GitHub v0.1.7 and native template version 5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Shared-account credential handoff and live R2 testing remain incomplete.
 
 ## Confirmed locally
 
@@ -125,3 +125,14 @@ A local browser test with dummy Cloudflare values reproduced the same failure: `
 [GitHub v0.1.7](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.7) is published from `dfa61e82b9a4f3f6af68f8ae4c47ad8dd4568820`. Its ZIP checksum is `1657dbe5f5852b221beb86297a1a0ede080e2ebe0097ecf9b01a168cd254e4df`. Anonymous download verification matched all 45 files to the tag. Fresh ZIP installation passed version, doctor, provisioning help, and offline planning outside the checkout. The final 81-test suite passes on Python 3.14 and 3.11; Ruff and both skill validators pass.
 
 Grok reported that a separate host-spawned worker also received only the Gemini injected-secret name, with both Cloudflare names absent. This confirms the observed handoff failure extends beyond an ordinary child shell. It does not prove the vault deleted the saved secrets or establish the internal cause. Credential collection is paused while the fixed runtime and native template update are staged. Native Settings also displayed an older v0.1.5 profile; the update must verify that live description as well as the public preview.
+
+
+### Native v0.1.7 publication and runtime
+
+The first staged version contained only a short summary in its shared Instructions field. It was not published. The corrected version 5 included the full tagged PROFILE, four intended public memories, the exact release SHA/checksum, and the two current skills. Native review confirmed those contents. Publishing changed the control to Copy link; the fresh public page at the same zBuR URL displayed the complete v0.1.7 profile through its final paragraph. Native Bot Settings also displayed the full current profile, correcting the stale v0.1.5 text observed earlier. No duplicate public template was created.
+
+Grok reported installing `/workspace/article-audio-v0.1.7` with the exact clean release HEAD, version/doctor checks passing, and the fixed response header present. It updated runtime_path without changing accepted narration, delivery choice, or the existing audition. The repaired fallback is being reopened once for the owner; this is not yet proof of live credential storage, R2 provisioning, public playback, or setup-token cleanup.
+
+The observed desktop app version is 0.61.0. Its native Cloudflare cards displayed Saved, while both original and fresh host-worker checks reported the Cloudflare environment names absent. The internal host cause remains unknown; no claim is made that stored secrets were deleted.
+
+[GitHub run 36325438656](https://github.com/harrisrobin/article-audio/actions/runs/36325438656) again started no tests. The check annotation reports the account billing lock. Local checks passed; hosted CI remains unavailable.

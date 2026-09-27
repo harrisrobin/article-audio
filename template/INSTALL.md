@@ -26,7 +26,7 @@ Use **Article Audio** as the Bot and template display name and **Article narrato
 
 ## Update the existing public template
 
-For later releases, keep the template-authoring Bot and update its profile, both complete skills, pinned release commit, and ZIP checksum using the preparation steps above. Open its **Share > Update template** action and review the proposed shared configuration. Publish the update and confirm that **Copy link** still returns the existing public URL. Do not choose Create template or create another authoring Bot for a normal release.
+For later releases, keep the template-authoring Bot and update its profile, both complete skills, pinned release commit, and ZIP checksum using the preparation steps above. Open its **Share > Update template** action and review the proposed shared configuration. In the staged **Context > Instructions**, verify the complete PROFILE body, not just a short description. Then publish the update and confirm that **Copy link** still returns the existing public URL. Reload that URL and check the full profile through its final paragraph. Do not choose Create template or create another authoring Bot for a normal release.
 
 Editing a local Bot or pushing GitHub commits alone does not update a published template snapshot. Imported Bots are copies; do not assume they automatically receive new instructions. Keep credentials, setup completion records, and temporary authoring restrictions out of every update. **Delete Template** is a separate share-menu action, not part of releasing an update.
 
