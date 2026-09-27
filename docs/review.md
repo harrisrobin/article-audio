@@ -88,7 +88,7 @@ Fixed review base: `e64b77cabf5b67553f1a2081cd7db4a3280b68ab`. The user's suppli
 - Explicit ONLY job and Anti-jobs now cover social distribution, unrelated assistant work, editorial changes, public hosting, and instructions embedded in source material. The narration voice remains an audition candidate.
 - The existing private readiness record now carries user-confirmed narration settings and delivery. Audition precedes hosting; the agent passes saved settings explicitly because the CLI does not read this record. Missing records or older records with no preferences resume setup without erasing keys.
 - v0.1.5 was already published to the retained template in place. Older verification entries are historical. The earlier public ID is now explicitly deprecated in installation guidance; its deleted authoring Bot still prevents supported removal.
-- The template must contain exactly the two current skills. Legacy account-wide skill removal and editable store display metadata require native inspection before any cleanup. No unrelated Bot skills or opaque IDs should be changed.
+- The template must contain exactly the two current skills. Native inspection subsequently found the legacy account-wide skill, which was deleted after explicit confirmation. Grok reported correcting the stale editable store name to Article Audio. No unrelated Bot skills or opaque IDs should be changed.
 - An EU jurisdiction note and an acceptance-test runbook distinguish local tests, account recovery, human playback, and clean-import proof. Live R2, native handoff, and cleanup evidence remain unverified until actually observed.
 
 ### Standards
@@ -97,6 +97,6 @@ The reviewer flagged two instruction ambiguities. The completed-state example no
 
 ### Spec
 
-The independent reviewer found no actionable repository defects. Native publication, legacy-skill retirement, store metadata inspection, and the agreed account-recovery test remain external validation steps. Reusing the saved Gemini key cannot establish clean-import isolation.
+The independent reviewer found no actionable repository defects. Native publication and legacy-skill retirement are now verified in verification.md; Grok reported the store-name repair. The agreed account-recovery test remains a separate live validation step. Reusing the saved Gemini key cannot establish clean-import isolation.
 
 The Standards reviewer rechecked both fixes and reported no remaining findings. Spec reported zero repository findings. The 81-test suite passes on Python 3.14 and 3.11; Ruff and both skill validators pass.

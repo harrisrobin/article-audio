@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published baseline: v0.1.5 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. GitHub v0.1.6 is published and verified below; the native template update is pending because Mac app control is unavailable.
+Current published baseline: v0.1.6 at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt), verified updated in place below. Older sections are historical evidence. The earlier `u9M4WdBafSgCyS3GNHKla` template is deprecated and still accessible; it is not a recommended installation path. GitHub v0.1.6 and native template version 3 are published and verified below; live account-recovery testing remains separate.
 
 ## Confirmed locally
 
@@ -84,8 +84,23 @@ The earlier u9M4WdBafSgCyS3GNHKla template remains publicly accessible. Its auth
 
 The profile now states its only job, anti-jobs, and source-instruction boundary. Agent onboarding auditions before hosting, confirms and saves narration/delivery preferences once, and resumes partial setup without clearing shared credentials. The CLI continues to use explicit flags; it does not read the agent's readiness record.
 
-All 81 tests pass on Python 3.14 and 3.11, both skill validators pass, and Ruff lint/format checks pass. These tests validate existing CLI behavior, not human acceptance of the new agent instructions. The two-axis review and dispositions are in review.md. Native publication, legacy skill/store inspection, and live account-recovery playback/token cleanup remain pending. A clean-import pass still needs an isolated account/computer; the owner chose to preserve and finish the existing Gemini setup.
+All 81 tests pass on Python 3.14 and 3.11, both skill validators pass, and Ruff lint/format checks pass. These tests validate existing CLI behavior, not human acceptance of the new agent instructions. The two-axis review and dispositions are in review.md. Native publication and legacy-skill removal are verified below. Live account-recovery playback/token cleanup remains pending. A clean-import pass still needs an isolated account/computer; the owner chose to preserve and finish the existing Gemini setup.
 
 [GitHub v0.1.6](https://github.com/harrisrobin/article-audio/releases/tag/v0.1.6) was published from `411166cc48c30350fd95eae29c980fad63c4d102`. Anonymous download verification matched all 45 ZIP files to the tag, checked the checksum, and retrieved the exact public profile, both skills, and new preference/test guides. ZIP SHA-256: `732a63c102742380e2c959c22d9c559498a945ab5dd1240bd7e1668d804c9563`. A fresh ZIP installation passed setup, version, doctor, provisioning help, and offline sample planning from outside the checkout.
 
 The Mac app-control connection timed out on native inspection and reconnection attempts. No v0.1.6 native update, legacy-skill removal, store rename, or live setup is claimed. The owner approved finishing existing setup while preserving its Gemini key; credential entry and human playback await the restored connection. CI remains blocked before any steps run: the GitHub check annotation says the account is locked due to a billing issue.
+
+
+### Native v0.1.6 publication
+
+On 2026-09-27, after the app-control connection recovered, Grok staged version 3 of the existing `zBuR546KeAs5X0iwlXkxt` template. Native review showed four intended public memories with the exact release commit/checksum and exactly `article-audio` plus `article-audio-onboarding`. The registered onboarding body showed v0.1.6, preference confirmation, shared-key recovery, and token-cleanup gates; the narration editor showed the matching release and audition-before-hosting flow. The template's Publish action changed to Copy link, its conversation card showed Published, and the same public URL displayed the complete v0.1.6 profile. No replacement Bot or public URL was created.
+
+The owner explicitly confirmed deletion of the obsolete account-wide `Article audio getting started` skill. The native Delete Skill confirmation completed; the UI reported deletion and the remaining skill list retained the two current Article Audio skills plus the unrelated hospital skills. This is separate from the old orphan public template, which remains deprecated rather than deleted.
+
+Grok reported correcting the editable store display name from New Agent to Article Audio with a name-only metadata edit after the normal profile/UpdateAgent actions did not synchronize it. The visible Bot and template names are Article Audio / Article narrator. The live setup is now using the saved Gemini key, preserving shared state, and preparing an audition before any Cloudflare credential collection.
+
+### Shared-account setup recovery
+
+Grok reported that both complete registered instruction bodies match the tagged v0.1.6 files after frontmatter extraction, the store name reads Article Audio, and the deleted legacy skill was not recreated. It installed `/workspace/article-audio-v0.1.6`, verified the clean source origin and exact release commit, passed CLI version/doctor checks, and saved the runtime path privately. It reused the saved Gemini key and generated an approximately 51-second Algenib audition at 1.1x with the package direction.
+
+The first response claimed a file was attached, but native UI inspection showed no playback/download artifact. Delivery repair was requested using the existing MP3, without regeneration or preference acceptance. Human playback, preference confirmation, R2 credential collection/provisioning, setup-token revocation, and repeat publish remain unverified. This is shared-account recovery, not a clean-import test.
