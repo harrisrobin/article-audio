@@ -13,6 +13,7 @@ import sys
 import tempfile
 import tomllib
 import zipfile
+import zlib
 from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path, PurePosixPath
@@ -188,7 +189,7 @@ def _verify_sidecar(sidecar: bytes, zip_name: str, archive: bytes) -> str:
 def _archive_files(archive: bytes) -> dict[str, bytes]:
     try:
         bundle = zipfile.ZipFile(BytesIO(archive))
-    except zipfile.BadZipFile:
+    except (UnicodeDecodeError, zipfile.BadZipFile):
         raise CompileError("source archive is invalid") from None
     files: dict[str, bytes] = {}
     expanded = 0
@@ -201,7 +202,9 @@ def _archive_files(archive: bytes) -> dict[str, bytes]:
             path = PurePosixPath(name)
             mode = member.external_attr >> 16
             if (
-                member.is_dir()
+                member.orig_filename != name
+                or "\x00" in member.orig_filename
+                or member.is_dir()
                 or member.flag_bits & 1
                 or member.compress_type not in {zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED}
                 or "\\" in name
@@ -222,7 +225,7 @@ def _archive_files(archive: bytes) -> dict[str, bytes]:
                 raise CompileError("source archive exceeds the expanded size limit")
             try:
                 content = bundle.read(member)
-            except (OSError, RuntimeError, zipfile.BadZipFile):
+            except (OSError, RuntimeError, zipfile.BadZipFile, zlib.error):
                 raise CompileError("source archive is invalid") from None
             if len(content) != member.file_size:
                 raise CompileError("source archive is invalid")
@@ -335,9 +338,14 @@ def _fetch_verified_release(tag: str, client: httpx.Client) -> VerifiedRelease:
 
 
 def _public_spec(release: VerifiedRelease) -> dict[str, Any]:
+    if "template/public.json" not in release.files:
+        raise CompileError(
+            f"release {release.tag} does not support template bundles: "
+            "template/public.json is missing"
+        )
     try:
         value = json.loads(release.files["template/public.json"].decode("utf-8"))
-    except (KeyError, UnicodeDecodeError, json.JSONDecodeError):
+    except (UnicodeDecodeError, json.JSONDecodeError):
         raise CompileError("public template metadata is invalid") from None
     expected_keys = {"schema_version", "display_name", "label", "template_id", "memories"}
     if not isinstance(value, dict) or set(value) != expected_keys:
@@ -502,14 +510,14 @@ def _write_bundle(output_dir: Path, release: VerifiedRelease, bundle: bytes) -> 
         raise CompileError("could not create output directory") from None
     bundle_path = output_dir / bundle_name
     checksum_path = output_dir / checksum_name
-    temporary_paths: list[Path] = []
-    created_paths: list[Path] = []
+    temporary_paths: dict[Path, tuple[int, int]] = {}
+    created_paths: dict[Path, tuple[int, int]] = {}
     try:
         with tempfile.NamedTemporaryFile(
             mode="w+b", dir=output_dir, prefix=".bundle-", delete=False
         ) as file:
             temporary_bundle = Path(file.name)
-            temporary_paths.append(temporary_bundle)
+            temporary_paths[temporary_bundle] = _file_identity(os.fstat(file.fileno()))
             file.write(bundle)
             file.flush()
             os.fsync(file.fileno())
@@ -517,16 +525,17 @@ def _write_bundle(output_dir: Path, release: VerifiedRelease, bundle: bytes) -> 
             mode="w+b", dir=output_dir, prefix=".checksum-", delete=False
         ) as file:
             temporary_checksum = Path(file.name)
-            temporary_paths.append(temporary_checksum)
+            temporary_paths[temporary_checksum] = _file_identity(os.fstat(file.fileno()))
             file.write(sidecar)
             file.flush()
             os.fsync(file.fileno())
         os.link(temporary_checksum, checksum_path)
-        created_paths.append(checksum_path)
+        created_paths[checksum_path] = temporary_paths[temporary_checksum]
         os.link(temporary_bundle, bundle_path)
-        created_paths.append(bundle_path)
-        for path in temporary_paths:
-            path.unlink()
+        created_paths[bundle_path] = temporary_paths[temporary_bundle]
+        for path, identity in temporary_paths.items():
+            if not _unlink_if_owned(path, identity):
+                raise OSError("temporary output changed during publication")
         temporary_paths.clear()
         directory_fd = os.open(output_dir, os.O_RDONLY)
         try:
@@ -534,16 +543,10 @@ def _write_bundle(output_dir: Path, release: VerifiedRelease, bundle: bytes) -> 
         finally:
             os.close(directory_fd)
     except BaseException as error:
-        for path in reversed(created_paths):
-            try:
-                path.unlink()
-            except FileNotFoundError:
-                pass
-        for path in temporary_paths:
-            try:
-                path.unlink()
-            except FileNotFoundError:
-                pass
+        for path, identity in reversed(created_paths.items()):
+            _unlink_if_owned(path, identity)
+        for path, identity in temporary_paths.items():
+            _unlink_if_owned(path, identity)
         try:
             output_dir.rmdir()
         except OSError:
@@ -554,6 +557,28 @@ def _write_bundle(output_dir: Path, release: VerifiedRelease, bundle: bytes) -> 
     return BundlePaths(
         bundle_path, checksum_path, release.commit_sha, release.zip_sha256, bundle_sha256
     )
+
+
+def _file_identity(value: os.stat_result) -> tuple[int, int]:
+    return value.st_dev, value.st_ino
+
+
+def _unlink_if_owned(path: Path, identity: tuple[int, int]) -> bool:
+    try:
+        current = path.stat(follow_symlinks=False)
+    except FileNotFoundError:
+        return True
+    except OSError:
+        return False
+    if _file_identity(current) != identity:
+        return False
+    try:
+        path.unlink()
+    except FileNotFoundError:
+        return True
+    except OSError:
+        return False
+    return True
 
 
 def compile_published_release(tag: str, output_dir: Path, client: httpx.Client) -> BundlePaths:

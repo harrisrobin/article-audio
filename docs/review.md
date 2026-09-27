@@ -115,3 +115,11 @@ The fallback form failed a real browser submission because `Referrer-Policy: no-
 ### Spec
 
 Both passes found no actionable repository defect. Public delivery saves the verified base URL and uses it on retries and post-cleanup uploads; other owners still default to private. Existing audio is reused. Native-card storage is distinguished from subprocess injection, which remains unverified for the Cloudflare pair. Live provisioning/playback and template publication remain external evidence gates, not implied by local tests.
+
+## Published-release template compiler in 0.1.8
+
+Fixed base: `b53be74fb0800c4f350626049d52d72d36753894`. The approved spec is a compiler for published stable releases only. The bundle must contain the complete profile, exactly two skills, four public memories, and verified release provenance. Native Grok publication remains a separate reviewed action.
+
+Independent Standards and Spec reviewers inspected the implementation. Standards found a cleanup race that could remove a file replaced by another process. Cleanup now records device/inode ownership and preserves replaced files. A deterministic regression covers that race. Parent review also found uncaught malformed DEFLATE data and ZIP names truncated at NUL bytes; both now fail with safe compiler errors. Releases missing public metadata receive an actionable unsupported-release error and cannot fall back to local files.
+
+The Standards recheck found no remaining actionable issues. Spec found no code-level deviations; its remaining completion gate was publication and verification against the actual release. All 132 tests pass on Python 3.11, and Ruff lint/format checks pass. Release and native-publication evidence is recorded separately in verification.md.

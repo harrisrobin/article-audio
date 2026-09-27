@@ -126,10 +126,13 @@ class GitHubFixture:
         retarget: bool = False,
         tree_overrides: dict | None = None,
         sidecar: bytes | None = None,
+        version: str = "0.1.8",
     ):
-        self.files = files or release_files()
+        self.version = version
+        self.tag = f"v{version}"
+        self.files = files or release_files(version=version)
         self.zip_bytes = zip_bytes or zip_release(self.files)
-        self.zip_name = "article-audio-0.1.8.zip"
+        self.zip_name = f"article-audio-{version}.zip"
         self.sidecar_name = f"{self.zip_name}.sha256"
         digest = hashlib.sha256(self.zip_bytes).hexdigest()
         self.sidecar = sidecar or f"{digest}  {self.zip_name}\n".encode()
@@ -151,7 +154,7 @@ class GitHubFixture:
             },
         ]
         self.release = {
-            "tag_name": "v0.1.8",
+            "tag_name": self.tag,
             "draft": False,
             "prerelease": False,
             "published_at": "2026-09-27T12:00:00Z",
@@ -178,9 +181,9 @@ class GitHubFixture:
     def handler(self, request: httpx.Request) -> httpx.Response:
         self.requests.append(request)
         path = unquote(request.url.path)
-        if path.endswith("/releases/tags/v0.1.8"):
+        if path.endswith(f"/releases/tags/{self.tag}"):
             return httpx.Response(200, json=self.release)
-        if path.endswith("/git/ref/tags/v0.1.8"):
+        if path.endswith(f"/git/ref/tags/{self.tag}"):
             self.ref_requests += 1
             if self.retarget and self.ref_requests > 1:
                 return httpx.Response(200, json={"object": {"type": "commit", "sha": "c" * 40}})
@@ -204,7 +207,18 @@ class GitHubFixture:
 def compile_fixture(tmp_path: Path, fixture: GitHubFixture):
     tmp_path.mkdir(parents=True, exist_ok=True)
     with fixture.client() as client:
-        return compile_template.compile_published_release("v0.1.8", tmp_path / "bundle", client)
+        return compile_template.compile_published_release(fixture.tag, tmp_path / "bundle", client)
+
+
+def replace_first_compressed_byte(archive: bytes) -> bytes:
+    with zipfile.ZipFile(io.BytesIO(archive)) as bundle:
+        member = bundle.infolist()[0]
+        offset = (
+            member.header_offset + 30 + len(member.filename.encode("utf-8")) + len(member.extra)
+        )
+    damaged = bytearray(archive)
+    damaged[offset] = 0xFF
+    return bytes(damaged)
 
 
 def test_compile_published_release_emits_literal_deterministic_bundle(tmp_path):
@@ -343,6 +357,37 @@ def test_rejects_unsafe_archive_entries(tmp_path, zip_mutation, message):
         compile_fixture(tmp_path, fixture)
 
 
+def test_corrupt_deflate_is_a_static_compiler_failure(tmp_path, monkeypatch, capsys):
+    valid = GitHubFixture()
+    fixture = GitHubFixture(
+        files=valid.files,
+        zip_bytes=replace_first_compressed_byte(valid.zip_bytes),
+    )
+    with pytest.raises(compile_template.CompileError, match="source archive is invalid"):
+        compile_fixture(tmp_path / "public", fixture)
+
+    monkeypatch.setattr(compile_template.httpx, "Client", lambda **kwargs: fixture.client())
+    result = compile_template.main(["v0.1.8", "--output-dir", str(tmp_path / "main" / "bundle")])
+    captured = capsys.readouterr()
+    assert result == 2
+    assert captured.err == "error: source archive is invalid\n"
+    assert "Traceback" not in captured.err
+
+
+def test_rejects_nul_in_original_zip_member_name(tmp_path):
+    files = release_files()
+    altered = dict(files)
+    profile = altered.pop("template/PROFILE.md")
+    altered["template/PROFILE.mdXXX"] = profile
+    archive = zip_release(altered).replace(
+        b"article-audio/template/PROFILE.mdXXX",
+        b"article-audio/template/PROFILE.md\x00XX",
+    )
+    fixture = GitHubFixture(files=files, zip_bytes=archive)
+    with pytest.raises(compile_template.CompileError, match="unsafe archive entries"):
+        compile_fixture(tmp_path, fixture)
+
+
 def test_rejects_checksum_tree_and_truncated_tree_mismatches(tmp_path):
     bad_checksum = GitHubFixture(sidecar=(b"0" * 64) + b"  article-audio-0.1.8.zip\n")
     with pytest.raises(compile_template.CompileError, match="checksum"):
@@ -444,6 +489,28 @@ def test_rejects_inconsistent_release_sources(tmp_path, mutate):
         compile_fixture(tmp_path, fixture)
 
 
+def test_legacy_release_without_public_metadata_fails_without_local_fallback(tmp_path):
+    files = release_files(version="0.1.7")
+    files.pop("template/public.json")
+    allowlist = ["pyproject.toml", *sorted(path for path in files if path != "pyproject.toml")]
+    files["pyproject.toml"] = (
+        "[project]\n"
+        'name = "article-audio"\n'
+        'version = "0.1.7"\n\n'
+        "[tool.hatch.build]\n"
+        f"only-include = {json.dumps(allowlist)}\n"
+    ).encode()
+    local = tmp_path / "template"
+    local.mkdir(parents=True)
+    (local / "public.json").write_text(json.dumps(public_spec()))
+    fixture = GitHubFixture(files=files, version="0.1.7")
+    with pytest.raises(
+        compile_template.CompileError,
+        match=r"release v0\.1\.7 does not support template bundles",
+    ):
+        compile_fixture(tmp_path / "run", fixture)
+
+
 @pytest.mark.parametrize("body", ["", "FILE:/tmp/skill-v0.1.8.md"])
 def test_rejects_skill_with_empty_or_placeholder_only_body(tmp_path, body):
     files = release_files()
@@ -532,6 +599,28 @@ def test_output_publication_never_removes_a_racing_preexisting_file(tmp_path, mo
     assert len(files) == 1
     assert files[0].name == "article-audio-template-v0.1.8.json"
     assert files[0].read_bytes() == b"other writer"
+
+
+def test_cleanup_preserves_replacement_of_first_published_output(tmp_path, monkeypatch):
+    output = tmp_path / "bundle"
+    real_link = os.link
+    calls = 0
+
+    def racing_link(source, destination):
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            checksum = output / "article-audio-template-v0.1.8.json.sha256"
+            checksum.unlink()
+            checksum.write_bytes(b"replacement inode")
+            raise OSError("injected second-link failure")
+        return real_link(source, destination)
+
+    monkeypatch.setattr(compile_template.os, "link", racing_link)
+    with pytest.raises(compile_template.CompileError, match="could not write"):
+        compile_fixture(tmp_path, GitHubFixture())
+    checksum = output / "article-audio-template-v0.1.8.json.sha256"
+    assert checksum.read_bytes() == b"replacement inode"
 
 
 def test_output_is_byte_deterministic_and_ignores_workspace_and_credentials(tmp_path, monkeypatch):
