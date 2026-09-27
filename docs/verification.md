@@ -2,7 +2,7 @@
 
 Local evidence from 2026-09-27. This distinguishes implemented behavior from integrations that still need a real account test.
 
-Current published package: [GitHub v0.2.0](https://github.com/harrisrobin/article-audio/releases/tag/v0.2.0) fixes narration to one preset and removes voice-approval, manual playback/seek, and setup-token-revocation checkpoints. Its source archive and complete template bundle are published and independently verified. The native Grok update is blocked by the locked Mac. Native v0.1.8, staged version 16, remains the last verified publication at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt). The unpublished v0.1.9 draft is superseded; stage v0.2.0 when native control resumes.
+Current published package: [GitHub v0.2.1](https://github.com/harrisrobin/article-audio/releases/tag/v0.2.1) includes the fixed narration flow and the adversarial-review corrections to runtime repair and installation guidance. Its source archive and complete template bundle are published and independently verified. The native Grok update is blocked by the locked Mac. Native v0.1.8, staged version 16, remains the last verified publication at [the retained template](https://x.ai/bot/zBuR546KeAs5X0iwlXkxt). Earlier unpublished drafts are superseded; stage v0.2.1 when native control resumes.
 
 Earlier sections are historical. The old `u9M4WdBafSgCyS3GNHKla` template remains deprecated and accessible; no supported removal was found. Shared-account fallback storage, R2 provisioning, and public sample delivery were verified below. Native secret delivery, a clean import, and complete X Article narration still need their own proof.
 
@@ -224,4 +224,9 @@ GitHub Actions run `36355321696` did not execute any test steps. Its annotation 
 
 The independent follow-up review corrected two instruction issues. Already-ready owners now get runtime-only repair before any setup invitation; schema-1 migration reuses their delivery and keys. README and INSTALL prominently distinguish the older native template from the current package and offer manual skill installation until native publication.
 
-All 140 tests passed again on Python 3.11, with Ruff and formatting checks passing. After the instruction corrections and patch-version change, both packaging tests and both skill validators passed. Independent Standards and Spec rechecks found no remaining actionable issue. The new package and native update are pending publication; the native snapshot remains last verified at 0.1.8.
+All 140 tests passed again on Python 3.11, with Ruff and formatting checks passing. After the instruction corrections and patch-version change, both packaging tests and both skill validators passed. Independent Standards and Spec rechecks found no remaining actionable issue. The package is published; native publication remains blocked by the locked Mac and is last verified at 0.1.8.
+
+
+Published release commit: `97f6b7cbec0c072df4318b65a55a9436c13c5a7d`. Source ZIP SHA-256: `4433db00c2b6b2dad084fac47de7a7cbb5ddf30db22909e2f13d5620b9b93b5c`. Bundle SHA-256: `fccecb0095bbb1f3454c0cafffe86e74b7bc4487e80df74782cb65ef03f9a266`. All six release assets are published. Anonymous verification matched all 51 ZIP files to the tag and both public bundle assets to the local outputs. Compiling from a fresh extraction with Python 3.11 produced byte-identical template JSON and checksum.
+
+Native app access was attempted again during this follow-up and reported the Mac locked. No native v0.2.1 publication or clean-import test is claimed. GitHub Actions run `36356824070` again started no steps because the account is locked by a billing issue.
