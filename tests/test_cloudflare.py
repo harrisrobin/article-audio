@@ -244,3 +244,70 @@ def test_nondefault_jurisdiction_uses_manual_fallback(store, monkeypatch):
     with pytest.raises(UserError, match="jurisdictional"):
         cloud.provision(store)
     assert cloud.requests == []
+
+
+def test_concurrent_manual_setup_is_not_overwritten(store):
+    cloud = CloudflareMock()
+    manual = {
+        "R2_ACCOUNT_ID": "d" * 32,
+        "R2_BUCKET": "manual-bucket",
+        "R2_ACCESS_KEY_ID": "manual-access",
+        "R2_SECRET_ACCESS_KEY": "manual-secret",
+    }
+
+    def save_manually(request):
+        if request.method == "POST" and request.url.path.endswith("/tokens"):
+            store.save(manual)
+
+    cloud.fail = save_manually
+    with pytest.raises(UserError) as error:
+        cloud.provision(store)
+    assert error.value.code == "credentials_changed"
+    assert "Revoke the unused" in str(error.value)
+    assert store.require("r2") == manual
+    assert len(cloud.tokens) == 1
+
+
+def test_reuse_clears_unneeded_bootstrap_without_api_requests(store, monkeypatch):
+    for key in GROUPS["r2"]:
+        monkeypatch.setenv(key, "existing-runtime-value")
+    cloud = CloudflareMock()
+    result = cloud.provision(store)
+    assert result["reused"] is True
+    assert result["setup_token_removed_from_file"] is True
+    assert store.status("cloudflare")["present"] == []
+    assert store.get("GEMINI_API_KEY") == "gemini-keep"
+    assert cloud.requests == []
+    assert "revoke" in result["next_step"]
+
+
+def test_failed_credential_write_does_not_repeat_token_creation(store, monkeypatch):
+    cloud = CloudflareMock()
+    original = store.save
+
+    def cannot_save(*args, **kwargs):
+        raise OSError("simulated disk failure")
+
+    monkeypatch.setattr(store, "save", cannot_save)
+    with pytest.raises(OSError):
+        cloud.provision(store)
+    assert len(cloud.tokens) == 1
+    monkeypatch.setattr(store, "save", original)
+    with pytest.raises(UserError) as error:
+        cloud.provision(store)
+    assert error.value.code == "token_recovery_required"
+    assert len(cloud.tokens) == 1
+
+
+def test_cli_provision_output_contains_only_nonsecret_result(store, monkeypatch, capsys):
+    from article_audio import cli
+
+    cloud = CloudflareMock()
+    with httpx.Client(transport=httpx.MockTransport(cloud)) as http:
+        monkeypatch.setattr(cli.httpx, "Client", lambda **kwargs: http)
+        assert cli.main(["--config-dir", str(store.directory), "auth", "provision-r2"]) == 0
+    output = capsys.readouterr()
+    assert json.loads(output.out)["configured"] is True
+    assert not any(
+        secret in output.out + output.err for secret in (SETUP_TOKEN, UPLOAD_TOKEN, UPLOAD_ID)
+    )

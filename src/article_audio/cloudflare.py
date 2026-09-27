@@ -14,6 +14,11 @@ from .files import atomic_write, file_lock, private_dir, read_private_json
 
 API = "https://api.cloudflare.com/client/v4"
 OBJECT_WRITE = "Workers R2 Storage Bucket Item Write"
+CLEANUP = (
+    "Publish a sample to verify hosting. Then revoke the short-lived setup token in Cloudflare "
+    "and remove its native Grok secret/environment entry. Keep the bucket upload token. "
+    "Local removal is not Cloudflare revocation."
+)
 
 
 class CloudflareAPI:
@@ -152,11 +157,13 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
     with file_lock(store.directory / ".r2-setup.lock"):
         status = store.status("r2")
         if not status["missing"]:
+            store.save({}, remove=GROUPS["cloudflare"])
             return {
                 "configured": True,
                 "reused": True,
                 "playback_verified": False,
-                "next_step": "Publish the sample with the existing bucket's jurisdiction.",
+                "setup_token_removed_from_file": True,
+                "next_step": "Use the existing bucket's jurisdiction. " + CLEANUP,
             }
         if status["present"]:
             raise UserError(
@@ -219,15 +226,26 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
                 "for recovery instructions.",
                 "cloudflare_failed",
             )
-        store.save(
-            {
-                "R2_ACCOUNT_ID": account,
-                "R2_BUCKET": state.bucket,
-                "R2_ACCESS_KEY_ID": result["id"],
-                "R2_SECRET_ACCESS_KEY": hashlib.sha256(result["value"].encode()).hexdigest(),
-            },
-            remove=GROUPS["cloudflare"],
-        )
+        try:
+            store.save(
+                {
+                    "R2_ACCOUNT_ID": account,
+                    "R2_BUCKET": state.bucket,
+                    "R2_ACCESS_KEY_ID": result["id"],
+                    "R2_SECRET_ACCESS_KEY": hashlib.sha256(result["value"].encode()).hexdigest(),
+                },
+                remove=GROUPS["cloudflare"],
+                if_absent=GROUPS["r2"],
+            )
+        except UserError as error:
+            if error.code == "credentials_changed":
+                raise UserError(
+                    f"R2 credentials changed during setup and were preserved. Revoke the unused "
+                    f"Cloudflare upload token named {state.token_name}. The new bucket remains; "
+                    "no existing bucket was changed.",
+                    "credentials_changed",
+                ) from None
+            raise
         return {
             "configured": True,
             "reused": False,
@@ -235,7 +253,5 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
             "jurisdiction": "default",
             "playback_verified": False,
             "setup_token_removed_from_file": True,
-            "next_step": "Publish a sample to verify hosting. Then revoke the short-lived "
-            "setup token in Cloudflare and remove its native Grok secret/environment entry. "
-            "Keep the bucket upload token. Local removal is not Cloudflare revocation.",
+            "next_step": CLEANUP,
         }

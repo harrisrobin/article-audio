@@ -26,6 +26,8 @@ class CredentialStore:
             return {}
         try:
             values = read_private_json(self.path)
+            if values == {}:
+                return {}
             try:
                 return self.validate(values)
             except UserError:
@@ -75,11 +77,23 @@ class CredentialStore:
             "storage_path": str(self.path),
         }
 
-    def save(self, values: dict[str, str], *, remove: tuple[str, ...] = ()) -> None:
-        values = self.validate(values)
+    def save(
+        self,
+        values: dict[str, str],
+        *,
+        remove: tuple[str, ...] = (),
+        if_absent: tuple[str, ...] = (),
+    ) -> None:
+        values = self.validate(values) if values or not remove else {}
         private_dir(self.directory)
         with file_lock(self.directory / ".credentials.lock"):
-            combined = self._read() | values
+            current = self._read()
+            if any(current.get(key) or os.environ.get(key, "").strip() for key in if_absent):
+                raise UserError(
+                    "Credentials changed during setup; existing values were preserved.",
+                    "credentials_changed",
+                )
+            combined = current | values
             for key in remove:
                 combined.pop(key, None)
             atomic_write(self.path, json.dumps(combined).encode())

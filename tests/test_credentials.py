@@ -109,3 +109,12 @@ def test_fifo_credential_path_fails_without_hanging(tmp_path):
     )
     assert result.returncode == 2
     assert "regular file" in result.stdout
+
+
+def test_removing_last_group_leaves_a_valid_empty_store(tmp_path):
+    store = CredentialStore(tmp_path / "config")
+    store.save({"CLOUDFLARE_API_TOKEN": "temporary"})
+    store.save({}, remove=("CLOUDFLARE_API_TOKEN",))
+    assert store.status("cloudflare")["present"] == []
+    store.save({"GEMINI_API_KEY": "new"})
+    assert store.get("GEMINI_API_KEY") == "new"
