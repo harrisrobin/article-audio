@@ -113,6 +113,26 @@ def test_provision_saves_bucket_scoped_keys_clears_bootstrap_and_reuses(store):
     assert len(cloud.requests) == count
 
 
+def test_reuse_does_not_remove_setup_credentials_after_destination_changes(store, monkeypatch):
+    store.save({key: "existing-" + key for key in GROUPS["r2"]})
+    snapshot = store.snapshot
+
+    def rotate_during_reuse(group):
+        result = snapshot(group)
+        if group == "cloudflare":
+            store.save({"R2_BUCKET": "replacement-bucket"})
+        return result
+
+    monkeypatch.setattr(store, "snapshot", rotate_during_reuse)
+    cloud = CloudflareMock()
+    with pytest.raises(UserError) as error:
+        cloud.provision(store)
+    assert error.value.code == "credentials_changed"
+    assert store.get("R2_BUCKET") == "replacement-bucket"
+    assert store.get("CLOUDFLARE_API_TOKEN") == SETUP_TOKEN
+    assert cloud.requests == []
+
+
 def test_bucket_create_timeout_reuses_reserved_bucket(store):
     cloud = CloudflareMock()
 

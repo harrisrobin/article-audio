@@ -3,7 +3,7 @@
 Publish the package release and its source ZIP plus checksum before compiling its template bundle. Run the compiler from an installed source checkout with Python 3.11 or newer:
 
 ```bash
-uv run python scripts/compile_template.py v0.2.1 --output-dir dist/template-v0.2.1
+uv run python scripts/compile_template.py v0.2.2 --output-dir dist/template-v0.2.2
 ```
 
 Use an explicit published stable tag. The command does not accept a branch, a draft release, a prerelease, or local preview content. It makes anonymous GitHub requests and does not need Gemini, Cloudflare, or GitHub credentials. Releases without `template/public.json` are unsupported.
@@ -13,9 +13,9 @@ The compiler verifies the release ZIP's checksum and compares its files with the
 On success, the output directory contains the JSON bundle and its SHA-256 sidecar. Use a new output directory for each attempt; the compiler preserves existing output. Attach both files to the same release:
 
 ```bash
-gh release upload v0.2.1 \
-  dist/template-v0.2.1/article-audio-template-v0.2.1.json \
-  dist/template-v0.2.1/article-audio-template-v0.2.1.json.sha256
+gh release upload v0.2.2 \
+  dist/template-v0.2.2/article-audio-template-v0.2.2.json \
+  dist/template-v0.2.2/article-audio-template-v0.2.2.json.sha256
 ```
 
 Do not replace an already published bundle with different bytes. Investigate any discrepancy between an existing asset and a newly compiled bundle.

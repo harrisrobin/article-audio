@@ -155,10 +155,10 @@ class SetupState:
 def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=False) -> dict:
     private_dir(store.directory)
     with file_lock(store.directory / ".r2-setup.lock"):
-        status = store.status("r2")
-        if not status["missing"]:
-            snapshot = {key: store.get(key) for key in GROUPS["cloudflare"]}
-            removed = store.save({}, remove_if_matches=snapshot)
+        configured = store.snapshot("r2")
+        if all(configured.values()):
+            snapshot = store.snapshot("cloudflare")
+            removed = store.save({}, remove_if_matches=snapshot, if_unchanged=configured)
             return {
                 "configured": True,
                 "reused": True,
@@ -166,7 +166,7 @@ def provision_r2(store: CredentialStore, http: httpx.Client, *, retry_token=Fals
                 "next_step": "Use the existing bucket's jurisdiction. "
                 + (PREVIEW if removed else REPLACED_SETUP),
             }
-        if status["present"]:
+        if any(configured.values()):
             raise UserError(
                 "Partial R2 credentials already exist. Complete auth setup r2, "
                 "or use a separate --config-dir for automatic setup."

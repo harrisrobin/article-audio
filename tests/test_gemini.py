@@ -79,3 +79,30 @@ def test_truncation_never_becomes_a_successful_recording():
     ) as transport:
         with pytest.raises(UserError, match="incomplete"):
             GeminiClient("secret", transport).synthesize("Text", VoiceSettings())
+
+
+@pytest.mark.parametrize("damage", ["null-candidate", "null-mime", "unicode-base64"])
+def test_malformed_audio_response_is_a_safe_resumable_failure(tmp_path, damage):
+    from article_audio.pipeline import generate, plan
+
+    data = response_data()
+    if damage == "null-candidate":
+        data["candidates"] = [None]
+    else:
+        audio = data["candidates"][0]["content"]["parts"][0]["inlineData"]
+        audio["mimeType" if damage == "null-mime" else "data"] = (
+            None if damage == "null-mime" else "private-marker-語"
+        )
+    settings = VoiceSettings()
+    with httpx.Client(
+        transport=httpx.MockTransport(lambda _: httpx.Response(200, json=data))
+    ) as http:
+        with pytest.raises(UserError) as error:
+            generate("Article", settings, tmp_path, GeminiClient("fake", http))
+    assert error.value.code == "invalid_provider_response"
+    assert "private-marker" not in str(error.value)
+    manifest = json.loads(
+        (tmp_path / plan("Article", settings)["job_id"] / "manifest.json").read_text()
+    )
+    assert manifest["status"] == "failed"
+    assert manifest["error_code"] == "invalid_provider_response"

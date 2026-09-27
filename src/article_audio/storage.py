@@ -52,16 +52,23 @@ def publish(
     if not re.fullmatch(r"[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]", bucket):
         raise UserError("Invalid R2 bucket name.")
     if public_base_url:
-        parsed = urlsplit(public_base_url)
+        try:
+            parsed = urlsplit(public_base_url)
+            port = parsed.port
+        except ValueError:
+            raise UserError("Public audio requires a clean HTTPS bucket base URL.") from None
         if (
             parsed.scheme != "https"
             or not parsed.hostname
             or parsed.username
             or parsed.password
-            or parsed.query
-            or parsed.fragment
+            or "?" in public_base_url
+            or "#" in public_base_url
+            or parsed.path not in ("", "/")
+            or port not in (None, 443)
+            or any(char.isspace() or ord(char) < 32 for char in public_base_url)
         ):
-            raise UserError("Public audio requires a clean HTTPS base URL.")
+            raise UserError("Public audio requires a clean HTTPS bucket base URL.")
     data = path.read_bytes()
     if not data:
         raise UserError("Cannot upload empty audio.")
@@ -87,7 +94,7 @@ def publish(
             )
         head = client.head_object(Bucket=bucket, Key=key)
         if (
-            head["ContentLength"] != len(data)
+            head.get("ContentLength") != len(data)
             or head.get("ContentType") != "audio/mpeg"
             or head.get("Metadata", {}).get("sha256") != checksum
         ):
@@ -95,11 +102,20 @@ def publish(
                 "Uploaded object failed metadata verification.", "upload_verification_failed"
             )
         remote = client.get_object(Bucket=bucket, Key=key, Range="bytes=0-1023")
+        sample_size = min(1024, len(data))
+        content_range = f"bytes 0-{sample_size - 1}/{len(data)}"
+        body = remote.get("Body")
+        if body is None:
+            raise UserError("Uploaded audio response has no body.", "upload_verification_failed")
         try:
-            sample = remote["Body"].read(1024)
+            sample = body.read(sample_size + 1)
         finally:
-            remote["Body"].close()
-        if remote.get("ResponseMetadata", {}).get("HTTPStatusCode") != 206 or sample != data[:1024]:
+            body.close()
+        if (
+            remote.get("ResponseMetadata", {}).get("HTTPStatusCode") != 206
+            or remote.get("ContentRange") != content_range
+            or sample != data[:sample_size]
+        ):
             raise UserError(
                 "Uploaded audio failed ranged-read verification.", "upload_verification_failed"
             )
@@ -116,11 +132,23 @@ def publish(
             with delivery.stream(
                 "GET", url, headers={"Range": "bytes=0-1023"}, timeout=30, follow_redirects=False
             ) as response:
-                sample = next(response.iter_bytes(chunk_size=1024), b"")
-                if response.status_code != 206 or sample != data[:1024]:
+                if (
+                    response.status_code != 206
+                    or response.headers.get("Content-Range") != content_range
+                    or response.headers.get("Content-Length", str(sample_size)) != str(sample_size)
+                ):
                     raise UserError(
                         "Playback URL is not serving ranged audio correctly.",
                         "playback_url_unverified",
+                    )
+                sample = b""
+                for chunk in response.iter_bytes(chunk_size=1024):
+                    sample += chunk
+                    if len(sample) > sample_size:
+                        break
+                if sample != data[:sample_size]:
+                    raise UserError(
+                        "Playback URL returned an incorrect audio range.", "playback_url_unverified"
                     )
     except (ClientError, BotoCoreError, S3UploadFailedError, httpx.HTTPError):
         raise UserError(

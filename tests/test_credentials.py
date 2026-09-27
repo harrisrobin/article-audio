@@ -5,7 +5,7 @@ import sys
 
 import pytest
 
-from article_audio.credentials import CredentialStore
+from article_audio.credentials import GROUPS, CredentialStore
 from article_audio.errors import UserError
 
 
@@ -118,3 +118,39 @@ def test_removing_last_group_leaves_a_valid_empty_store(tmp_path):
     assert store.status("cloudflare")["present"] == []
     store.save({"GEMINI_API_KEY": "new"})
     assert store.get("GEMINI_API_KEY") == "new"
+
+
+@pytest.mark.parametrize("operation", ["require", "status"])
+def test_group_read_uses_one_configuration_during_rotation(tmp_path, monkeypatch, operation):
+    for key in GROUPS["r2"]:
+        monkeypatch.delenv(key, raising=False)
+    old = {key: "old-" + key for key in GROUPS["r2"]}
+    new = {key: "new-" + key for key in GROUPS["r2"]}
+    if operation == "status":
+        old = {"R2_ACCOUNT_ID": "old-account"}
+    reader = CredentialStore(tmp_path / "config")
+    writer = CredentialStore(reader.directory)
+    writer.save(old)
+    read = reader._read
+
+    def rotate_after_read():
+        values = read()
+        writer.save(new)
+        return values
+
+    monkeypatch.setattr(reader, "_read", rotate_after_read)
+    result = getattr(reader, operation)("r2")
+    if operation == "require":
+        assert result == old
+    else:
+        assert result["present"] == ["R2_ACCOUNT_ID"]
+        assert set(result["missing"]) == set(GROUPS["r2"]) - {"R2_ACCOUNT_ID"}
+
+
+def test_complete_environment_group_does_not_require_saved_file(tmp_path, monkeypatch):
+    store = CredentialStore(tmp_path / "config")
+    expected = {key: "injected-" + key for key in GROUPS["r2"]}
+    for key, value in expected.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.setattr(store, "_read", lambda: pytest.fail("File backend should not be read"))
+    assert store.require("r2") == expected

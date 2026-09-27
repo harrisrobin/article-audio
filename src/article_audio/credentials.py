@@ -54,11 +54,19 @@ class CredentialStore:
         return {key: value.strip() for key, value in values.items()}
 
     def get(self, key: str) -> str | None:
-        value = os.environ.get(key)
-        return value.strip() if value and value.strip() else self._read().get(key)
+        return self._snapshot((key,))[key]
+
+    def _snapshot(self, keys: tuple[str, ...]) -> dict[str, str | None]:
+        environment = dict(os.environ)
+        values = {key: environment.get(key, "").strip() for key in keys}
+        saved = self._read() if not all(values.values()) else {}
+        return {key: values[key] or saved.get(key) for key in keys}
+
+    def snapshot(self, group: str) -> dict[str, str | None]:
+        return self._snapshot(GROUPS[group])
 
     def require(self, group: str) -> dict[str, str]:
-        values = {key: self.get(key) for key in GROUPS[group]}
+        values = self.snapshot(group)
         missing = [key for key, value in values.items() if not value]
         if missing:
             raise UserError(
@@ -69,7 +77,8 @@ class CredentialStore:
 
     def status(self, group: str) -> dict:
         keys = GROUPS[group]
-        present = [key for key in keys if self.get(key)]
+        values = self.snapshot(group)
+        present = [key for key in keys if values[key]]
         return {
             "group": group,
             "present": present,
@@ -83,13 +92,21 @@ class CredentialStore:
         *,
         remove_if_matches: dict[str, str | None] | None = None,
         if_absent: tuple[str, ...] = (),
+        if_unchanged: dict[str, str | None] | None = None,
     ) -> bool:
         """Merge values; return whether conditional removal completed or was already absent."""
         values = self.validate(values) if values or not remove_if_matches else {}
         private_dir(self.directory)
         with file_lock(self.directory / ".credentials.lock"):
             current = self._read()
-            if any(current.get(key) or os.environ.get(key, "").strip() for key in if_absent):
+            environment = dict(os.environ)
+            if any(current.get(key) or environment.get(key, "").strip() for key in if_absent) or (
+                if_unchanged is not None
+                and any(
+                    (environment.get(key, "").strip() or current.get(key)) != value
+                    for key, value in if_unchanged.items()
+                )
+            ):
                 raise UserError(
                     "Credentials changed during setup; existing values were preserved.",
                     "credentials_changed",

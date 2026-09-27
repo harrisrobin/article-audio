@@ -230,3 +230,10 @@ All 140 tests passed again on Python 3.11, with Ruff and formatting checks passi
 Published release commit: `97f6b7cbec0c072df4318b65a55a9436c13c5a7d`. Source ZIP SHA-256: `4433db00c2b6b2dad084fac47de7a7cbb5ddf30db22909e2f13d5620b9b93b5c`. Bundle SHA-256: `fccecb0095bbb1f3454c0cafffe86e74b7bc4487e80df74782cb65ef03f9a266`. All six release assets are published. Anonymous verification matched all 51 ZIP files to the tag and both public bundle assets to the local outputs. Compiling from a fresh extraction with Python 3.11 produced byte-identical template JSON and checksum.
 
 Native app access was attempted again during this follow-up and reported the Mac locked. No native v0.2.1 publication or clean-import test is claimed. GitHub Actions run `36356824070` again started no steps because the account is locked by a billing issue.
+
+
+## Whole-codebase review in 0.2.2
+
+The review covered every tracked source, test, bootstrap, compiler, and instruction file at `20da06789f2e5d962b15ccf518c8bc88a36186b9`. Both independent review axes rechecked the fixes and found no remaining actionable issue. See review.md for accepted and dismissed findings.
+
+All 165 tests pass locally on Python 3.11.14. Ruff lint and formatting pass. The fixes cover consistent credential snapshots and conditional cleanup, exact ranged-delivery checks, public bucket URL validation, and safe malformed provider/audio failures. The fixed narrator and simplified onboarding flow are unchanged. Native template publication and clean-import behavior are separate and have not been reverified by this code review.

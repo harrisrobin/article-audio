@@ -61,6 +61,7 @@ def decode_audio(data: bytes, mime_type: str) -> bytes:
                 not expected
                 or wav.getnchannels() != 1
                 or wav.getsampwidth() != 2
+                or wav.getframerate() <= 0
                 or len(wav.readframes(wav.getnframes())) != expected
             ):
                 raise UserError("Empty, truncated, or unsupported WAV audio.", "invalid_audio")

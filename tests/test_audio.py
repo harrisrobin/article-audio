@@ -3,7 +3,7 @@ import wave
 
 import pytest
 
-from article_audio.audio import decode_audio, probe_audio, split_text
+from article_audio.audio import decode_audio, probe_audio, split_text, validate_narration
 from article_audio.errors import UserError
 
 
@@ -53,3 +53,11 @@ def test_duration_guard_is_conservative_and_ignores_short_headings():
     check_narration_duration("word " * 50, 2.0)
     with pytest.raises(UserError, match="short"):
         check_narration_duration("word " * 50, 1.99)
+
+
+def test_zero_rate_wav_is_rejected_before_duration_calculation():
+    audio = decode_audio(b"\x00\x01" * 240, "audio/L16;rate=24000")
+    damaged = audio[:24] + b"\x00" * 4 + audio[28:]
+    with pytest.raises(UserError) as error:
+        validate_narration(damaged, "Article")
+    assert error.value.code == "invalid_audio"

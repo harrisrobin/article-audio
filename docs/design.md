@@ -10,7 +10,7 @@ Generation splits exact transcript slices with a conservative character cap. Eac
 
 A duration sanity check rejects grossly short speech: for at least 200 alphanumeric characters, raw speech must last at least characters/100 seconds. Apply it to new and cached segments and to final or cached MP3 duration multiplied by playback speed. This is a conservative error guard, not transcript alignment or proof of spoken accuracy.
 
-R2 publishing is explicit and separate from synthesis. Private signed links are the default. Public URLs require explicit configuration. Cache keys include content and settings. Upload metadata, length and a ranged GET must pass before returning success. Presigned links are returned to the user but not persisted in job manifests.
+R2 publishing is explicit and separate from synthesis. Private signed links are the default. Public URLs require explicit configuration. Cache keys include content and settings. Upload metadata, length and a ranged GET must pass before returning success. Both the S3 read and playback URL must return the exact requested prefix, range bounds, and full object length. This checks ranged delivery, not every remote audio byte or spoken word. Presigned links are returned to the user but not persisted in job manifests.
 
 The open-source distribution includes source, tests, a lockfile, a setup script, an agent skill, a template profile, and a license. It contains no API keys or user's article content. The shareable Grok template is created inside Grok after runtime validation; this repository supplies its portable ingredients.
 

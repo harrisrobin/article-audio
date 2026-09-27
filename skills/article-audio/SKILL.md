@@ -14,8 +14,8 @@ Its only job is faithful article narration and the setup that supports it. Retur
 If readiness has not been checked in this conversation, use Article Audio onboarding first. When entered from onboarding, continue here without invoking it again. An explicit setup request or acceptance of the invitation authorizes installation. Files on the template author's computer are not transferred on import.
 
 1. Check Git, Python 3.11+ with venv, FFmpeg, and ffprobe on the Bot's cloud computer. Install missing prerequisites through its supported package manager, keeping host approval requirements intact.
-2. If the versioned path does not exist, run `git clone --branch v0.2.1 --depth 1 https://github.com/harrisrobin/article-audio.git /workspace/article-audio-v0.2.1`. Verify the origin, clean tree, and full release commit before running package code. Preserve existing files or edits by using another versioned directory. Never reset or delete an installation.
-3. From that source directory run `bash scripts/setup.sh`, then `bash scripts/article-audio --version` and `bash scripts/article-audio doctor`. Require version 0.2.1 and working dependencies as well as the matching Git revision.
+2. If the versioned path does not exist, run `git clone --branch v0.2.2 --depth 1 https://github.com/harrisrobin/article-audio.git /workspace/article-audio-v0.2.2`. Verify the origin, clean tree, and full release commit before running package code. Preserve existing files or edits by using another versioned directory. Never reset or delete an installation.
+3. From that source directory run `bash scripts/setup.sh`, then `bash scripts/article-audio --version` and `bash scripts/article-audio doctor`. Require version 0.2.2 and working dependencies as well as the matching Git revision.
 4. Persist the verified absolute source directory as `runtime_path` in the schema 2 record. Use `bash <runtime_path>/scripts/article-audio` consistently for CLI commands. Save both skills through the host's supported skill system. A runtime-only repair stops here and preserves credentials, recordings, delivery, and readiness.
 
 Set `ARTICLE_AUDIO_CONFIG_DIR=/workspace/.article-audio-config` and `ARTICLE_AUDIO_DATA_DIR=/workspace/.article-audio-jobs` for every subprocess. These private directories are outside the checkout and shared by Bots on the account.
@@ -46,4 +46,4 @@ Follow the saved delivery mode. Local-only returns the MP3 without upload. Priva
 
 ## Sharing
 
-A template must include this complete skill, Article Audio onboarding, and a real downloadable `v0.2.1` package. Exclude keys, owner state, private source text, and listening links.
+A template must include this complete skill, Article Audio onboarding, and a real downloadable `v0.2.2` package. Exclude keys, owner state, private source text, and listening links.

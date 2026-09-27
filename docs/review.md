@@ -156,3 +156,34 @@ Spec found one valid recovery issue. The onboarding instructions said a ready re
 Two other proposed Spec findings were dismissed. The unchanged short-audio error recommends listening as diagnosis but imposes no playback confirmation or readiness gate. Choosing an unspecified destination is a retained privacy and delivery preference, distinct from the removed voice/playback approvals or a second request to begin setup. INSTALL now makes that distinction explicit.
 
 The Spec reviewer rechecked fresh setup, ready-owner repair, matching/customized schema-1 migration, and missing credentials with no remaining actionable finding. The Standards reviewer also found no unresolved issue after the corrections. All 140 tests, Ruff lint, and formatting passed before these instruction-only corrections. Publication and native runtime evidence remain separate in verification.md.
+
+
+## Whole-codebase review in 0.2.2
+
+Scope: all 51 tracked files at `20da06789f2e5d962b15ccf518c8bc88a36186b9`, not a release diff. Fresh independent Standards and Spec reviewers used the current security, design, delivery, and template contracts. Parent review also covered the complete compiler, packaging/bootstrap scripts, media pipeline, and external response boundaries. Historical issues were eligible findings.
+
+### Standards
+
+Three hard findings were reproduced and fixed:
+
+1. Multi-key credential reads could combine an old account ID with a newly rotated key, secret, and bucket. Each group now uses one file/environment snapshot. Reusing configured R2 also checks the captured destination under the credential lock before removing setup credentials, preserving them if another process changes the destination.
+2. Ranged delivery accepted a correct prefix without validating the range bounds or total object length. S3 and playback reads now require the exact Content-Range and returned byte count/content, including a bounded check for excess response bytes. This remains a ranged-delivery check, not a full remote-file hash or semantic speech check.
+3. Public bucket URLs accepted object paths and malformed ports. Validation now rejects these before upload. The independent recheck also caught empty query/fragment delimiters; those are rejected too.
+
+The suggested R2 credential value-object refactor remains a judgment call, not a hard violation. The snapshot boundary fixes the concrete race without adding an unnecessary configuration subsystem. The final Standards recheck accepted all three repairs with no remaining hard finding.
+
+### Spec
+
+Three findings were accepted and fixed. Two overlap the Standards report: incorrect public bucket bases and incomplete ranged-delivery validation. The recheck also found that missing S3 ContentLength or Body fields could escape as internal exceptions; they now produce safe upload_verification_failed errors.
+
+Two candidates were rejected after checking the existing contracts. Complete R2 credential reuse intentionally preserves the configured bucket; the Bot must verify its privacy, and SECURITY.md explicitly warns that signed links do not make public objects private. A stale manifest status alone does not invalidate a matching MP3 hash with a successful media probe and duration check, so cache reuse remains correct.
+
+The final Spec recheck reported all three accepted findings resolved, with no remaining actionable finding or scope creep.
+
+### Parent boundary checks and verification
+
+Malformed Gemini candidates, MIME types, and non-ASCII base64 previously escaped as AttributeError or ValueError; a zero-rate WAV caused ZeroDivisionError during duration calculation. These now become safe provider/audio errors. Regression tests prove malformed provider replies leave failed, resumable manifests without exposing response content.
+
+All 165 tests pass on Python 3.11.14, including credential-rotation races, malformed responses, URL rejection before upload, short-file ranges, incorrect totals, and excess response bytes. Ruff lint and formatting pass. No real credentials, provider calls, bucket changes, or native UI were needed for this review. Release and native-template evidence remain separate in verification.md.
+
+Standards: 3 accepted and fixed, worst issue mixed credentials during rotation. Spec: 3 accepted and fixed, worst issue falsely verified ranged delivery. Two findings overlap; neither axis has an unresolved actionable finding.

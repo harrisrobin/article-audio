@@ -1,5 +1,4 @@
 import base64
-import binascii
 import time
 from dataclasses import dataclass, field
 
@@ -95,6 +94,8 @@ class GeminiClient:
         )
         try:
             candidate = data["candidates"][0]
+            if not isinstance(candidate, dict):
+                raise ValueError
             if candidate.get("finishReason") != "STOP":
                 raise UserError(
                     "Gemini narration is incomplete or blocked. No completed audio was accepted; "
@@ -107,8 +108,10 @@ class GeminiClient:
             if len(parts) != 1:
                 raise UserError("Expected one complete audio segment from Gemini.", "invalid_audio")
             audio = parts[0]
+            if not isinstance(audio["data"], str) or not isinstance(audio["mimeType"], str):
+                raise ValueError
             return decode_audio(base64.b64decode(audio["data"], validate=True), audio["mimeType"])
-        except (KeyError, IndexError, TypeError, binascii.Error):
+        except (KeyError, IndexError, TypeError, ValueError):
             raise UserError(
                 "Gemini did not return usable audio.", "invalid_provider_response"
             ) from None
